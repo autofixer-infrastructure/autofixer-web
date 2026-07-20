@@ -1,0 +1,667 @@
+// Prisma schema for Autofixer - Air Conditioning Automotive Service
+// Based on: ESPECIFICACION-TECNICA-COMPLETA.md
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER MANAGEMENT
+// ============================================
+
+enum UserRole {
+  CLIENT
+  TECHNICIAN
+  ADMIN
+}
+
+enum ClientTier {
+  GREEN_GRADUATED  // 3+ servicios completados
+  GREEN_RELIABLE   // 0-1 no-shows
+  YELLOW_SUSPICIOUS // 2+ cancelaciones
+  RED_FRAUDULENT   // 2+ no-shows
+}
+
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  emailVerified   DateTime?
+  passwordHash    String?
+  name            String?
+  phone           String?
+  role            UserRole  @default(CLIENT)
+  
+  // Client specific
+  clientTier      ClientTier @default(GREEN_RELIABLE)
+  totalServices   Int        @default(0)
+  noShows         Int        @default(0)
+  cancellations   Int        @default(0)
+  graduatedAt     DateTime?  // When reached GREEN_GRADUATED
+  
+  // Auth
+  accounts        Account[]
+  sessions        Session[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  vehicles        Vehicle[]
+  bookings        Booking[]
+  reviews         Review[]
+  addresses       Address[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ============================================
+// LOCATION DATA
+// ============================================
+
+model Commune {
+  id        String   @id @default(cuid())
+  name      String   // "Providencia", "Las Condes", etc.
+  slug      String   @unique
+  zone      Zone     @relation(fields: [zoneId], references: [id])
+  zoneId    String
+  
+  // Geo data
+  latitude  Float?
+  longitude Float?
+  
+  // Displacement pricing from base (Recoleta)
+  displacementFee Int @default(0) // in CLP
+  
+  // Relations
+  addresses       Address[]
+  bookings        Booking[]
+  localPageContent LocalPageContent?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([slug])
+  @@index([zoneId])
+}
+
+model Zone {
+  id        String    @id @default(cuid())
+  name      String    // "Norte", "Oriente", "Centro", "Sur", "Poniente"
+  slug      String    @unique
+  communes  Commune[]
+  
+  createdAt DateTime @default(now())
+}
+
+model Address {
+  id          String   @id @default(cuid())
+  userId      String
+  communeId   String
+  street      String   // "Av. Providencia 1234"
+  apartment   String?  // "Depto 501" (optional)
+  reference   String?  // "Edificio Torre 2, estacionamiento subte"
+  
+  // For Google Maps
+  latitude    Float?
+  longitude   Float?
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  commune     Commune  @relation(fields: [communeId], references: [id])
+  
+  createdAt DateTime @default(now())
+  
+  @@index([userId])
+  @@index([communeId])
+}
+
+// ============================================
+// VEHICLES
+// ============================================
+
+model Vehicle {
+  id        String   @id @default(cuid())
+  userId    String
+  plate     String   // "BXRT-45"
+  
+  // Vehicle details
+  brand     String   // "Toyota"
+  model     String   // "Corolla"
+  year      Int      // 2019
+  color     String?
+  
+  // AC specific
+  refrigerantType RefrigirantType @default(R134A)
+  
+  // Calculated fields
+  vehicleType VehicleType @default(SEDAN)
+  
+  // Relations
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookings      Booking[]
+  serviceHistory ServiceRecord[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([userId, plate])
+  @@index([userId])
+  @@index([brand])
+}
+
+enum RefrigirantType {
+  R134A
+  R1234YF
+  R290
+}
+
+enum VehicleType {
+  SEDAN
+  HATCHBACK
+  SUV
+  PICKUP
+  VAN
+  TRUCK
+}
+
+// ============================================
+// SERVICES CATALOG
+// ============================================
+
+model Service {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String   // "Diagnóstico"
+  description String   @db.Text
+  
+  // Pricing (base, in CLP)
+  basePrice   Int
+  maxPrice    Int?     // For ranges like $35,000-$45,000
+  
+  // Duration (in minutes)
+  duration    Int
+  
+  // Technical details
+  refrigerantType RefrigirantType? // If specific to one type
+  
+  // Availability
+  availableOnWeekends Boolean @default(true)
+  
+  // Display
+  icon        String?  // Lucide icon name
+  featured    Boolean  @default(false)
+  
+  // Relations
+  bookingItems    BookingItem[]
+  serviceRecords  ServiceRecord[]
+  faqItems        ServiceFAQ[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([slug])
+  @@index([featured])
+}
+
+// ============================================
+// FAQ per Service
+// ============================================
+
+model ServiceFAQ {
+  id        String  @id @default(cuid())
+  serviceId String
+  question  String
+  answer    String  @db.Text
+  order     Int     @default(0)
+  
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  
+  @@index([serviceId])
+}
+
+// ============================================
+// BOOKINGS
+// ============================================
+
+enum BookingStatus {
+  PENDING_PAYMENT      // Awaiting deposit
+  CONFIRMED           // Deposit paid, awaiting service
+  IN_PROGRESS         // Technician assigned, in transit or working
+  COMPLETED           // Service done
+  CANCELLED           // Cancelled by client or admin
+  NO_SHOW            // Client didn't show up
+}
+
+model Booking {
+  id            String        @id @default(cuid())
+  
+  // Customer
+  userId        String
+  vehicleId     String
+  addressId     String
+  communeId     String
+  
+  // Service info
+  scheduledDate DateTime
+  scheduledTime String        // "10:00" - time slot
+  notes         String?       @db.Text // Customer notes
+  
+  // Status
+  status        BookingStatus @default(PENDING_PAYMENT)
+  
+  // Financials
+  subtotal      Int           // Sum of services
+  displacementFee Int         // Based on commune
+  total         Int           // subtotal + displacementFee
+  
+  // Deposit
+  depositRequired Int         @default(12500) // 50% of diagnosis
+  depositPaid    Boolean      @default(false)
+  depositPaidAt  DateTime?
+  
+  // Technician assignment
+  technicianId   String?
+  
+  // Cancellation
+  cancelledAt    DateTime?
+  cancellationReason String?
+  cancellationPenalty Int?    // 50% if <3h before
+  
+  // Service completion
+  completedAt    DateTime?
+  diagnosisNotes String?     @db.Text // Technician notes
+  workDone       String?      @db.Text // What was actually done
+  
+  // Relations
+  user          User          @relation(fields: [userId], references: [id])
+  vehicle       Vehicle       @relation(fields: [vehicleId], references: [id])
+  address       Address       @relation(fields: [addressId], references: [id])
+  commune       Commune       @relation(fields: [communeId], references: [id])
+  technician    Technician?   @relation(fields: [technicianId], references: [id])
+  items         BookingItem[]
+  payments      Payment[]
+  review        Review?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([status])
+  @@index([scheduledDate])
+  @@index([technicianId])
+}
+
+model BookingItem {
+  id          String  @id @default(cuid())
+  bookingId   String
+  serviceId   String
+  
+  // Override pricing (optional)
+  price       Int?    // If different from Service.basePrice
+  
+  service     Service @relation(fields: [serviceId], references: [id])
+  booking     Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  
+  @@index([bookingId])
+  @@index([serviceId])
+}
+
+// ============================================
+// TECHNICIANS
+// ============================================
+
+model Technician {
+  id          String   @id @default(cuid())
+  userId      String?  @unique
+  
+  // Profile
+  name        String
+  phone       String
+  photo       String?  // URL
+  
+  // Availability
+  maxRadiusKm Int      @default(35) // Max distance from base
+  
+  // Work hours (JSON for flexibility)
+  workHours   Json     // { monday: { start: "08:00", end: "18:00" }, ... }
+  
+  // Status
+  isActive    Boolean  @default(true)
+  
+  // Specializations
+  specializations String[] // ["R134A", "R1234YF", "Compressor"]
+  
+  // Relations
+  user       User?     @relation(fields: [userId], references: [id])
+  bookings   Booking[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([isActive])
+}
+
+// ============================================
+// SERVICE RECORDS (History per vehicle)
+// ============================================
+
+model ServiceRecord {
+  id          String   @id @default(cuid())
+  
+  vehicleId   String
+  serviceId   String
+  bookingId   String?
+  
+  // Details
+  date        DateTime
+  technicianId String?
+  cost        Int      // Actual cost
+  
+  // What was done
+  diagnosis   String?  @db.Text
+  workDone    String?  @db.Text
+  
+  // Parts used
+  partsUsed   Json?    // [{ name: "Compresor", cost: 150000 }]
+  
+  // Next service recommendation
+  nextServiceDate DateTime?
+  
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id])
+  service   Service @relation(fields: [serviceId], references: [id])
+  
+  createdAt DateTime @default(now())
+  
+  @@index([vehicleId])
+  @@index([date])
+}
+
+// ============================================
+// PAYMENTS
+// ============================================
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  TRANSFER
+  FLOW
+  WEBPAY
+  PAYPAL
+  MERCADOPAGO
+  CASH
+}
+
+model Payment {
+  id            String        @id @default(cuid())
+  bookingId     String?
+  
+  amount        Int           // in CLP
+  method        PaymentMethod
+  status        PaymentStatus @default(PENDING)
+  
+  // External reference
+  externalId    String?       // Flow/WebPay transaction ID
+  externalUrl   String?       // Payment URL for redirect methods
+  
+  // Timestamps
+  paidAt        DateTime?
+  failedAt      DateTime?
+  
+  // Refund
+  refundedAt    DateTime?
+  refundAmount  Int?
+  
+  booking       Booking?      @relation(fields: [bookingId], references: [id])
+  
+  createdAt DateTime @default(now())
+  
+  @@index([bookingId])
+  @@index([status])
+}
+
+// ============================================
+// REVIEWS / TESTIMONIALS
+// ============================================
+
+model Review {
+  id          String   @id @default(cuid())
+  bookingId   String   @unique
+  
+  userId      String
+  vehicleId   String
+  communeId   String
+  
+  // Rating (1-5)
+  rating      Int
+  
+  // Content
+  title       String?
+  content     String   @db.Text
+  
+  // Media
+  photos      String[] // URLs
+  videoUrl    String?
+  
+  // Source
+  serviceType String   // "Diagnóstico", "Carga R134a", etc.
+  
+  // Admin approval
+  isPublished Boolean  @default(false)
+  publishedAt DateTime?
+  
+  // Relations
+  user    User    @relation(fields: [userId], references: [id])
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id])
+  commune Commune @relation(fields: [communeId], references: [id])
+  booking Booking @relation(fields: [bookingId], references: [id])
+  
+  createdAt DateTime @default(now())
+  
+  @@index([isPublished])
+  @@index([rating])
+}
+
+// ============================================
+// LOCAL PAGES (Content per commune)
+// ============================================
+
+model LocalPageContent {
+  id          String  @id @default(cuid())
+  communeId   String  @unique
+  
+  // SEO
+  title       String
+  metaDescription String
+  h1          String
+  
+  // Content blocks (markdown/HTML)
+  introduction String @db.Text
+  coverage     String @db.Text
+  testimonials String @db.Text
+  faqs         String @db.Text
+  
+  // JSON-LD for LocalBusiness
+  schemaMarkup Json?
+  
+  commune   Commune @relation(fields: [communeId], references: [id])
+  
+  updatedAt DateTime @updatedAt
+  
+  @@index([communeId])
+}
+
+// ============================================
+// BLOG / CONTENT
+// ============================================
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  
+  // SEO
+  title       String
+  metaDescription String @db.Text
+  
+  // Content
+  excerpt     String   @db.Text
+  content     String   @db.Text
+  
+  // Media
+  featuredImage String?
+  images      String[]
+  
+  // Metadata
+  author      String?
+  category    String
+  tags        String[]
+  
+  // SEO
+  readingTime Int      // in minutes
+  
+  // Status
+  isPublished Boolean  @default(false)
+  publishedAt DateTime?
+  
+  // Schema
+  schemaMarkup Json?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([slug])
+  @@index([isPublished])
+  @@index([category])
+}
+
+// ============================================
+// CASOS REALES
+// ============================================
+
+model RealCase {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  
+  // Case info
+  title       String
+  vehicle     String   // "Toyota Corolla 2019"
+  commune     String
+  
+  // The story
+  problem     String   @db.Text
+  diagnosis   String   @db.Text
+  solution    String   @db.Text
+  
+  // Results
+  cost        Int
+  duration    Int      // minutes
+  rating      Int      // 5
+  
+  // Media
+  beforePhoto String?
+  afterPhoto  String?
+  
+  // Review
+  reviewId    String?  @unique
+  
+  // Status
+  isPublished Boolean  @default(false)
+  publishedAt DateTime?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([slug])
+  @@index([isPublished])
+}
+
+// ============================================
+// CONFIGURATION
+// ============================================
+
+model SiteConfig {
+  id    String @id @default("site_config")
+  
+  // Contact
+  phone        String
+  whatsapp     String
+  email        String
+  
+  // Address
+  baseAddress  String
+  baseCommune  String
+  
+  // Hours
+  workHours    Json
+  
+  // Social
+  socialLinks  Json
+  
+  // Legal
+  guaranteeDays Int     @default(90)
+  
+  // Booking rules
+  bookingLockMinutes Int @default(8)
+  cancellationHours  Int  @default(3)
+  
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================
+// NOTIFICATIONS / AUDIT LOG
+// ============================================
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  
+  action    String   // "BOOKING_CREATED", "PAYMENT_RECEIVED", etc.
+  entity    String   // "Booking", "Payment", "User"
+  entityId  String
+  
+  // Who did it
+  userId    String?
+  ipAddress String?
+  userAgent String?
+  
+  // What changed
+  oldData   Json?
+  newData   Json?
+  
+  createdAt DateTime @default(now())
+  
+  @@index([entity, entityId])
+  @@index([action])
+  @@index([createdAt])
+}
