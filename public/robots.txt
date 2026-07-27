@@ -1,0 +1,33 @@
+User-Agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /intranet/
+
+User-Agent: GPTBot
+Allow: /
+
+User-Agent: CCBot
+Allow: /
+
+User-Agent: perplexitybot
+Allow: /
+
+User-Agent: Google-Extended
+Disallow: /
+
+User-Agent: anthropic-ai
+Allow: /
+
+User-Agent: Bytespider
+Disallow: /
+
+User-Agent: Applebot
+Allow: /
+
+User-Agent: Applebot-Extended
+Allow: /
+
+Host: https://autofixer.cl
+Sitemap: https://autofixer.cl/sitemap.xml

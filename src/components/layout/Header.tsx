@@ -1,211 +1,113 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useState } from 'react'
-import { Menu, X, ChevronDown } from 'lucide-react'
-import { clsx } from 'clsx'
+import { usePathname } from 'next/navigation'
+import { Menu, X, Phone, Calendar } from 'lucide-react'
 
-const servicios = [
-  { name: 'Diagnóstico', href: '/servicios/diagnostico', price: 'Desde $25.000' },
-  { name: 'Carga de Gas R134a', href: '/servicios/carga-r134a', price: 'Desde $35.000' },
-  { name: 'Carga de Gas R1234yf', href: '/servicios/carga-r1234yf', price: 'Desde $90.000' },
-  { name: 'Sanitización', href: '/servicios/sanitizacion', price: 'Desde $45.000' },
-  { name: 'Reparación', href: '/servicios/reparacion', price: 'Cotizar' },
-  { name: 'Mantenimiento', href: '/servicios/mantenimiento', price: 'Desde $25.000' },
+const navLinks = [
+  { label: 'Inicio', path: '/' },
+  { label: 'Servicios', path: '/servicios' },
+  { label: 'Cómo Trabajamos', path: '/como-trabajamos' },
+  { label: 'Precios', path: '/precios-referenciales' },
+  { label: 'Cobertura', path: '/cobertura' },
+  { label: 'FAQ', path: '/preguntas-frecuentes' },
 ]
 
-const problemas = [
-  { name: 'Aire no enfría', href: '/problemas/aire-no-enfria' },
-  { name: 'Mal olor', href: '/problemas/mal-olor' },
-  { name: 'Ruido extraño', href: '/problemas/ruido' },
-  { name: 'Aire caliente', href: '/problemas/aire-caliente' },
-  { name: 'No funciona', href: '/problemas/no-funciona' },
-]
+function HeaderComponent() {
+  const [isOpen, setIsOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  const pathname = usePathname()
 
-export function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const isActive = (path: string) => {
+    if (path === '/') return pathname === '/'
+    return pathname.startsWith(path)
+  }
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-[72px]">
-          
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">AF</span>
-            </div>
-            <span className="text-xl font-bold text-primary">Autofixer</span>
-          </Link>
+    <>
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-md' : 'bg-white shadow-sm'}`}>
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="flex items-center justify-between h-[72px]">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2 shrink-0">
+              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-orange-500 to-blue-500 flex items-center justify-center">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-white">
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" />
+                  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </div>
+              <span className="font-heading font-extrabold text-xl text-blue-600 tracking-tight">
+                AUTOFIXER
+              </span>
+            </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-8">
-            
-            {/* Servicios Dropdown */}
-            <div 
-              className="relative"
-              onMouseEnter={() => setActiveDropdown('servicios')}
-              onMouseLeave={() => setActiveDropdown(null)}
-            >
-              <button className="flex items-center gap-1 text-gray-700 hover:text-primary transition-colors">
-                Servicios <ChevronDown className="w-4 h-4" />
-              </button>
-              
-              {activeDropdown === 'servicios' && (
-                <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-xl shadow-elevated border border-gray-100 p-4 animate-fade-in">
-                  <div className="space-y-1">
-                    {servicios.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors group"
-                      >
-                        <span className="text-gray-700 group-hover:text-primary font-medium">{item.name}</span>
-                        <span className="text-sm text-secondary">{item.price}</span>
-                      </Link>
-                    ))}
-                  </div>
-                  <div className="mt-4 pt-4 border-t">
-                    <Link href="/servicios" className="btn btn-secondary btn-sm w-full">
-                      Ver todos los servicios
-                    </Link>
-                  </div>
-                </div>
-              )}
+            {/* Desktop Nav */}
+            <div className="hidden lg:flex items-center gap-1">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  href={link.path}
+                  className={`px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${isActive(link.path) ? 'text-blue-600 bg-blue-50' : 'text-gray-900 hover:text-blue-600'}`}
+                >
+                  {link.label}
+                </Link>
+              ))}
             </div>
 
-            {/* Problemas Dropdown */}
-            <div 
-              className="relative"
-              onMouseEnter={() => setActiveDropdown('problemas')}
-              onMouseLeave={() => setActiveDropdown(null)}
-            >
-              <button className="flex items-center gap-1 text-gray-700 hover:text-primary transition-colors">
-                Problemas <ChevronDown className="w-4 h-4" />
-              </button>
-              
-              {activeDropdown === 'problemas' && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-elevated border border-gray-100 p-4 animate-fade-in">
-                  <div className="grid grid-cols-1 gap-1">
-                    {problemas.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className="px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 hover:text-primary font-medium"
-                      >
-                        {item.name}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
+            {/* Desktop CTA */}
+            <div className="hidden lg:flex items-center gap-4">
+              <a href="tel:+56935075600" className="flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">
+                <Phone size={16} />
+                <span>+56 9 3507 5600</span>
+              </a>
+              <a href="https://wa.me/56935075600?text=Hola%20Autofixer,%20quiero%20agendar%20un%20diagn%C3%B3stico%20a%20domicilio" target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold text-sm px-5 py-2.5 rounded-lg shadow-md transition-all duration-300 hover:-translate-y-0.5">
+                <Calendar size={16} />
+                <span>Solicitar Diagnóstico</span>
+              </a>
             </div>
 
-            <Link href="/precios" className="nav-link">
-              Precios
-            </Link>
-            
-            <Link href="/cobertura" className="nav-link">
-              Cobertura
-            </Link>
-            
-            <Link href="/blog" className="nav-link">
-              Blog
-            </Link>
-            
-            <Link href="/nosotros" className="nav-link">
-              Nosotros
-            </Link>
+            {/* Mobile Menu Button */}
+            <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden p-2 rounded-md hover:bg-gray-100 transition-colors" aria-label="Menu">
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </nav>
-
-          {/* CTA Buttons */}
-          <div className="hidden lg:flex items-center gap-4">
-            <a href="tel:+56900000000" className="text-gray-600 hover:text-primary transition-colors">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
-            </a>
-            <Link href="/cotizar" className="btn btn-secondary">
-              Cotizar Ahora
-            </Link>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="lg:hidden p-2 text-gray-600"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
         </div>
-      </div>
+      </header>
 
       {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div className="lg:hidden border-t border-gray-100 bg-white animate-slide-up">
-          <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
-            
-            {/* Mobile Servicios */}
-            <div>
-              <h3 className="font-semibold text-gray-900 mb-3">Servicios</h3>
-              <div className="space-y-1">
-                {servicios.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className="block px-4 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Mobile Problemas */}
-            <div>
-              <h3 className="font-semibold text-gray-900 mb-3">Problemas</h3>
-              <div className="space-y-1">
-                {problemas.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className="block px-4 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Mobile Links */}
-            <div className="space-y-1">
-              <Link href="/precios" className="block px-4 py-2 text-gray-600 hover:text-primary" onClick={() => setIsMenuOpen(false)}>
-                Precios
+      {isOpen && (
+        <div className="lg:hidden fixed inset-0 top-[72px] bg-white z-40 overflow-y-auto">
+          <div className="flex flex-col p-6 gap-2">
+            {navLinks.map((link) => (
+              <Link key={link.path} href={link.path}
+                className={`px-4 py-3 text-base font-medium rounded-lg transition-colors ${isActive(link.path) ? 'text-blue-600 bg-blue-50' : 'text-gray-900 hover:bg-gray-50'}`}>
+                {link.label}
               </Link>
-              <Link href="/cobertura" className="block px-4 py-2 text-gray-600 hover:text-primary" onClick={() => setIsMenuOpen(false)}>
-                Cobertura
-              </Link>
-              <Link href="/blog" className="block px-4 py-2 text-gray-600 hover:text-primary" onClick={() => setIsMenuOpen(false)}>
-                Blog
-              </Link>
-              <Link href="/nosotros" className="block px-4 py-2 text-gray-600 hover:text-primary" onClick={() => setIsMenuOpen(false)}>
-                Nosotros
-              </Link>
-            </div>
-
-            {/* Mobile CTA */}
-            <div className="pt-4 border-t">
-              <Link href="/cotizar" className="btn btn-secondary w-full" onClick={() => setIsMenuOpen(false)}>
-                Cotizar Ahora
-              </Link>
+            ))}
+            <div className="mt-6 flex flex-col gap-3">
+              <a href="tel:+56935075600" className="flex items-center justify-center gap-2 text-blue-600 font-semibold py-3 border-2 border-blue-600 rounded-lg">
+                <Phone size={18} /><span>Llamar Ahora</span>
+              </a>
+              <a href="https://wa.me/56935075600?text=Hola%20Autofixer,%20quiero%20agendar%20un%20diagn%C3%B3stico%20a%20domicilio" target="_blank" rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 bg-green-500 text-white font-semibold py-3 rounded-lg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                <span>WhatsApp Ahora</span>
+              </a>
             </div>
           </div>
         </div>
       )}
-    </header>
+    </>
   )
 }
+
+export { HeaderComponent as Header }
+export default HeaderComponent

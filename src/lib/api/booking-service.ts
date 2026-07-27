@@ -5,7 +5,7 @@
 
 import { api } from './client'
 
-export type BookingStatus = 
+export type BookingStatus =
   | 'PENDING'
   | 'CONFIRMED'
   | 'IN_PROGRESS'
@@ -39,13 +39,9 @@ export interface Client {
   phone: string
 }
 
-export interface BookingService {
+export interface BookingServiceItem {
   serviceId: string
-  service: {
-    id: string
-    name: string
-    type: string
-  }
+  service: { id: string; name: string; type: string }
   quantity: number
   unitPrice: number
   totalPrice: number
@@ -59,8 +55,6 @@ export interface Booking {
   vehicleId?: string
   technicianId?: string
   addressId?: string
-  
-  // Address details
   street?: string
   number?: string
   department?: string
@@ -68,8 +62,6 @@ export interface Booking {
   lat?: number
   lng?: number
   reference?: string
-  
-  // Pricing
   laborCost: number
   partsCost: number
   materialsCost: number
@@ -78,30 +70,17 @@ export interface Booking {
   subtotal: number
   tax: number
   total: number
-  
-  // Scheduling
   scheduledDate: string
   scheduledTime: string
   estimatedDurationMinutes: number
   serviceStartTime?: string
   serviceEndTime?: string
-  
-  // Status
   status: BookingStatus
-  statusHistory?: Array<{
-    status: string
-    timestamp: string
-    userId?: string
-    note?: string
-  }>
-  
-  // Relations
+  statusHistory?: Array<{ status: string; timestamp: string; userId?: string; note?: string }>
   vehicle?: Vehicle
   client?: Client
   technician?: Technician
-  services?: BookingService[]
-  
-  // Metadata
+  services?: BookingServiceItem[]
   createdAt: string
   updatedAt: string
 }
@@ -125,96 +104,42 @@ export interface CreateBookingData {
   scheduledDate: string
   scheduledTime: string
   estimatedDurationMinutes: number
-  services?: {
-    serviceId: string
-    quantity?: number
-    unitPrice: number
-    totalPrice: number
-    notes?: string
-  }[]
+  services?: { serviceId: string; quantity?: number; unitPrice: number; totalPrice: number; notes?: string }[]
 }
 
 export interface PaginatedResponse<T> {
   data: T[]
-  meta: {
-    total: number
-    page: number
-    limit: number
-    totalPages: number
-  }
+  meta: { total: number; page: number; limit: number; totalPages: number }
+}
+
+export interface PublicBookingData {
+  vehicleType: string
+  commune: string
+  vehicleBrand: string
+  vehicleModel: string
+  vehicleYear: string
+  name: string
+  clientEmail: string
+  clientPhone: string
+  date: string
+  time: string
+  notes: string
+  address: string
+  refrigerantType: string
+  symptoms: string[]
 }
 
 export class BookingService {
-  /**
-   * Create a new booking
-   */
-  async create(data: CreateBookingData): Promise<Booking> {
-    return api.createBooking(data)
-  }
-
-  /**
-   * Get booking by ID
-   */
-  async getById(id: string): Promise<Booking> {
-    return api.getBooking(id)
-  }
-
-  /**
-   * Get booking by booking number
-   */
-  async getByNumber(bookingNumber: string): Promise<Booking> {
-    return api.getBookingByNumber(bookingNumber)
-  }
-
-  /**
-   * Get all bookings with pagination and filters
-   */
-  async getAll(params?: {
-    page?: number
-    limit?: number
-    status?: BookingStatus
-    fromDate?: string
-    toDate?: string
-  }): Promise<PaginatedResponse<Booking>> {
-    return api.getBookings(params) as Promise<PaginatedResponse<Booking>>
-  }
-
-  /**
-   * Get my bookings (for authenticated client)
-   */
-  async getMyBookings(params?: {
-    page?: number
-    limit?: number
-    status?: BookingStatus
-  }): Promise<PaginatedResponse<Booking>> {
-    return api.getBookings(params) as Promise<PaginatedResponse<Booking>>
-  }
-
-  /**
-   * Update booking
-   */
-  async update(id: string, data: Partial<CreateBookingData>): Promise<Booking> {
-    return api.updateBooking(id, data) as Promise<Booking>
-  }
-
-  /**
-   * Cancel booking
-   */
-  async cancel(id: string, reason?: string): Promise<Booking> {
-    return api.cancelBooking(id, reason) as Promise<Booking>
-  }
-
-  /**
-   * Get available time slots for a specific date
-   */
-  async getAvailableSlots(date: string, technicianId?: string): Promise<string[]> {
-    // TODO: Implement when scheduling service is ready
-    // For now, return mock data
-    const slots: string[] = []
-    for (let hour = 8; hour <= 18; hour++) {
-      slots.push(`${hour.toString().padStart(2, '0')}:00`)
-    }
-    return slots
+  async createPublic(data: PublicBookingData): Promise<any> { return api.createPublicBooking(data as any) }
+  async create(data: any): Promise<any> { return api.createBooking(data) }
+  async getById(id: string): Promise<any> { return api.getBooking(id) }
+  async getByNumber(bookingNumber: string): Promise<any> { return api.getBookingByNumber(bookingNumber) }
+  async getAll(params?: { page?: number; limit?: number; status?: BookingStatus; fromDate?: string; toDate?: string }): Promise<any> { return api.getBookings(params) }
+  async getMyBookings(params?: { page?: number; limit?: number; status?: BookingStatus }): Promise<any> { return api.getBookings(params) }
+  async update(id: string, data: any): Promise<any> { return api.updateBooking(id, data) }
+  async cancel(id: string, reason?: string): Promise<any> { return api.cancelBooking(id, reason) }
+  async getAvailableSlots(date: string, commune: string): Promise<any[]> {
+    return api.getAvailableSlots(date, commune)
   }
 }
 

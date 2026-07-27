@@ -43,7 +43,6 @@ export function calculateDisplacementFee(communeSlug: string): number {
     // Poniente
     'pudahuel': 15000,
     'cerro-navia': 15000,
-    'renca': 15000,
     'quilicura': 20000,
   }
   

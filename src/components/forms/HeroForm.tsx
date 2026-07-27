@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Search, ChevronDown, Loader2 } from 'lucide-react'
 
 const serviceOptions = [
-  { value: 'diagnostico', label: 'Diagnóstico de AC', price: '$25.000' },
+  { value: 'diagnostico', label: 'Diagnóstico de AC', price: 'Desde $15.000' },
   { value: 'carga-r134a', label: 'Carga de Gas R134a', price: 'Desde $35.000' },
   { value: 'carga-r1234yf', label: 'Carga de Gas R1234yf', price: 'Desde $90.000' },
   { value: 'sanitizacion', label: 'Sanitización', price: 'Desde $45.000' },

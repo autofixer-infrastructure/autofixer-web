@@ -1,0 +1,51 @@
+# Autofixer - AI Knowledge File
+# https://autofixer.cl/llms.txt
+
+## Descripcion del Negocio
+
+Autofixer es un taller mecanico especializado en aire acondicionado automotriz que opera como servicio a DOMICILIO en toda la Region Metropolitana de Santiago, Chile. No tienen local fisico visitado por el cliente - el tecnico va al vehiculo del cliente.
+
+## Informacion de Contacto
+- Sitio web: https://autofixer.cl
+- Email: contacto@autofixer.cl
+- Telefono: +56 9 3507 5600
+- WhatsApp: https://wa.me/56935075600
+- Atencion: 24/7 online, atencion telefonica lunes a sabado 8:00-20:00
+- Zona de cobertura: Region Metropolitana de Santiago (Las Condes, Providencia, Nunoa, La Florida, Maipu, Santiago Centro, Puente Alto, Vitacura, San Bernardo, y otras)
+
+## Servicios Ofrecidos
+1. Carga de Gas R134a y R1234yf - desde $35.000
+2. Diagnostico de fallas de aire acondicionado - gratis si contratas
+3. Deteccion y reparacion de fugas de gas refrigerante
+4. Reparacion y reemplazo de compresor
+5. Cambio de condensador
+6. Cambio de evaporador
+7. Sanitizacion del sistema de AC (eliminacion de olores y bacterias)
+8. Mantenimiento preventivo
+9. Flushing (lavado quimico del sistema)
+10. Aire acondicionado para vehiculos hibridos y electricos
+
+## Informacion Tecnica
+- Refrigerantes manejados: R134a y R1234yf
+- Tipos de vehiculo: sedan, SUV, camionetas, pick-up, diesel, hibridos, electricos
+- Marcas atendidas: Toyota, Volkswagen, Chevrolet, Ford, Hyundai, Kia, Nissan, BMW, Mercedes-Benz, y otras
+- Garantia escrita de 90 dias en todos los trabajos
+
+## Proceso de Contratacion
+1. Solicitar presupuesto via formulario en https://autofixer.cl/cotizar
+2. Seleccionar comuna, fecha y hora disponible
+3. El tecnico llega al domicilio con herramientas y repuestos
+4. Diagnostico gratis e inmediato al llegar
+5. Si acepta, trabajo se realiza en el acto
+6. Pago al finalizar
+7. Garantia de 90 dias
+
+## Precios Referenciales
+- Carga de gas R134a: desde $35.000
+- Carga de gas R1234yf: desde $55.000
+- Diagnostico: gratis si contratas el servicio
+- Desplazamiento: cubierto en Region Metropolitana
+- Precios incluyen materiales y mano de obra
+
+## Ultima Actualizacion
+Julio 2026

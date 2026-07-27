@@ -1,270 +1,132 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
-import { 
-  Wind, 
-  Car, 
-  Wrench, 
-  Shield, 
-  Sparkles,
-  CheckCircle,
-  ArrowRight,
-  Clock,
-  MapPin
-} from 'lucide-react'
-import { ServiceSchema, FAQSchema } from '@/components/layout/SchemaMarkup'
-import { formatPrice, getServiceDurationText } from '@/lib/utils'
-import { services } from '@/lib/db/services'
+import { CheckCircle, ArrowRight, Truck, Shield, Phone } from 'lucide-react'
+import { ScrollReveal } from '@/components/ScrollReveal'
 
-// Icons mapping
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  'Wind': Wind,
-  'Car': Car,
-  'Wrench': Wrench,
-  'Shield': Shield,
-  'Sparkles': Sparkles,
-  'Search': Wind,
+export const metadata: Metadata = {
+  title: 'Servicios de Aire Acondicionado Automotriz a Domicilio en Santiago',
+  description: 'Diagnóstico, carga de gas, sanitización y reparación de aire acondicionado automotriz a domicilio en Santiago. Especialistas en R134a, R1234yf, compresor y más. Garantía 90 días.',
+  keywords: ['servicio aire acondicionado automotriz Santiago', 'reparación A/C auto domicilio', 'mantenimiento aire acondicionado auto'],
+  alternates: { canonical: 'https://autofixer.cl/servicios' },
 }
 
-export const metadata = {
-  title: 'Servicios de Aire Acondicionado Automotriz | Autofixer',
-  description: 'Diagnóstico, carga de gas, sanitización y reparación de aire acondicionado automotriz. Técnicos certificados a domicilio en toda la Región Metropolitana.',
-}
+const services = [
+  { id: 'carga-gas', title: 'Carga de Gas Refrigerante', subtitle: 'R134a y R1234yf', desc: 'Recarga con gas puro certificado. Diagnóstico de presión y verificación completa del sistema.', price: 'R134a desde $35.000', href: '/servicios/carga-gas', popular: true },
+  { id: 'diagnostico', title: 'Diagnóstico Profesional', subtitle: 'Con equipos digitales', desc: 'Escáner electrónico, manómetros digitales y detector de fugas UV. Exactamente identificamos el problema.', price: 'Desde $15.000', href: '/servicios/diagnostico', popular: true },
+  { id: 'fugas', title: 'Detección y Reparación de Fugas', subtitle: 'Electrónica + profesional', desc: 'Localización de alta sensibilidad. Sellado de conexiones o reemplazo de componentes según sea necesario.', price: 'Desde $45.000', href: '/servicios/deteccion-reparacion-fugas', popular: false },
+  { id: 'compresor', title: 'Reparación de Compresor', subtitle: 'Cambio de embrague o compresor', desc: 'Diagnóstico completo, cambio de embrague electromagnético o reemplazo total del compresor con repuesto.', price: 'Desde $180.000', href: '/servicios/reparacion-compresor', popular: false },
+  { id: 'sanitizacion', title: 'Sanitización del Sistema', subtitle: 'Eliminación de hongos y olores', desc: 'Limpieza antibacterial profunda del evaporador y conductos. Elimina malos olores y mejora la calidad del aire.', price: 'Desde $35.000', href: '/servicios/sanitizacion', popular: false },
+  { id: 'condensador', title: 'Cambio de Condensador', subtitle: 'Repuesto + instalación', desc: 'Reparación de aletas dañadas o reemplazo completo del condensador. Incluye carga de gas posterior.', price: 'Desde $120.000', href: '/servicios/cambio-condensador', popular: false },
+  { id: 'evaporador', title: 'Cambio de Evaporador', subtitle: 'Repuesto original + instalación', desc: 'Reemplazo profesional del evaporador. Incluye diagnóstico, instalación y verificación del sistema completo.', price: 'Desde $120.000', href: '/servicios/cambio-evaporador', popular: false },
+  { id: 'mantencion', title: 'Mantención Preventiva', subtitle: 'Revisión completa anual', desc: 'Inspección completa del sistema de climatización. Limpieza, verificación de mangueras, conexiones y gas.', price: 'Desde $25.000', href: '/servicios/mantenimiento-preventivo', popular: false },
+  { id: 'flushing', title: 'Flushing del Sistema', subtitle: 'Limpieza interna profunda', desc: 'Eliminación de residuos, ácidos y humedad del sistema. Recomendado antes de una recarga después de una reparación.', price: 'Desde $25.000', href: '/servicios/flushing', popular: false },
+  { id: 'hibrido', title: 'Aire Híbrido y Eléctrico', subtitle: 'Especialistas en EVs', desc: 'Servicio especializado para vehículos híbridos y eléctricos. Carga de gas R1234yf y diagnóstico de sistemas de climatización de alta tensión.', price: 'Desde $90.000', href: '/servicios/aire-electrico-hibrido', popular: false },
+]
 
-// FAQ Schema
 const faqs = [
-  {
-    question: '¿Qué incluye el diagnóstico de aire acondicionado?',
-    answer: 'El diagnóstico incluye revisión visual de todos los componentes, medición de presiones del sistema, revisión de compresor, condensador, evaporador y tuberías. Te entregamos un informe completo del estado de tu sistema.'
-  },
-  {
-    question: '¿Cuánto dura el servicio de carga de gas?',
-    answer: 'La carga de gas refrigerante tiene una duración aproximada de 60-90 minutos dependiendo del vehículo y el tipo de problema. Si se requiere diagnóstico adicional, puede tomar más tiempo.'
-  },
-  {
-    question: '¿Qué es el gas R1234yf y cuándo se usa?',
-    answer: 'El R1234yf es el nuevo gas refrigerante requerido para vehículos desde 2017 en adelante. Es más amigable con el medio ambiente y requiere equipamiento especializado. El costo es mayor debido al precio del gas.'
-  },
-  {
-    question: '¿La sanitización elimina todos los olores?',
-    answer: 'La sanitización profesional elimina el 99.9% de bacterias, hongos y ácaros del sistema. Es muy efectiva para olores por humedad o moho. En casos severos puede requerir un segundo tratamiento.'
-  },
-  {
-    question: '¿Qué incluye la garantía de 90 días?',
-    answer: 'La garantía cubre cualquier falla relacionada directamente con el trabajo realizado. Si el problema original reaparece o hay una fuga derivada del servicio, volvemos sin costo adicional.'
-  }
+  { q: '¿Qué servicios ofrecen?', a: 'Somos especialistas exclusivos en aire acondicionado automotriz: carga de gas (R134a y R1234yf), diagnóstico profesional, detección de fugas, reparación y cambio de compresor, sanitización, cambio de condensador y evaporador, mantención preventiva y flushing. Todo a domicilio en Santiago.' },
+  { q: '¿Cubren todas las comunas de Santiago?', a: 'Sí. Trabajamos en todas las comunas de la Región Metropolitana, desde Las Condes y Vitacura en el nororiente hasta San Bernardo y Puente Alto en el sur. El desplazamiento tiene un costo según la zona.' },
+  { q: '¿Cómo funciona el servicio a domicilio?', a: 'Contactas por WhatsApp o formulario, te entregamos un presupuesto cerrado, confirmamos la hora y el técnico llega a tu ubicación con todo el equipamiento. El trabajo se hace ahí mismo sin mover el vehículo.' },
+  { q: '¿Qué garantía tienen?', a: 'Todos los servicios incluyen garantía escrita de 90 días por mano de obra. Si hay algún problema relacionado con nuestro trabajo, lo resolvemos sin costo adicional.' },
 ]
 
-// Benefits
-const benefits = [
-  'Técnicos certificados con experiencia',
-  'Equipamiento profesional de última generación',
-  'Diagnóstico sin costo adicional si no hay reparación',
-  'Garantía escrita de 90 días',
-  'Precios transparentes sin costos ocultos',
-  'Atención a domicilio en toda la RM',
-]
-
-export default function ServicesPage() {
+export default function ServiciosPage() {
   return (
-    <>
-      <ServiceSchema services={services.map(s => ({ name: s.name, price: s.basePrice }))} />
-      <FAQSchema faqs={faqs} />
-      
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-primary to-primary-600 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <span className="badge bg-white/10 text-white mb-4">Nuestros Servicios</span>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Servicio Profesional de Aire Acondicionado Automotriz
-            </h1>
-            <p className="text-xl text-white/80 mb-8">
-              Diagnóstico, carga de gas, sanitización y reparación. 
-              Todos los servicios incluyen garantía de 90 días y atención a domicilio.
-            </p>
-          </div>
-        </div>
-      </section>
+    <div className='min-h-screen bg-gray-50'>
 
-      {/* Benefits Bar */}
-      <section className="bg-gray-50 border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {benefits.map((benefit, index) => (
-              <div key={index} className="flex items-center gap-2 text-sm">
-                <CheckCircle className="w-5 h-5 text-secondary flex-shrink-0" />
-                <span className="text-gray-700">{benefit}</span>
-              </div>
-            ))}
+      {/* Hero */}
+      <section className='bg-gradient-to-br from-blue-900 to-indigo-900 text-white py-16 md:py-24'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center'>
+          <h1 className='text-4xl md:text-5xl font-bold mb-6'>
+            Servicios de Aire Acondicionado Automotriz a Domicilio en Santiago
+          </h1>
+          <p className='text-xl text-blue-100 mb-8 max-w-2xl mx-auto'>
+            Diagnóstico, carga de gas, sanitización y reparación.
+            Todos los servicios incluyen garantía de 90 días y atención a domicilio.
+          </p>
+          <div className='flex flex-wrap justify-center gap-4 text-sm'>
+            <div className='flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg'><Truck className='w-4 h-4 text-amber-400' /><span>A domicilio en toda RM</span></div>
+            <div className='flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg'><Shield className='w-4 h-4 text-amber-400' /><span>Garantía 90 días</span></div>
+            <div className='flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg'><CheckCircle className='w-4 h-4 text-amber-400' /><span>Técnicos certificados</span></div>
           </div>
         </div>
       </section>
 
       {/* Services Grid */}
-      <section className="section">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map((service) => {
-              const Icon = iconMap[service.icon || 'Wind']
-              
-              return (
-                <div key={service.id} className="card card-hover p-8 flex flex-col">
-                  <div className="service-card-icon mb-6">
-                    <Icon className="w-8 h-8" />
-                  </div>
-                  
-                  <h2 className="text-2xl font-bold text-gray-900 mb-3">
-                    {service.name}
-                  </h2>
-                  
-                  <p className="text-gray-600 mb-6 flex-grow">
-                    {service.description}
-                  </p>
-                  
-                  {/* Meta info */}
-                  <div className="flex flex-wrap gap-4 mb-6 text-sm text-gray-500">
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      <span>{getServiceDurationText(service.duration)}</span>
-                    </div>
-                    {service.refrigerantType && (
-                      <div className="flex items-center gap-1">
-                        <Sparkles className="w-4 h-4" />
-                        <span>Gas {service.refrigerantType}</span>
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Price */}
-                  <div className="pt-6 border-t border-gray-100">
-                    <div className="flex items-baseline gap-2 mb-4">
-                      <span className="text-3xl font-bold text-primary">
-                        {service.basePrice > 0 ? formatPrice(service.basePrice) : 'Cotizar'}
-                      </span>
-                      {service.maxPrice && (
-                        <span className="text-gray-500">
-                          - {formatPrice(service.maxPrice)}
-                        </span>
-                      )}
-                    </div>
-                    
-                    <div className="flex gap-3">
-                      <Link 
-                        href={`/servicios/${service.slug}`}
-                        className="btn btn-outline flex-1"
-                      >
-                        Ver Detalles
-                      </Link>
-                      <Link 
-                        href={`/cotizar?service=${service.slug}`}
-                        className="btn btn-secondary flex-1"
-                      >
-                        Cotizar
-                      </Link>
-                    </div>
-                  </div>
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16'>
+        <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
+          {services.map((service) => (
+            <ScrollReveal key={service.id}>
+              <Link
+                href={service.href}
+                className='group bg-white rounded-2xl p-6 shadow-card hover:shadow-elevated transition-all border border-gray-100 h-full flex flex-col'
+              >
+                {service.popular && <div className='bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full w-fit mb-3'>Más solicitado</div>}
+                <h3 className='text-xl font-bold text-gray-900 mb-1'>{service.title}</h3>
+                <p className='text-sm text-secondary font-medium mb-3'>{service.subtitle}</p>
+                <p className='text-gray-600 text-sm mb-4 flex-1'>{service.desc}</p>
+                <div className='flex items-center justify-between'>
+                  <span className='text-sm font-semibold text-blue-900'>{service.price}</span>
+                  <ArrowRight className='w-5 h-5 text-gray-400 group-hover:text-secondary group-hover:translate-x-1 transition-all' />
                 </div>
-              )
-            })}
+              </Link>
+            </ScrollReveal>
+          ))}
+        </div>
+      </div>
+
+      {/* Problemas CTA */}
+      <section className='py-16 bg-white'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <div className='bg-gradient-to-r from-blue-900 to-indigo-900 rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-8'>
+            <div className='flex-1 text-white'>
+              <h2 className='text-3xl font-bold mb-4'>¿No sabes qué servicio necesitas?</h2>
+              <p className='text-blue-100 mb-6'>Revisa los problemas más comunes del aire acondicionado automotriz y encuentra la solución que corresponde.</p>
+              <Link href='/problemas' className='inline-flex items-center gap-2 bg-white text-blue-900 px-6 py-3 rounded-xl font-semibold hover:bg-amber-500 hover:text-white transition-colors'>
+                Ver problemas comunes <ArrowRight className='w-5 h-5' />
+              </Link>
+            </div>
+            <div className='flex gap-4 text-6xl'><span>❄️</span><span>🌡️</span><span>🔧</span></div>
           </div>
         </div>
       </section>
 
-      {/* Refrigerant Info */}
-      <section className="section section-alt">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              ¿Qué Tipo de Gas Usa tu Vehículo?
-            </h2>
-            <p className="text-lg text-gray-600">
-              La mayoría de los vehículos fabricados antes de 2017 usan gas R134a, 
-              mientras que los modelos más nuevos usan R1234yf.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div className="card p-8">
-              <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mb-6">
-                <Car className="w-8 h-8 text-blue-600" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Gas R134a
-              </h3>
-              <p className="text-gray-600 mb-4">
-                Vehículos anteriores a 2017. Gas más común y económico.
-              </p>
-              <ul className="space-y-2 text-gray-600 mb-6">
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-secondary" />
-                  Costo promedio: $35.000 - $70.000
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-secondary" />
-                  Disponible en la mayoría de talleres
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-secondary" />
-                  Más de 20 años en el mercado
-                </li>
-              </ul>
-              <Link href="/servicios/carga-gas" className="btn btn-outline w-full">
-                Carga R134a - Desde $35.000
-              </Link>
-            </div>
-            
-            <div className="card p-8 border-2 border-secondary/30 bg-gradient-to-br from-white to-secondary/5">
-              <div className="w-16 h-16 rounded-full bg-secondary/20 flex items-center justify-center mb-6">
-                <Sparkles className="w-8 h-8 text-secondary" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Gas R1234yf
-              </h3>
-              <p className="text-gray-600 mb-4">
-                Vehículos desde 2017. Gas ecológico de última generación.
-              </p>
-              <ul className="space-y-2 text-gray-600 mb-6">
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-secondary" />
-                  Costo promedio: $90.000+
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-secondary" />
-                  99.9% menor impacto ambiental
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-secondary" />
-                  Equipamiento especializado requerido
-                </li>
-              </ul>
-              <Link href="/servicios/carga-gas" className="btn btn-secondary w-full">
-                Carga R1234yf - Desde $90.000
-              </Link>
-            </div>
+      {/* FAQ */}
+      <section className='py-16'>
+        <div className='max-w-3xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <ScrollReveal><h2 className='text-3xl font-bold text-gray-900 text-center mb-8'>Preguntas frecuentes</h2></ScrollReveal>
+          <div className='space-y-3'>
+            {faqs.map((faq, idx) => (
+              <details key={idx} className='bg-white rounded-xl group'>
+                <summary className='flex items-center justify-between p-6 cursor-pointer list-none'>
+                  <span className='font-bold text-gray-900'>{faq.q}</span>
+                  <svg className='w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M19 9l-7 7-7-7' /></svg>
+                </summary>
+                <div className='px-6 pb-6 pt-0 text-gray-600 border-t border-gray-100'>{faq.a}</div>
+              </details>
+            ))}
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="section section-gradient text-center">
-        <div className="max-w-3xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            ¿No Sabes Qué Servicio Necesitas?
-          </h2>
-          <p className="text-xl text-white/80 mb-8">
-            Llámanos o escríbenos por WhatsApp y te orientamos sin costo.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/cotizar" className="btn bg-white text-primary hover:bg-gray-100 btn-lg">
-              Usar Cotizador Online
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-            <a href="tel:+56900000000" className="btn btn-outline border-white text-white hover:bg-white hover:text-primary btn-lg">
-              <MapPin className="w-5 h-5" />
-              Llamar Ahora
-            </a>
+      <section className='py-16'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <div className='bg-gradient-to-r from-blue-900 to-indigo-900 rounded-2xl p-8 md:p-12 text-center'>
+            <h2 className='text-3xl font-bold text-white mb-4'>¿Necesitas servicio de aire acondicionado?</h2>
+            <p className='text-blue-100 mb-8 max-w-2xl mx-auto'>Contáctanos por WhatsApp y te ayudamos a identificar qué servicio necesitas. Diagnóstico gratis si contratas.</p>
+            <div className='flex flex-col sm:flex-row gap-4 justify-center'>
+              <a href='https://wa.me/56935075600?text=Hola%2C%20necesito%20información%20sobre%20servicios%20de%20aire%20acondicionado' className='inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-semibold transition-colors'>
+                <Phone className='w-5 h-5' />Hablar por WhatsApp
+              </a>
+              <Link href='/precios-referenciales' className='inline-flex items-center justify-center gap-2 border-2 border-white text-white hover:bg-white hover:text-blue-900 px-8 py-4 rounded-xl font-semibold transition-colors'>
+                Ver precios referenciales
+              </Link>
+            </div>
           </div>
         </div>
       </section>
-    </>
+
+    </div>
   )
 }

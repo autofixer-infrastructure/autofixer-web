@@ -2,11 +2,11 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { 
-  CheckCircle, 
-  Clock, 
-  MapPin, 
-  Shield, 
+import {
+  CheckCircle,
+  Clock,
+  MapPin,
+  Shield,
   ChevronRight,
   ChevronLeft,
   Loader2,
@@ -14,44 +14,43 @@ import {
   Calendar,
   AlertCircle
 } from 'lucide-react'
-import { formatPrice, calculateDisplacementFee, generateTimeSlots } from '@/lib/utils'
-import { quoteService, SERVICE_TYPE_MAP, VEHICLE_TYPE_MAP } from '@/lib/api/quote-service'
-import { bookingService } from '@/lib/api/booking-service'
+import { formatPrice, calculateDisplacementFee } from '@/lib/utils'
+import { api, quoteService, bookingService } from '@/lib/api'
 
 // Service options
 const serviceOptions = [
-  { 
-    value: 'diagnostico', 
-    label: 'Diagnóstico de AC', 
+  {
+    value: 'diagnostico',
+    label: 'Diagnóstico de AC',
     price: 25000,
     duration: 60,
     description: 'Revisión completa del sistema'
   },
-  { 
-    value: 'carga-r134a', 
-    label: 'Carga de Gas R134a', 
+  {
+    value: 'carga-r134a',
+    label: 'Carga de Gas R134a',
     price: 35000,
     maxPrice: 70000,
     duration: 90,
     description: 'Para vehículos anteriores a 2017'
   },
-  { 
-    value: 'carga-r1234yf', 
-    label: 'Carga de Gas R1234yf', 
+  {
+    value: 'carga-r1234yf',
+    label: 'Carga de Gas R1234yf',
     price: 90000,
     duration: 90,
     description: 'Para vehículos desde 2017'
   },
-  { 
-    value: 'sanitizacion-sedan', 
-    label: 'Sanitización Sedán', 
+  {
+    value: 'sanitizacion-sedan',
+    label: 'Sanitización Sedán',
     price: 45000,
     duration: 45,
     description: 'Eliminación de hongos y malos olores'
   },
-  { 
-    value: 'sanitizacion-suv', 
-    label: 'Sanitización SUV/Camioneta', 
+  {
+    value: 'sanitizacion-suv',
+    label: 'Sanitización SUV/Camioneta',
     price: 55000,
     duration: 45,
     description: 'Para vehículos más grandes'
@@ -69,15 +68,42 @@ const vehicleTypes = [
 
 // Popular communes
 const popularCommunes = [
-  'Providencia', 'Las Condes', 'Ñuñoa', 'Santiago Centro', 
-  'La Florida', 'Maipú', 'Vitacura', 'La Reina',
-  'Peñalolén', 'Puente Alto', 'San Bernardo'
+  'Providencia', 'Las Condes', 'Nuñoa', 'Santiago Centro',
+  'La Florida', 'Maipu', 'Vitacura', 'La Reina',
+  'Penalolen', 'Puente Alto', 'San Bernardo', 'Recoleta',
+  'Independencia', 'Santiago', 'Macul', 'Pudahuel',
+  'Quilicura', 'Lampa', 'Colina', 'Chicureo',
 ]
 
-// Time slots
-const timeSlots = generateTimeSlots(8, 18, 60)
-
 type Step = 1 | 2 | 3 | 4
+
+function normalizeCommune(name: string): string {
+  const map: Record<string, string> = {
+    'nuñoa': 'Nuñoa',
+    'ñuñoa': 'Nuñoa',
+    'las condes': 'Las Condes',
+    'la florida': 'La Florida',
+    'santiago centro': 'Santiago Centro',
+    'santiago': 'Santiago',
+    'macul': 'Macul',
+    'la reina': 'La Reina',
+    'vitacura': 'Vitacura',
+    'providencia': 'Providencia',
+    'penalolen': 'Peñalolen',
+    'puente alto': 'Puente Alto',
+    'san bernardo': 'San Bernardo',
+    'recoleta': 'Recoleta',
+    'independencia': 'Independencia',
+    'pudahuel': 'Pudahuel',
+    'quilicura': 'Quilicura',
+    'lampe': 'Lampa',
+    'colina': 'Colina',
+    'chicureo': 'Chicureo',
+    'maipu': 'Maipú',
+  }
+  const normalized = name.toLowerCase().replace(/[ñ]/g, 'n').trim()
+  return map[normalized] || name
+}
 
 function CotizarForm() {
   const searchParams = useSearchParams()
@@ -86,7 +112,7 @@ function CotizarForm() {
   const [error, setError] = useState<string | null>(null)
   const [quoteId, setQuoteId] = useState<string | null>(null)
   const [bookingNumber, setBookingNumber] = useState<string | null>(null)
-  
+
   // Form state
   const [formData, setFormData] = useState({
     service: '',
@@ -101,21 +127,29 @@ function CotizarForm() {
     date: '',
     time: '',
     notes: '',
+    address: '',
+    refrigerantType: '',
+    symptoms: [] as string[],
   })
-  
+
   // Calculated pricing from API
   const [calculatedQuote, setCalculatedQuote] = useState<any>(null)
-  
+
+  // Slots from backend
+  const [availableSlots, setAvailableSlots] = useState<{ time: string; available: boolean }[]>([])
+  const [loadingSlots, setLoadingSlots] = useState(false)
+  const [slotsError, setSlotsError] = useState<string | null>(null)
+
   // Calculate totals (fallback to frontend calculation if API not available)
   const selectedService = serviceOptions.find(s => s.value === formData.service)
-  const displacementFee = calculatedQuote?.pricing?.travelCost 
+  const displacementFee = calculatedQuote?.pricing?.travelCost
     || calculateDisplacementFee(formData.commune.toLowerCase().replace(/ /g, '-'))
-  const servicePrice = calculatedQuote?.pricing?.laborCost 
-    || calculatedQuote?.pricing?.subtotal 
-    || selectedService?.price 
+  const servicePrice = calculatedQuote?.pricing?.laborCost
+    || calculatedQuote?.pricing?.subtotal
+    || selectedService?.price
     || 0
   const total = calculatedQuote?.pricing?.total || (servicePrice + displacementFee)
-  
+
   // Pre-fill from URL params
   useEffect(() => {
     const service = searchParams.get('service')
@@ -123,14 +157,38 @@ function CotizarForm() {
       setFormData(prev => ({ ...prev, service }))
     }
   }, [searchParams])
-  
+
   // Calculate quote when service/vehicle/commune changes
   useEffect(() => {
     if (formData.service && formData.vehicleType && formData.commune) {
       calculateQuote()
     }
   }, [formData.service, formData.vehicleType, formData.commune])
-  
+
+  // Fetch available slots when date + commune change in step 3
+  useEffect(() => {
+    if (step === 3 && formData.date && formData.commune) {
+      fetchSlots()
+    }
+  }, [step, formData.date, formData.commune])
+
+  const fetchSlots = async () => {
+    if (!formData.date || !formData.commune) return
+    setLoadingSlots(true)
+    setSlotsError(null)
+    try {
+      const normalizedCommune = normalizeCommune(formData.commune)
+      const slots = await bookingService.getAvailableSlots(formData.date, normalizedCommune)
+      setAvailableSlots(slots)
+    } catch (err) {
+      console.warn('Slots API error:', err)
+      setSlotsError('No se pudieron cargar los horarios disponibles.')
+      setAvailableSlots([])
+    } finally {
+      setLoadingSlots(false)
+    }
+  }
+
   // Calculate quote via API
   const calculateQuote = async () => {
     try {
@@ -141,12 +199,11 @@ function CotizarForm() {
       })
       setCalculatedQuote(result)
     } catch (err) {
-      // Fallback to frontend calculation
       console.warn('Quote API not available, using frontend calculation')
       setCalculatedQuote(null)
     }
   }
-  
+
   // Navigation
   const canProceed = () => {
     switch (step) {
@@ -156,24 +213,24 @@ function CotizarForm() {
       default: return true
     }
   }
-  
+
   const handleNext = () => {
     if (canProceed() && step < 4) {
       setStep((step + 1) as Step)
     }
   }
-  
+
   const handleBack = () => {
     if (step > 1) {
       setStep((step - 1) as Step)
     }
   }
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     setError(null)
-    
+
     try {
       // Step 1: Create quote
       let quoteId = null
@@ -193,32 +250,75 @@ function CotizarForm() {
       } catch (quoteErr) {
         console.warn('Quote creation failed, continuing with booking only')
       }
-      
+
       // Step 2: Create booking via public endpoint (no auth required)
       try {
+        // Build services array: use API services if available, otherwise build from formData
+        let services: any[] = []
+        let laborCost = 0
+        let partsCost = 0
+        let materialsCost = 0
+        let travelCost = 0
+
+        if (calculatedQuote?.services && calculatedQuote.services.length > 0) {
+          // Use API-calculated services (has real serviceIds)
+          services = calculatedQuote.services.map((s: any) => ({
+            serviceId: s.serviceId,
+            quantity: 1,
+            unitPrice: s.finalPrice,
+            totalPrice: s.finalPrice,
+          }))
+          laborCost = calculatedQuote.pricing?.laborCost || 0
+          partsCost = calculatedQuote.pricing?.partsCost || 0
+          materialsCost = calculatedQuote.pricing?.materialsCost || 0
+          travelCost = calculatedQuote.pricing?.travelCost || 0
+        } else {
+          // Fallback: build from frontend serviceOptions
+          const svc = serviceOptions.find(s => s.value === formData.service)
+          if (svc) {
+            services = [{
+              serviceId: svc.value,  // Backend accepts service type string
+              quantity: 1,
+              unitPrice: svc.price,
+              totalPrice: svc.price,
+            }]
+            laborCost = svc.price
+            travelCost = displacementFee
+          }
+        }
+
+        // Format date to ISO 8601 full datetime
+        const isoDate = new Date(formData.date + 'T00:00:00.000Z').toISOString()
+
         const booking = await api.createPublicBooking({
           clientEmail: formData.email,
           clientName: formData.name,
           clientPhone: formData.phone,
-          commune: formData.commune,
+          commune: normalizeCommune(formData.commune),
+          street: formData.address,
+          number: '',
           vehicleBrand: formData.vehicleBrand,
           vehicleModel: formData.vehicleModel,
           vehicleType: formData.vehicleType,
-          quoteId,
-          laborCost: calculatedQuote?.pricing?.laborCost || selectedService?.price || 25000,
-          partsCost: calculatedQuote?.pricing?.partsCost || 0,
-          materialsCost: calculatedQuote?.pricing?.materialsCost || 0,
-          travelCost: calculatedQuote?.pricing?.travelCost || displacementFee,
-          scheduledDate: formData.date,
+          vehicleYear: parseInt(formData.vehicleYear) || undefined,
+          symptoms: formData.symptoms,
+          description: formData.notes,
+          refrigerantType: formData.refrigerantType,
+          laborCost,
+          partsCost,
+          materialsCost,
+          travelCost,
+          discount: 0,
+          scheduledDate: isoDate,
           scheduledTime: formData.time,
-          estimatedDurationMinutes: selectedService?.duration || 60,
+          estimatedDurationMinutes: 60,
+          services,
         })
-        setBookingNumber(booking.bookingNumber)
+        setBookingNumber((booking as any).bookingNumber || (booking as any).id)
       } catch (bookingErr) {
-        // If API not available, just show success
         console.warn('Booking API not available:', bookingErr)
       }
-      
+
       setIsLoading(false)
       setStep(4)
     } catch (err: any) {
@@ -226,7 +326,7 @@ function CotizarForm() {
       setIsLoading(false)
     }
   }
-  
+
   // Steps
   const steps = [
     { number: 1, label: 'Servicio' },
@@ -243,49 +343,62 @@ function CotizarForm() {
           <h1 className="text-3xl font-bold text-gray-900 mb-6">
             Cotizar Servicio
           </h1>
-          
+
+          {/* Step Counter + Progress Bar */}
+          <div className="mb-6">
+            <p className="text-sm font-semibold text-amber-600 mb-2">
+              Paso {step} de {steps.length} — {steps[step - 1]?.label}
+            </p>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div
+                className="bg-amber-500 h-2 rounded-full transition-all duration-500 ease-out"
+                style={{ width: (step / steps.length * 100) + '%' }}
+              />
+            </div>
+          </div>
+
           {/* Progress Steps */}
           <div className="flex items-center justify-between">
             {steps.map((s, index) => (
               <div key={s.number} className="flex items-center">
-                <div className={`
+                <div className="
                   flex items-center justify-center w-10 h-10 rounded-full font-semibold
-                  ${step >= s.number 
-                    ? 'bg-secondary text-white' 
+                  ${step >= s.number
+                    ? 'bg-secondary text-white'
                     : 'bg-gray-200 text-gray-500'}
-                `}>
+                ">
                   {step > s.number ? (
                     <CheckCircle className="w-5 h-5" />
                   ) : (
                     s.number
                   )}
                 </div>
-                <span className={`
+                <span className="
                   ml-3 font-medium hidden sm:block
                   ${step >= s.number ? 'text-gray-900' : 'text-gray-500'}
-                `}>
+                ">
                   {s.label}
                 </span>
                 {index < steps.length - 1 && (
-                  <div className={`
+                  <div className="
                     w-12 sm:w-24 h-1 mx-4
                     ${step > s.number ? 'bg-secondary' : 'bg-gray-200'}
-                  `} />
+                  " />
                 )}
               </div>
             ))}
           </div>
         </div>
       </div>
-      
+
       {/* Content */}
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-3 gap-8">
-          
+
           {/* Form */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-2xl shadow-card p-8">
-              
+
               {/* Step 1: Service Selection */}
               {step === 1 && (
                 <div className="space-y-6 animate-fade-in">
@@ -297,7 +410,7 @@ function CotizarForm() {
                       Selecciona el servicio y los datos de tu vehículo.
                     </p>
                   </div>
-                  
+
                   {/* Service Selection */}
                   <div>
                     <label className="form-label">Servicio</label>
@@ -305,12 +418,12 @@ function CotizarForm() {
                       {serviceOptions.map((service) => (
                         <label
                           key={service.value}
-                          className={`
-                            flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all
-                            ${formData.service === service.value 
-                              ? 'border-secondary bg-secondary/5' 
-                              : 'border-gray-200 hover:border-gray-300'}
-                          `}
+                          className={
+                            'flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all '
+                            + (formData.service === service.value
+                              ? 'border-secondary bg-secondary/5'
+                              : 'border-gray-200 hover:border-gray-300')
+                          }
                         >
                           <input
                             type="radio"
@@ -334,7 +447,7 @@ function CotizarForm() {
                       ))}
                     </div>
                   </div>
-                  
+
                   {/* Vehicle Type */}
                   <div>
                     <label className="form-label">Tipo de Vehículo</label>
@@ -344,19 +457,19 @@ function CotizarForm() {
                           key={type.value}
                           type="button"
                           onClick={() => setFormData({ ...formData, vehicleType: type.value })}
-                          className={`
-                            p-3 rounded-xl border-2 text-center transition-all
-                            ${formData.vehicleType === type.value
+                          className={
+                            'p-3 rounded-xl border-2 text-center transition-all '
+                            + (formData.vehicleType === type.value
                               ? 'border-secondary bg-secondary/5 text-secondary'
-                              : 'border-gray-200 hover:border-gray-300 text-gray-700'}
-                          `}
+                              : 'border-gray-200 hover:border-gray-300 text-gray-700')
+                          }
                         >
                           {type.label}
                         </button>
                       ))}
                     </div>
                   </div>
-                  
+
                   {/* Commune */}
                   <div>
                     <label className="form-label">Tu Comuna</label>
@@ -367,7 +480,7 @@ function CotizarForm() {
                     >
                       <option value="">Selecciona tu comuna</option>
                       {popularCommunes.map((commune) => (
-                        <option key={commune} value={commune.toLowerCase()}>
+                        <option key={commune} value={commune}>
                           {commune}
                         </option>
                       ))}
@@ -380,7 +493,7 @@ function CotizarForm() {
                   </div>
                 </div>
               )}
-              
+
               {/* Step 2: Contact Info */}
               {step === 2 && (
                 <div className="space-y-6 animate-fade-in">
@@ -392,7 +505,7 @@ function CotizarForm() {
                       Necesitamos tus datos para confirmar la reserva.
                     </p>
                   </div>
-                  
+
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div className="sm:col-span-2">
                       <label className="form-label">Nombre completo</label>
@@ -404,7 +517,7 @@ function CotizarForm() {
                         className="form-input"
                       />
                     </div>
-                    
+
                     <div>
                       <label className="form-label">Email</label>
                       <input
@@ -415,7 +528,7 @@ function CotizarForm() {
                         className="form-input"
                       />
                     </div>
-                    
+
                     <div>
                       <label className="form-label">Teléfono (WhatsApp)</label>
                       <input
@@ -426,7 +539,7 @@ function CotizarForm() {
                         className="form-input"
                       />
                     </div>
-                    
+
                     <div>
                       <label className="form-label">Marca del vehículo (opcional)</label>
                       <input
@@ -437,7 +550,7 @@ function CotizarForm() {
                         className="form-input"
                       />
                     </div>
-                    
+
                     <div>
                       <label className="form-label">Modelo del vehículo (opcional)</label>
                       <input
@@ -449,7 +562,7 @@ function CotizarForm() {
                       />
                     </div>
                   </div>
-                  
+
                   <div>
                     <label className="form-label">Notas adicionales (opcional)</label>
                     <textarea
@@ -462,7 +575,7 @@ function CotizarForm() {
                   </div>
                 </div>
               )}
-              
+
               {/* Step 3: Schedule */}
               {step === 3 && (
                 <div className="space-y-6 animate-fade-in">
@@ -474,7 +587,7 @@ function CotizarForm() {
                       Horarios disponibles de lunes a viernes.
                     </p>
                   </div>
-                  
+
                   {/* Date */}
                   <div>
                     <label className="form-label">
@@ -484,47 +597,73 @@ function CotizarForm() {
                     <input
                       type="date"
                       value={formData.date}
-                      onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                      onChange={(e) => {
+                        setFormData({ ...formData, date: e.target.value, time: '' })
+                        setAvailableSlots([])
+                      }}
                       min={new Date().toISOString().split('T')[0]}
                       className="form-input"
                     />
                   </div>
-                  
+
                   {/* Time Slots */}
-                  <div>
-                    <label className="form-label">
-                      <Clock className="w-4 h-4 inline mr-2" />
-                      Horario preferente
-                    </label>
-                    <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
-                      {timeSlots.map((slot) => (
-                        <button
-                          key={slot}
-                          type="button"
-                          onClick={() => setFormData({ ...formData, time: slot })}
-                          className={`
-                            p-3 rounded-xl border-2 text-center font-medium transition-all
-                            ${formData.time === slot
-                              ? 'border-secondary bg-secondary/5 text-secondary'
-                              : 'border-gray-200 hover:border-gray-300 text-gray-700'}
-                          `}
-                        >
-                          {slot}
-                        </button>
-                      ))}
+                  {formData.date && formData.commune && (
+                    <div>
+                      <label className="form-label">
+                        <Clock className="w-4 h-4 inline mr-2" />
+                        Horario preferente
+                        {loadingSlots && <Loader2 className="w-4 h-4 inline ml-2 animate-spin" />}
+                      </label>
+
+                      {slotsError ? (
+                        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                          <p className="text-sm text-amber-800">
+                            <AlertCircle className="w-4 h-4 inline mr-2" />
+                            {slotsError}
+                          </p>
+                        </div>
+                      ) : availableSlots.length > 0 ? (
+                        <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
+                          {availableSlots.map((slot) => (
+                            <button
+                              key={slot.time}
+                              type="button"
+                              disabled={!slot.available}
+                              onClick={() => slot.available && setFormData({ ...formData, time: slot.time })}
+                              className={
+                                'p-3 rounded-xl border-2 text-center font-medium transition-all '
+                                + (formData.time === slot.time
+                                  ? 'border-secondary bg-secondary/5 text-secondary'
+                                  : slot.available
+                                    ? 'border-gray-200 hover:border-gray-300 text-gray-700 cursor-pointer'
+                                    : 'border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed')
+                              }
+                            >
+                              {slot.time}
+                              {!slot.available && (
+                                <span className="block text-xs text-gray-400 font-normal">Ocupado</span>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      ) : !loadingSlots && formData.date ? (
+                        <p className="text-sm text-gray-500 mt-2">
+                          No hay horarios disponibles para esta fecha.
+                        </p>
+                      ) : null}
                     </div>
-                  </div>
-                  
+                  )}
+
                   {/* Info box */}
                   <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
                     <p className="text-sm text-blue-800">
-                      <strong>Nota:</strong> La fecha y hora seleccionadas están sujetas a disponibilidad. 
+                      <strong>Nota:</strong> La fecha y hora seleccionadas están sujetas a disponibilidad.
                       Te contactaremos por WhatsApp para confirmar tu reserva.
                     </p>
                   </div>
                 </div>
               )}
-              
+
               {/* Step 4: Confirmation */}
               {step === 4 && (
                 <div className="text-center py-8 animate-fade-in">
@@ -535,10 +674,10 @@ function CotizarForm() {
                     ¡Solicitud Enviada!
                   </h2>
                   <p className="text-gray-600 mb-8 max-w-md mx-auto">
-                    Hemos recibido tu solicitud de reserva. Te contactaremos por WhatsApp 
+                    Hemos recibido tu solicitud de reserva. Te contactaremos por WhatsApp
                     en los próximos minutos para confirmar la fecha y hora.
                   </p>
-                  
+
                   <div className="bg-gray-50 rounded-xl p-6 mb-8 text-left max-w-md mx-auto">
                     <h3 className="font-semibold text-gray-900 mb-4">Resumen de tu solicitud:</h3>
                     <div className="space-y-3 text-sm">
@@ -566,7 +705,7 @@ function CotizarForm() {
                       </div>
                     </div>
                   </div>
-                  
+
                   {error && (
                     <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 text-left max-w-md mx-auto">
                       <p className="text-sm text-amber-800">
@@ -575,16 +714,16 @@ function CotizarForm() {
                       </p>
                     </div>
                   )}
-                  
+
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="tel:+569****0000" className="btn btn-outline">
+                    <a href="tel:+56935075600" className="btn btn-outline">
                       <Phone className="w-5 h-5" />
                       Llamar si no te contactamos
                     </a>
                   </div>
                 </div>
               )}
-              
+
               {/* Navigation Buttons */}
               {step < 4 && (
                 <div className="flex justify-between mt-8 pt-6 border-t">
@@ -600,7 +739,7 @@ function CotizarForm() {
                   ) : (
                     <div />
                   )}
-                  
+
                   {step < 3 ? (
                     <button
                       type="button"
@@ -635,14 +774,14 @@ function CotizarForm() {
               )}
             </div>
           </div>
-          
+
           {/* Summary Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-card p-6 sticky top-24">
               <h3 className="font-semibold text-gray-900 mb-4">
                 Resumen
               </h3>
-              
+
               {selectedService ? (
                 <div className="space-y-4">
                   <div className="p-4 bg-gray-50 rounded-xl">
@@ -650,12 +789,12 @@ function CotizarForm() {
                     <p className="font-medium text-gray-900">{selectedService.label}</p>
                     <p className="text-sm text-gray-600">{selectedService.description}</p>
                   </div>
-                  
+
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Duración aprox.</span>
                     <span className="font-medium">{selectedService.duration} min</span>
                   </div>
-                  
+
                   <div className="border-t pt-4 space-y-2">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Servicio</span>
@@ -678,7 +817,7 @@ function CotizarForm() {
                   Selecciona un servicio para ver el resumen.
                 </p>
               )}
-              
+
               {/* Trust signals */}
               <div className="mt-6 pt-6 border-t space-y-3">
                 <div className="flex items-center gap-3 text-sm text-gray-600">

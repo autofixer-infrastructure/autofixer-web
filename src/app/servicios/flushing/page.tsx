@@ -1,0 +1,165 @@
+"use client"
+import Link from 'next/link'
+import { Droplets, CheckCircle, Phone, ChevronDown } from 'lucide-react'
+
+const faqs = [
+  { question: 'Cuando es necesario hacer flushing?', answer: 'El flushing es necesario cuando el sistema tiene contaminantes como humedad residual, aceite degradado, particulas de metal o residuos de refrigerante viejo. Tambien se hace antes de instalar un compresor nuevo para garantizar un sistema limpio.' },
+  { question: 'El flushing daña el sistema?', answer: 'No, el flushing es un procedimiento estandar cuando se hace correctamente. Usamos productos especificos para cada tipo de contaminante y lavamos con el gas o liquido adecuado segun el componente.' },
+  { question: 'Cuanto cuesta el flushing?', answer: 'El flushing de todo el sistema cuesta desde $50.000 a $80.000 dependiendo de los componentes que requieran limpieza. El flushing de componentes individuales tiene precios menores.' },
+  { question: 'Cuanto tiempo toma?', answer: 'El flushing completo del sistema toma entre 2 y 4 horas dependiendo de cuan contaminado este el sistema y los componentes que requieran limpieza.' },
+  { question: 'Diferencia entre flushing y sanitizacion?', answer: 'El flushing limpia contaminantes fisicos y quimicos del sistema (humedad, aceite, particulas). La sanitizacion elimina organismos biologicos (hongos, bacterias). Son procedimientos complementarios.' },
+]
+
+const zonePricing = [
+  { zone: 'Zona 1', areas: 'Recoleta, Independencia, Santiago Centro', price: 0 },
+  { zone: 'Zona 2', areas: 'Providencia, Nunoa, Las Condes, Vitacura, La Reina, Macul', price: 5000 },
+  { zone: 'Zona 3', areas: 'La Florida, Penanolan, Puente Alto, San Bernardo', price: 10000 },
+  { zone: 'Zona 4', areas: 'Pudahuel, Quilicura, Lampa, Batuco', price: 15000 },
+  { zone: 'Zona 5', areas: 'Colina, Chicureo, Pirque, San Jose de Maipo', price: 25000 },
+]
+
+export default function FlushingPage() {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <nav className="bg-white border-b py-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ol className="flex items-center gap-2 text-sm">
+            <li><Link href="/" className="text-gray-500 hover:text-blue-900">Inicio</Link></li>
+            <ChevronDown className="w-4 h-4 text-gray-400" />
+            <li><Link href="/servicios" className="text-gray-500 hover:text-blue-900">Servicios</Link></li>
+            <ChevronDown className="w-4 h-4 text-gray-400" />
+            <li><span className="text-blue-900 font-medium">Flushing</span></li>
+          </ol>
+        </div>
+      </nav>
+
+      <section className="bg-gradient-to-br from-blue-900 to-indigo-900 text-white py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <div className="flex items-center gap-2 mb-4">
+              <Droplets className="w-6 h-6 text-blue-300" />
+              <span className="text-blue-300 font-medium">Limpieza Profunda</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">Flushing y Limpieza del Sistema A/C</h1>
+            <p className="text-xl text-blue-100 mb-8">
+              Limpieza profunda que remueve contaminantes, humedad y residuos del sistema.
+              Necesario antes de instalar compresor nuevo o despues de una reparacion mayor.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <a href="https://wa.me/56935075600?text=Hola%2C%20necesito%20flushing%20de%20mi%20A%2FC" className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                <Phone className="w-5 h-5" />
+                Solicitar Flushing
+              </a>
+              <a href="tel:+56935075600" className="inline-flex items-center gap-2 border-2 border-white text-white hover:bg-white hover:text-blue-900 px-6 py-3 rounded-lg font-medium transition-colors">
+                <Phone className="w-5 h-5" />
+                Llamar Ahora
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white border-b py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap justify-center gap-8 text-center">
+            <div><div className="text-2xl font-bold text-blue-900">Desde $50.000</div><div className="text-sm text-gray-600">Flushing completo</div></div>
+            <div className="w-px bg-gray-300 hidden md:block"></div>
+            <div><div className="text-2xl font-bold text-amber-600">2-4 horas</div><div className="text-sm text-gray-600">Duracion</div></div>
+            <div className="w-px bg-gray-300 hidden md:block"></div>
+            <div><div className="text-2xl font-bold text-amber-600">Sistema limpio</div><div className="text-sm text-gray-600">Resultado garantizado</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-3 gap-12">
+            <div className="lg:col-span-2">
+              <div className="mb-12">
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">Que Incluye el Flushing</h2>
+                <div className="bg-white rounded-xl p-6">
+                  <div className="space-y-4">
+                    {[
+                      'Flushing de linea de alta y baja presion',
+                      'Limpieza de condensador con solvente especifico',
+                      'Limpieza de evaporador',
+                      'Limpieza de desacumulador y filtro',
+                      'Remocion de humedad residual',
+                      'Vacío profundo del sistema',
+                      'Inspeccion de componentes',
+                      'Carga de gas refrigerante nuevo',
+                      'Prueba de funcionamiento',
+                    ].map((item, idx) => (
+                      <div key={idx} className="flex items-start gap-3">
+                        <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                        <span className="text-gray-700 text-sm">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-12">
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">Preguntas Frecuentes</h2>
+                <div className="space-y-4">
+                  {faqs.map((faq, idx) => (
+                    <details key={idx} className="bg-white rounded-xl group">
+                      <summary className="flex items-center justify-between p-6 cursor-pointer list-none">
+                        <span className="font-bold text-gray-900">{faq.question}</span>
+                        <ChevronDown className="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" />
+                      </summary>
+                      <div className="px-6 pb-6 pt-0 text-gray-600 border-t border-gray-100">
+                        {faq.answer}
+                      </div>
+                    </details>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:col-span-1">
+              <div className="bg-white rounded-xl p-6 mb-6 sticky top-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Costo de Desplazamiento</h3>
+                <div className="space-y-3 mb-6">
+                  {zonePricing.map((zone, idx) => (
+                    <div key={idx} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
+                      <div>
+                        <span className="font-medium text-gray-900">{zone.zone}</span>
+                        <p className="text-xs text-gray-500">{zone.areas}</p>
+                      </div>
+                      <span className="font-bold text-blue-900">{zone.price === 0 ? 'Gratis' : '+' + zone.price.toLocaleString('es-CL') + ' CLP'}</span>
+                    </div>
+                  ))}
+                </div>
+                <a href="https://wa.me/56935075600?text=Hola%2C%20necesito%20flushing%20del%20sistema%20A%2FC" className="block w-full text-center bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-medium mb-3 transition-colors">
+                  <Phone className="w-4 h-4 inline mr-2" />
+                  Solicitar en WhatsApp
+                </a>
+                <a href="tel:+56935075600" className="block w-full text-center border-2 border-gray-300 text-gray-700 hover:border-gray-400 px-6 py-3 rounded-lg font-medium transition-colors">
+                  <Phone className="w-4 h-4 inline mr-2" />
+                  +56 9 3507 5600
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 bg-gradient-to-br from-blue-900 to-indigo-900 text-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Sistema Limpio, Rendimiento Optimo</h2>
+          <p className="text-xl text-blue-100 mb-8">El flushing elimina contaminantes que dañan tu compresor y reducen la eficiencia. Ideal antes del verano o despues de una reparacion mayor.</p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <a href="https://wa.me/56935075600?text=Hola%2C%20quiero%20hacer%20flushing%20a%20mi%20A%2FC" className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-lg font-medium text-lg transition-colors">
+              <Phone className="w-5 h-5" />
+              Solicitar Flushing
+            </a>
+            <Link href="/cotizar" className="inline-flex items-center gap-2 border-2 border-white text-white hover:bg-white hover:text-blue-900 px-8 py-4 rounded-lg font-medium text-lg transition-colors">
+              Solicitar Cotizacion
+            </Link>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}

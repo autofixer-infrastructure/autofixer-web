@@ -102,7 +102,7 @@ export class QuoteService {
         : undefined,
     }
 
-    return api.calculateQuote(apiData)
+    return api.calculateQuote(apiData) as any
   }
 
   /**
@@ -141,21 +141,21 @@ export class QuoteService {
       utmCampaign: data.utmCampaign,
     }
 
-    return api.createQuote(apiData)
+    return api.createQuote(apiData) as any
   }
 
   /**
    * Get quote by ID
    */
   async getById(id: string): Promise<Quote> {
-    return api.getQuote(id)
+    return api.getQuote(id) as any
   }
 
   /**
    * Get all quotes (for admin/technician)
    */
   async getAll(params?: { page?: number; limit?: number; isConverted?: boolean }) {
-    return api.getQuotes(params)
+    return api.getQuotes(params) as Promise<{ data: Quote[]; meta: any }>
   }
 }
 

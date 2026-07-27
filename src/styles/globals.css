@@ -2,20 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ============================================
-   AUTOFIXER - GLOBAL STYLES
-   Color Palette (del diseño de referencia):
-   - Primary Blue: #0084D1
-   - Orange Accent: #FF8A00
-   - Grays: #64748B, #94A3B8, #E2E8F0
-   ============================================ */
-
 /* Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap');
 
 @layer base {
   :root {
-    /* Brand Colors */
     --color-primary: #0084D1;
     --color-primary-dark: #0068A8;
     --color-primary-light: #E0F0FA;
@@ -23,377 +14,91 @@
     --color-orange-hover: #E67E00;
     --color-success: #10B981;
     --color-whatsapp: #25D366;
-    
-    /* Spacing */
     --header-height: 72px;
   }
-  
-  html {
-    scroll-behavior: smooth;
-  }
-  
+
+  html { scroll-behavior: smooth; }
+
   body {
-    @apply bg-white text-brand-black antialiased;
+    @apply bg-white text-gray-900 antialiased;
     font-family: 'Inter', system-ui, sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
-  
+
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
     line-height: 1.1;
     letter-spacing: -0.02em;
   }
-  
-  /* Focus styles */
-  *:focus-visible {
-    @apply outline-none ring-2 ring-brand-blue ring-offset-2;
-  }
-  
-  /* Selection */
+
+  *:focus-visible { @apply outline-none ring-2 ring-brand-blue ring-offset-2; }
+
   ::selection {
-    @apply bg-brand-blue/20 text-brand-blue;
+    background-color: rgba(0, 132, 209, 0.2);
+    color: #0084D1;
   }
 }
 
 @layer components {
-  /* ============================================
-     LAYOUT
-     ============================================ */
-  
   .container-autofixer {
     @apply max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8;
   }
-  
-  .section-padding {
-    @apply py-16 md:py-20 lg:py-24;
-  }
 
-  /* ============================================
-     BUTTONS
-     ============================================ */
-  
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3
            font-semibold rounded-[10px] transition-all duration-300
            disabled:opacity-50 disabled:cursor-not-allowed;
   }
-  
+
+  /* Brand-corrected buttons */
   .btn-primary {
-    @apply bg-brand-orange hover:bg-brand-orange-hover text-white 
+    @apply bg-brand-orange hover:bg-brand-orange-hover text-white
            active:scale-[0.98] shadow-lg hover:shadow-xl hover:-translate-y-0.5;
   }
-  
+
   .btn-secondary {
-    @apply bg-brand-blue hover:bg-brand-blue-dark text-white 
+    @apply bg-brand-blue hover:bg-brand-blue-dark text-white
            active:scale-[0.98] shadow-lg hover:shadow-xl hover:-translate-y-0.5;
   }
-  
+
   .btn-outline {
-    @apply border-2 border-brand-blue text-brand-blue 
+    @apply border-2 border-brand-blue text-brand-blue
            hover:bg-brand-blue hover:text-white;
   }
-  
-  .btn-ghost {
-    @apply text-brand-blue hover:bg-brand-blue-light;
-  }
-  
+
   .btn-whatsapp {
-    @apply bg-brand-whatsapp hover:bg-[#128C7E] text-white 
+    @apply bg-brand-whatsapp hover:bg-green-600 text-white
            shadow-lg hover:shadow-xl hover:-translate-y-0.5;
   }
-  
-  .btn-lg {
-    @apply px-8 py-4 text-lg;
-  }
-  
-  .btn-sm {
-    @apply px-4 py-2 text-sm;
-  }
-  
-  /* ============================================
-     CARDS
-     ============================================ */
-  
+
   .card {
-    @apply bg-white rounded-2xl shadow-card 
-           border border-brand-gray-border overflow-hidden
+    @apply bg-white rounded-2xl shadow-md
+           border border-gray-100 overflow-hidden
            transition-all duration-300;
   }
-  
+
   .card-hover {
-    @apply hover:shadow-card-hover hover:-translate-y-1;
-  }
-  
-  .card-featured {
-    @apply border-2 border-brand-blue/30 bg-gradient-to-br 
-           from-white to-brand-blue-light/30;
-  }
-  
-  /* ============================================
-     BADGES
-     ============================================ */
-  
-  .badge {
-    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
-  }
-  
-  .badge-primary {
-    @apply bg-brand-blue-light text-brand-blue;
-  }
-  
-  .badge-secondary {
-    @apply bg-brand-orange/10 text-brand-orange;
-  }
-  
-  .badge-success {
-    @apply bg-brand-success-light text-brand-success;
-  }
-  
-  .badge-warning {
-    @apply bg-amber-100 text-amber-800;
-  }
-  
-  .badge-error {
-    @apply bg-red-100 text-red-800;
-  }
-  
-  /* ============================================
-     PRICING
-     ============================================ */
-  
-  .price-tag {
-    @apply text-3xl font-bold text-brand-blue;
-  }
-  
-  .price-range {
-    @apply flex items-baseline gap-2;
-  }
-  
-  .price-from {
-    @apply text-lg text-brand-gray-light;
-  }
-  
-  .price-main {
-    @apply text-4xl font-bold text-brand-blue;
-  }
-  
-  .price-period {
-    @apply text-brand-gray;
-  }
-  
-  /* ============================================
-     SECTION STYLES
-     ============================================ */
-  
-  .section {
-    @apply py-16 md:py-24;
-  }
-  
-  .section-dark {
-    @apply bg-brand-blue text-white;
-  }
-  
-  .section-gradient {
-    @apply bg-gradient-to-br from-brand-blue to-brand-blue-dark text-white;
-  }
-  
-  .section-alt {
-    @apply bg-brand-silver;
-  }
-  
-  /* ============================================
-     NAVIGATION
-     ============================================ */
-  
-  .nav-link {
-    @apply text-brand-gray hover:text-brand-blue transition-colors 
-           relative after:absolute after:bottom-0 after:left-0 
-           after:w-0 after:h-0.5 after:bg-brand-orange
-           after:transition-all hover:after:w-full;
-  }
-  
-  .nav-link-active {
-    @apply text-brand-blue after:w-full;
-  }
-  
-  /* ============================================
-     FORMS
-     ============================================ */
-  
-  .form-input {
-    @apply w-full px-4 py-3 border border-brand-gray-border rounded-lg
-           placeholder:text-brand-gray-light
-           focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20
-           transition-all duration-200;
-  }
-  
-  .form-label {
-    @apply block text-sm font-medium text-brand-black mb-2;
-  }
-  
-  .form-error {
-    @apply text-sm text-red-500 mt-1;
-  }
-  
-  /* ============================================
-     SERVICE CARDS
-     ============================================ */
-  
-  .service-card {
-    @apply card card-hover p-7 flex flex-col h-full;
-  }
-  
-  .service-card-icon {
-    @apply w-14 h-14 rounded-full bg-brand-blue-light text-brand-blue 
-           flex items-center justify-center mb-5;
-  }
-  
-  .service-card-price {
-    @apply mt-auto pt-4 border-t border-brand-gray-border;
-  }
-  
-  /* ============================================
-     TRUST SIGNALS
-     ============================================ */
-  
-  .trust-badge {
-    @apply flex items-center gap-3 text-sm text-brand-gray;
-  }
-  
-  .trust-icon {
-    @apply w-10 h-10 rounded-full bg-brand-blue-light text-brand-blue 
-           flex items-center justify-center flex-shrink-0;
+    @apply hover:shadow-xl hover:-translate-y-1;
   }
 }
 
 @layer utilities {
-  /* ============================================
-     TEXT UTILITIES
-     ============================================ */
-  
-  .text-balance {
-    text-wrap: balance;
-  }
-  
   .text-gradient {
     @apply bg-gradient-to-r from-brand-blue to-brand-orange bg-clip-text text-transparent;
   }
-  
-  /* ============================================
-     ANIMATIONS
-     ============================================ */
-  
-  .animate-fade-in {
-    animation: fadeIn 0.5s ease-in-out;
-  }
-  
-  .animate-slide-up {
-    animation: slideUp 0.5s ease-out;
-  }
-  
+
   .animate-pulse-subtle {
     animation: pulseSubtle 2s ease-in-out infinite;
   }
-  
+
   .animate-float {
     animation: float 3s ease-in-out infinite;
   }
-  
-  /* Stagger children */
-  .stagger-children > * {
-    @apply animate-slide-up;
-  }
-  
-  .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
-  .stagger-children > *:nth-child(2) { animation-delay: 100ms; }
-  .stagger-children > *:nth-child(3) { animation-delay: 200ms; }
-  .stagger-children > *:nth-child(4) { animation-delay: 300ms; }
-  .stagger-children > *:nth-child(5) { animation-delay: 400ms; }
-  .stagger-children > *:nth-child(6) { animation-delay: 500ms; }
-  
-  /* ============================================
-     SCROLLBAR
-     ============================================ */
-  
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  
-  .custom-scrollbar::-webkit-scrollbar-track {
-    @apply bg-brand-silver rounded-full;
-  }
-  
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-brand-gray-border rounded-full hover:bg-brand-gray-light;
-  }
-  
-  /* ============================================
-     GLASS EFFECT
-     ============================================ */
-  
-  .glass {
-    @apply bg-white/80 backdrop-blur-md 
-           border border-white/20;
-  }
-  
-  /* ============================================
-     GRADIENT BORDER
-     ============================================ */
-  
-  .gradient-border {
-    position: relative;
-  }
-  
-  .gradient-border::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    padding: 3px;
-    border-radius: inherit;
-    background: linear-gradient(135deg, #FF8A00, #0084D1);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-  }
-}
 
-/* ============================================
-   HERO PATTERN BACKGROUND
-   ============================================ */
-
-.hero-pattern {
-  background-image: 
-    radial-gradient(circle at 1px 1px, rgba(0, 132, 209, 0.1) 1px, transparent 0);
-  background-size: 40px 40px;
-}
-
-/* ============================================
-   FLOATING WHATSAPP BUTTON
-   ============================================ */
-
-.whatsapp-float {
-  @apply fixed bottom-6 right-6 z-50;
-  @apply w-14 h-14 rounded-full bg-brand-whatsapp text-white
-         flex items-center justify-center
-         shadow-elevated hover:scale-110 transition-transform
-         hover:shadow-2xl;
-}
-
-/* ============================================
-   KEYFRAMES
-   ============================================ */
-
-@keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-@keyframes slideUp {
-  0% { opacity: 0; transform: translateY(10px); }
-  100% { opacity: 1; transform: translateY(0); }
+  .animate-marquee {
+    animation: marquee 40s linear infinite;
+  }
 }
 
 @keyframes pulseSubtle {
@@ -404,4 +109,9 @@
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
 }

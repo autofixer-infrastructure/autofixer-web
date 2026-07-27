@@ -20,7 +20,7 @@ export function CTASection({
   className = ''
 }: CTASectionProps) {
   const prices = [
-    { service: 'Diagnóstico', price: '$25.000', note: '+ desplazamiento' },
+    { service: 'Diagnóstico', price: 'Desde $15.000', note: '+ desplazamiento' },
     { service: 'Carga Simple R134a', price: '$35.000', note: '+ desplazamiento' },
     { service: 'Carga Doble R134a', price: '$70.000', note: '+ desplazamiento' },
     { service: 'Sanitización Sedán', price: '$45.000', note: '+ desplazamiento' },
