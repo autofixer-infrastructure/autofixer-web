@@ -123,31 +123,38 @@ function HeroSection() {
               en climatización automotriz con garantía real de 90 días.
             </p>
 
+                        <div className="mt-6 p-5 bg-blue-50 border border-blue-100 rounded-xl">
+              <h2 className="font-heading font-bold text-lg text-brand-black mb-3">
+                ¿Buscas recarga de gas R134a o R1234yf en Las Condes, Providencia, Ñuñoa o Santiago Centro?
+              </h2>
+              <p className="text-slate-600 leading-relaxed mb-3">
+                En <strong>Autofixer</strong> nos desplazamos a tu domicilio con equipo de vacío profesional y manómetros calibrados para diagnosticar fugas y recuperar el frío de tu vehículo el mismo día. Trabajamos con gas R134a (la mayoría de los autos anteriores a 2017) y R1234yf (vehículos post-2017/2018), incluyendo marcas como Toyota, Hyundai, Kia, Nissan, Ford, Volkswagen, BMW y Mercedes-Benz.
+              </p>
+              <div className="flex flex-wrap gap-2 mt-3">
+                <span className="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-medium">R134a desde $35.000</span>
+                <span className="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full font-medium">R1234yf desde $90.000</span>
+                <span className="text-xs bg-orange-100 text-orange-700 px-3 py-1 rounded-full font-medium">Diagnóstico GRATIS si contratas</span>
+                <span className="text-xs bg-gray-100 text-gray-700 px-3 py-1 rounded-full font-medium">Garantía 90 días</span>
+              </div>
+            </div>
+
             <div className="flex flex-wrap gap-4 mt-8">
               <a
                 href="https://wa.me/56935075600?text=Hola%20Autofixer,%20quiero%20agendar%20un%20diagn%C3%B3stico%20a%20domicilio"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-primary flex items-center gap-2 animate-pulse-subtle"
+                className="btn-primary"
               >
-                <Calendar size={18} />
-                <span>Solicitar Diagnóstico a Domicilio</span>
+                <Phone className="w-5 h-5" />
+                <span>Contactar por WhatsApp</span>
               </a>
-              <a
-                href="https://wa.me/56935075600"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-whatsapp flex items-center gap-2"
-              >
-                <WhatsAppIcon size={18} />
-                <span>WhatsApp Ahora</span>
+              <a href="/cotizar" className="btn-secondary">
+                <Calendar className="w-5 h-5" />
+                <span>Cotizar</span>
               </a>
-              <a
-                href="tel:+56935075600"
-                className="btn-secondary flex items-center gap-2"
-              >
-                <Phone size={18} />
-                <span>Llamar +56 9 3507 5600</span>
+              <a href="tel:+56935075600" className="btn-secondary">
+                <Phone className="w-5 h-5" />
+                <span>Llamar ahora</span>
               </a>
             </div>
 

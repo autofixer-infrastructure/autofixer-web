@@ -15,13 +15,13 @@ User-Agent: perplexitybot
 Allow: /
 
 User-Agent: Google-Extended
-Disallow: /
+Allow: /
 
 User-Agent: anthropic-ai
 Allow: /
 
 User-Agent: Bytespider
-Disallow: /
+Allow: /
 
 User-Agent: Applebot
 Allow: /
