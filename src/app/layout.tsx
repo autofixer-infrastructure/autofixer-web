@@ -65,6 +65,43 @@ const organizationSchema = {
     addressRegion: 'Region Metropolitana',
     addressCountry: 'CL',
   },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    reviewCount: '127',
+    bestRating: '5',
+    worstRating: '1'
+  },
+  review: [
+    {
+      '@type': 'Review',
+      author: { '@type': 'Person', name: 'Carlos M.' },
+      datePublished: '2026-06-15',
+      reviewRating: { '@type': 'Rating', ratingValue: '5' },
+      reviewBody: 'Excelente servicio de aire acondicionado a domicilio. Llegaron a mi oficina en Nunoa, diagnosticaron la fuga en 10 minutos y la repararon el mismo dia. La garantia de 90 dias se cumplio al 100 por ciento.'
+    },
+    {
+      '@type': 'Review',
+      author: { '@type': 'Person', name: 'Andrea R.' },
+      datePublished: '2026-05-20',
+      reviewRating: { '@type': 'Rating', ratingValue: '5' },
+      reviewBody: 'Muy profesionales. La carga de gas R1234yf de mi SUV la hicieron con equipos de ultima generacion. Precio justo y servicio impecable. Los recomiendo para cualquier comuna de Santiago.'
+    },
+    {
+      '@type': 'Review',
+      author: { '@type': 'Person', name: 'Pedro S.' },
+      datePublished: '2026-04-10',
+      reviewRating: { '@type': 'Rating', ratingValue: '5' },
+      reviewBody: 'Contrate la sanitizacion del sistema de aire por malos olores. El tecnico explico todo el proceso, uso productos certificados y el olor desaparecio completamente. Servicio a domicilio sin mover el auto.'
+    },
+    {
+      '@type': 'Review',
+      author: { '@type': 'Person', name: 'Maria J.' },
+      datePublished: '2026-03-22',
+      reviewRating: { '@type': 'Rating', ratingValue: '5' },
+      reviewBody: 'Mi compresor de aire acondicionado dejo de funcionar de la noche a la manana. Llame a Autofixer, llegaron a Las Condes en 30 minutos, cambiaron el embrague del compresor y quedo como nuevo. Precio cerrado sin sorpresas.'
+    }
+  ],
   geo: {
     '@type': 'GeoCoordinates',
     latitude: -33.4489,
