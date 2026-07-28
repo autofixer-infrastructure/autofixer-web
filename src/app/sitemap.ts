@@ -39,5 +39,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/cobertura/nunoa`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
   ]
 
-  return [...staticPages, ...servicioPages, ...coberturaPages]
+  const blogPages: MetadataRoute.Sitemap = [
+    { url: `${baseUrl}/blog/como-saber-si-mi-ac-necesita-recarga`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+  ]
+
+  return [...staticPages, ...servicioPages, ...coberturaPages, ...blogPages]
 }

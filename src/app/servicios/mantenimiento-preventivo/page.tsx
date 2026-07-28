@@ -160,6 +160,22 @@ export default function MantenimientoPreventivoPage() {
           </div>
         </div>
       </section>
+      <div className="mt-12 p-6 bg-gray-50 rounded-xl border border-gray-100">
+        <h3 className="text-lg font-bold text-gray-900 mb-4">Servicios relacionados que podrian interesarte</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <a href="/servicios/carga-gas" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
+            <h4 className="font-semibold text-blue-600 mb-1">Carga de Gas Refrigerante</h4>
+            <p className="text-sm text-gray-600">Revision de nivel de gas incluida en el paquete de mantencion.</p>
+          </a>
+          <a href="/servicios/deteccion-reparacion-fugas" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
+            <h4 className="font-semibold text-blue-600 mb-1">Deteccion y Reparacion de Fugas</h4>
+            <p className="text-sm text-gray-600">Inspeccion visual y electronica de posibles fugas.</p>
+          </a>
+          <a href="/servicios/sanitizacion" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
+            <h4 className="font-semibold text-blue-600 mb-1">Sanitizacion del Sistema</h4>
+            <p className="text-sm text-gray-600">Sanitizacion incluida como parte del paquete preventivo.</p>
+          </a>        </div>
+      </div>
     </div>
   )
 }

@@ -144,6 +144,70 @@ export default async function CoberturaComunaPage({ params }: { params: Promise<
           </div>
         </div>
       </section>
+    <section className="py-12 bg-gray-50">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h3 className="text-xl font-bold text-gray-900 mb-4">Servicios de aire acondicionado que ofrecemos en tu comuna</h3>
+        <ul className="grid sm:grid-cols-2 gap-3 mb-6">
+      <li>
+        <a href="/servicios/carga-gas" className="flex items-center text-blue-700 hover:text-blue-900 hover:underline">
+          <span className="mr-2">❄️</span> Carga de Gas Refrigerante — Desde $45.000 CLP
+        </a>
+      </li>
+      <li>
+        <a href="/servicios/deteccion-reparacion-fugas" className="flex items-center text-blue-700 hover:text-blue-900 hover:underline">
+          <span className="mr-2">🔍</span> Deteccion y Reparacion de Fugas — Desde $80.000 CLP
+        </a>
+      </li>
+      <li>
+        <a href="/servicios/reparacion-compresor" className="flex items-center text-blue-700 hover:text-blue-900 hover:underline">
+          <span className="mr-2">⚙️</span> Reparacion de Compresor — Diagnostico gratuito
+        </a>
+      </li>
+      <li>
+        <a href="/servicios/cambio-condensador" className="flex items-center text-blue-700 hover:text-blue-900 hover:underline">
+          <span className="mr-2">🔧</span> Cambio de Condensador — Cotizacion personalizada
+        </a>
+      </li>
+      <li>
+        <a href="/servicios/cambio-evaporador" className="flex items-center text-blue-700 hover:text-blue-900 hover:underline">
+          <span className="mr-2">🔧</span> Cambio de Evaporador — Cotizacion personalizada
+        </a>
+      </li>
+      <li>
+        <a href="/servicios/sanitizacion" className="flex items-center text-blue-700 hover:text-blue-900 hover:underline">
+          <span className="mr-2">🌿</span> Sanitizacion del Sistema — Desde $35.000 CLP
+        </a>
+      </li>
+      <li>
+        <a href="/servicios/mantenimiento-preventivo" className="flex items-center text-blue-700 hover:text-blue-900 hover:underline">
+          <span className="mr-2">✅</span> Mantenimiento Preventivo — Desde $55.000 CLP
+        </a>
+      </li>
+      <li>
+        <a href="/servicios/diagnostico" className="flex items-center text-blue-700 hover:text-blue-900 hover:underline">
+          <span className="mr-2">🔬</span> Diagnostico Especializado — Gratuito
+        </a>
+      </li>
+      <li>
+        <a href="/servicios/aire-electrico-hibrido" className="flex items-center text-blue-700 hover:text-blue-900 hover:underline">
+          <span className="mr-2">⚡</span> Aire para Electricos e Hibridos — Desde $60.000 CLP
+        </a>
+      </li>
+      <li>
+        <a href="/servicios/flushing" className="flex items-center text-blue-700 hover:text-blue-900 hover:underline">
+          <span className="mr-2">🧴</span> Flushing del Sistema — Desde $40.000 CLP
+        </a>
+      </li>
+        </ul>
+        <p className="text-sm text-gray-600 mb-4">
+          <strong>Tiempo promedio de llegada:</strong> 25-40 minutos.
+          Servicio a domicilio sin mover tu vehiculo. Garantia de 90 dias en todas las reparaciones.
+        </p>
+        <a href="/cotizar" className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+          Cotizar servicio en tu comuna →
+        </a>
+      </div>
+    </section>
     </main>
   )
 }

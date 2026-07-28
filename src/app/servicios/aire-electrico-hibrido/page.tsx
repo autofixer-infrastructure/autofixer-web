@@ -180,6 +180,22 @@ export default function AireElectricoPage() {
           </div>
         </div>
       </section>
+      <div className="mt-12 p-6 bg-gray-50 rounded-xl border border-gray-100">
+        <h3 className="text-lg font-bold text-gray-900 mb-4">Servicios relacionados que podrian interesarte</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <a href="/servicios/carga-gas" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
+            <h4 className="font-semibold text-blue-600 mb-1">Carga de Gas Refrigerante</h4>
+            <p className="text-sm text-gray-600">Autos electricos e hibridos requieren gases refrigerantes especificos.</p>
+          </a>
+          <a href="/servicios/diagnostico" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
+            <h4 className="font-semibold text-blue-600 mb-1">Diagnostico Especializado</h4>
+            <p className="text-sm text-gray-600">Sistemas de AC de vehiculos electricos requieren diagnostico especializado.</p>
+          </a>
+          <a href="/servicios/mantenimiento-preventivo" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
+            <h4 className="font-semibold text-blue-600 mb-1">Mantenimiento Preventivo</h4>
+            <p className="text-sm text-gray-600">Mantenimiento especifico para sistemas de climatizacion hibrida.</p>
+          </a>        </div>
+      </div>
     </div>
   )
 }

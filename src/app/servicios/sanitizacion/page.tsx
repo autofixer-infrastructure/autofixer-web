@@ -158,6 +158,22 @@ export default function SanitizacionPage() {
           </div>
         </div>
       </section>
+      <div className="mt-12 p-6 bg-gray-50 rounded-xl border border-gray-100">
+        <h3 className="text-lg font-bold text-gray-900 mb-4">Servicios relacionados que podrian interesarte</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <a href="/servicios/mantenimiento-preventivo" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
+            <h4 className="font-semibold text-blue-600 mb-1">Mantenimiento Preventivo</h4>
+            <p className="text-sm text-gray-600">Sanitizacion como parte del mantenimiento anual del sistema.</p>
+          </a>
+          <a href="/servicios/carga-gas" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
+            <h4 className="font-semibold text-blue-600 mb-1">Carga de Gas Refrigerante</h4>
+            <p className="text-sm text-gray-600">Despues de sanitizar, verificamos la presion y nivel de gas.</p>
+          </a>
+          <a href="/servicios/deteccion-reparacion-fugas" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
+            <h4 className="font-semibold text-blue-600 mb-1">Deteccion y Reparacion de Fugas</h4>
+            <p className="text-sm text-gray-600">Malos olores pueden indicar fugas de refrigerante.</p>
+          </a>        </div>
+      </div>
     </div>
   )
 }
