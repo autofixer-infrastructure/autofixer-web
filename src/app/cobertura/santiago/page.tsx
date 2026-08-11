@@ -109,21 +109,20 @@ export default function CoberturaSantiagoPage() {
 
       <section className="py-12 sm:py-16 bg-gradient-to-b from-slate-50 to-white">
         <div className="max-w-4xl mx-auto px-4">
-          <ScrollReveal>
-            <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mb-4">
-              <MapPin className="w-4 h-4" />
-              Cobertura Gran Santiago
-            </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 leading-tight mb-6">
-              Servicio de Aire Acondicionado Automotriz a Domicilio en Santiago
-            </h1>
-            <p className="text-lg text-slate-700 leading-relaxed mb-4">
-              Somos la única empresa especializada en aire acondicionado automotriz con cobertura completa en la Gran Santiago. Atendemos tu vehículo en tu casa, oficina o estacionamiento, sin necesidad de dejarlo en un taller. Técnicos certificados, equipo profesional y respuesta en menos de 2 horas.
-            </p>
-            <p className="text-lg text-slate-700 leading-relaxed mb-8">
-              Cubrimos las 22 comunas principales de la Región Metropolitana, desde Providencia y Las Condes hasta Maipú, Puente Alto y la zona poniente. Si tu comuna no aparece en la lista, consúltanos: llegamos a toda el área metropolitana.
-            </p>
-          </ScrollReveal>
+          {/* Sprint 46 fix: badge + H1 + 2 primeros <p> fuera de ScrollReveal para LCP mobile <2.5s */}
+          <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mb-4">
+            <MapPin className="w-4 h-4" />
+            Cobertura Gran Santiago
+          </div>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 leading-tight mb-6">
+            Servicio de Aire Acondicionado Automotriz a Domicilio en Santiago
+          </h1>
+          <p className="text-lg text-slate-700 leading-relaxed mb-4">
+            Somos la única empresa especializada en aire acondicionado automotriz con cobertura completa en la Gran Santiago. Atendemos tu vehículo en tu casa, oficina o estacionamiento, sin necesidad de dejarlo en un taller. Técnicos certificados, equipo profesional y respuesta en menos de 2 horas.
+          </p>
+          <p className="text-lg text-slate-700 leading-relaxed mb-8">
+            Cubrimos las 22 comunas principales de la Región Metropolitana, desde Providencia y Las Condes hasta Maipú, Puente Alto y la zona poniente. Si tu comuna no aparece en la lista, consúltanos: llegamos a toda el área metropolitana.
+          </p>
 
           <ScrollReveal>
             <div className="grid sm:grid-cols-3 gap-4 mb-12">
