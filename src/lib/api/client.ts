@@ -145,7 +145,7 @@ class ApiClient {
     lastName: string;
     phone?: string;
   }): Promise<AuthTokens> {
-    return this.request<AuthTokens>('/auth/register', {
+    return this.request<AuthTokens>('/v1/auth/register', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
@@ -155,26 +155,26 @@ class ApiClient {
     email: string;
     password: string;
   }): Promise<AuthTokens> {
-    return this.request<AuthTokens>('/auth/login', {
+    return this.request<AuthTokens>('/v1/auth/login', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
   }
 
   async logout(): Promise<{ message: string }> {
-    return this.request<{ message: string }>('/auth/logout', {
+    return this.request<{ message: string }>('/v1/auth/logout', {
       method: 'POST',
     });
   }
 
   async getCurrentUser(): Promise<User> {
-    return this.request<User>('/auth/me');
+    return this.request<User>('/v1/auth/me');
   }
 
   // ========== QUOTES ==========
 
   async calculateQuote(payload: QuoteCalculateRequest): Promise<QuoteResult> {
-    return this.request<QuoteResult>('/quotes/calculate', {
+    return this.request<QuoteResult>('/v1/quotes/calculate', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
@@ -187,7 +187,7 @@ class ApiClient {
     refrigerantType?: string;
     notes?: string;
   }): Promise<{ id: string; total: number }> {
-    return this.request<{ id: string; total: number }>('/quotes', {
+    return this.request<{ id: string; total: number }>('/v1/quotes/public', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
@@ -225,6 +225,7 @@ class ApiClient {
     utmSource?: string;
     utmMedium?: string;
     utmCampaign?: string;
+    turnstileToken?: string;
   }): Promise<{ id: string; bookingNumber: string; status: string }> {
     return this.request<{ id: string; bookingNumber: string; status: string }>('/bookings', {
       method: 'POST',
