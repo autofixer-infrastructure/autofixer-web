@@ -1,0 +1,25 @@
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Flushing (Lavado) del Sistema A/C Automotriz | Autofixer',
+  description: 'Limpieza profunda del sistema de aire acondicionado automotriz. Eliminamos contaminación y residuos del compresor. Servicio a domicilio en Santiago con equipo certificado.',
+  alternates: { canonical: 'https://autofixer.cl/servicios/flushing' },
+  openGraph: {
+    url: 'https://autofixer.cl/servicios/flushing',
+    title: 'Flushing (Lavado) del Sistema A/C Automotriz | Autofixer',
+    description: 'Limpieza profunda del sistema de aire acondicionado automotriz. Eliminamos contaminación y residuos del compresor. Servicio a domicilio en Santiago con equipo certificado.',
+  
+    images: [
+      {
+        url: 'https://autofixer.cl/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Flushing del Sistema de A/C Automotriz | Autofixer',
+      },
+    ],
+},
+}
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>
+}
