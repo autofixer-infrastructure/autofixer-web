@@ -30,3 +30,10 @@ next-env.d.ts
 
 # Performance docs (baselines, known-issues) - generado por sprint 41
 docs/
+.sprint*-safety-*
+.sprint*-backup-*
+*.bak
+*.tmp
+*.dump.gz
+package-lock.json
+yarn.lock

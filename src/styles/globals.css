@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap');
 
 @layer base {
   :root {
@@ -21,12 +19,12 @@
 
   body {
     @apply bg-white text-gray-900 antialiased;
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: var(--font-inter), system-ui, sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-heading), sans-serif;
     font-weight: 700;
     line-height: 1.1;
     letter-spacing: -0.02em;
