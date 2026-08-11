@@ -85,28 +85,29 @@ function HeroSection() {
       <div className="container-autofixer relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left: Content */}
+          {/* Sprint 45 fix: H1 + primeros párrafos fuera de Reveal para LCP */}
+          <div className="inline-flex items-center gap-2 bg-brand-success-light text-brand-success font-medium text-xs px-3 py-1.5 rounded-full mb-5">
+            <Check size={14} />
+            <span>Especialistas Exclusivos en A/C Automotriz a Domicilio</span>
+          </div>
+
+          <h1 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-brand-black leading-tight">
+            Aire Acondicionado Automotriz a Domicilio en{' '}
+            <span className="text-brand-blue">Santiago</span>
+          </h1>
+
+          <p className="mt-3 text-lg text-brand-gray italic font-body">
+            &quot;Todo para tu auto con la calidad que mereces, tu aliado en innovación y confianza en cada servicio.&quot;
+          </p>
+
+          <p className="mt-5 text-base text-slate-600 leading-relaxed max-w-xl">
+            ¿Tu auto no enfría? ¡Olvídate de moverlo! En Autofixer llegamos hasta tu domicilio, oficina,
+            estacionamiento o condominio en todo Santiago. Diagnóstico preciso, carga de gas, detección de fugas,
+            reparación de compresor, condensador, evaporador y mantenciones preventivas. Especialistas exclusivos
+            en climatización automotriz con garantía real de 90 días.
+          </p>
+
           <Reveal>
-            <div className="inline-flex items-center gap-2 bg-brand-success-light text-brand-success font-medium text-xs px-3 py-1.5 rounded-full mb-5">
-              <Check size={14} />
-              <span>Especialistas Exclusivos en A/C Automotriz a Domicilio</span>
-            </div>
-
-            <h1 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-brand-black leading-tight">
-              Aire Acondicionado Automotriz a Domicilio en{' '}
-              <span className="text-brand-blue">Santiago</span>
-            </h1>
-
-            <p className="mt-3 text-lg text-brand-gray italic font-body">
-              &quot;Todo para tu auto con la calidad que mereces, tu aliado en innovación y confianza en cada servicio.&quot;
-            </p>
-
-            <p className="mt-5 text-base text-slate-600 leading-relaxed max-w-xl">
-              ¿Tu auto no enfría? ¡Olvídate de moverlo! En Autofixer llegamos hasta tu domicilio, oficina,
-              estacionamiento o condominio en todo Santiago. Diagnóstico preciso, carga de gas, detección de fugas,
-              reparación de compresor, condensador, evaporador y mantenciones preventivas. Especialistas exclusivos
-              en climatización automotriz con garantía real de 90 días.
-            </p>
-
                         <div className="mt-6 p-5 bg-blue-50 border border-blue-100 rounded-xl">
               <h2 className="font-heading font-bold text-lg text-brand-black mb-3">
                 ¿Buscas recarga de gas R134a o R1234yf en Las Condes, Providencia, Ñuñoa o Santiago Centro?
