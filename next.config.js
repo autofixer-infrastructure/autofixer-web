@@ -1,6 +1,11 @@
+const { withSentryConfig } = require('@sentry/nextjs');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    // Sprint 39 bis: habilitar AVIF/WebP + cache 1 año
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 31536000,
     remotePatterns: [
       {
         protocol: 'https',
@@ -16,6 +21,28 @@ const nextConfig = {
   reactStrictMode: true,
   // Powered by header
   poweredByHeader: false,
-}
+  async redirects() {
+    return [
+      // Redirecciones internas ya existentes
+      { source: '/cobertura/santiago-centro', destination: '/cobertura/santiago', permanent: true },
+      { source: '/precios', destination: '/precios-referenciales', permanent: true },
+      { source: '/blog/por-que-mi-aire-acondicionado-de-auto-no-enfria', destination: '/blog/por-que-tu-aire-acondicionado-no-enfria', permanent: true },
 
-module.exports = nextConfig
+      // Redirecciones URLs antiguas de WordPress (301 para traspasar PageRank)
+      // URLs .html que tenian SEO historico
+      { source: '/aire-acondicionado-santiago-centro.html', destination: '/cobertura/santiago', permanent: true },
+      { source: '/aire-acondicionado-la-reina.html', destination: '/cobertura/la-reina', permanent: true },
+      { source: '/santiago-centro.html', destination: '/cobertura/santiago', permanent: true },
+      // URLs sin .html pero que vienen del WordPress viejo
+      { source: '/pulido-y-restauracion-de-focos-a-domicilio', destination: '/pulido-de-focos-a-domicilio-santiago', permanent: true },
+      { source: '/mantencion-por-kilometraje-a-domicilio-preventiva-y-garantizada', destination: '/servicios', permanent: true },
+      { source: '/categoria-producto/posters', destination: '/servicios', permanent: true },
+    ]
+  },
+};
+
+module.exports = withSentryConfig(nextConfig, {
+  silent: true,
+  hideSourceMaps: true,
+  disableLogger: true,
+});
