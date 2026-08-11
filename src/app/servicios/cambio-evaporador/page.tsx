@@ -1,6 +1,14 @@
-'use client'
 import Link from 'next/link'
+import ServiceViewTracker from '@/components/tracking/ServiceViewTracker'
 import { Wind, CheckCircle, Phone, ChevronDown } from 'lucide-react'
+
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Cambio de Evaporador A/C Auto a Domicilio | desde $220.000',
+  description: 'Reemplazo completo de evaporador de A/C automotriz a domicilio en Santiago. Presupuesto cerrado antes de intervenir. Garantia 90 dias. WhatsApp +56 9 3507 5600.',
+  alternates: { canonical: 'https://autofixer.cl/servicios/cambio-evaporador' },
+}
 
 const faqs = [
   { question: '¿Qué es el evaporador del aire acondicionado?', answer: 'El evaporador es el componente ubicado dentro del habitáculo (generalmente detrás del panel) donde el refrigerante se evapora absorbiendo calor del aire. Es donde ocurre el enfriamiento real.' },
@@ -19,16 +27,65 @@ const zonePricing = [
 ]
 
 
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Como cambiar el evaporador del aire acondicionado automotriz en 8 pasos",
+  "description": "Procedimiento profesional de 8 pasos para cambiar el evaporador A/C automotriz: recuperacion, desmontaje del tablero, acceso a la caja del evaporador, extraccion, limpieza, instalacion del nuevo, vacio y carga.",
+  "totalTime": "PT240M",
+  "estimatedCost": {"@type": "MonetaryAmount", "currency": "CLP", "value": "180000-350000"},
+  "tool": [
+    {"@type": "HowToTool", "name": "Maquina de recuperacion de refrigerante"},
+    {"@type": "HowToTool", "name": "Bomba de vacio de doble etapa"},
+    {"@type": "HowToTool", "name": "Manometro de A/C automotriz alta y baja presion"},
+    {"@type": "HowToTool", "name": "Balanza digital para refrigerante"},
+    {"@type": "HowToTool", "name": "Kit de herramientas de desmontaje de tablero"},
+    {"@type": "HowToTool", "name": "Limpia evaporador en espuma biodegradable"}
+  ],
+  "step": [
+    {"@type": "HowToStep", "position": 1, "name": "Recuperacion completa del refrigerante", "text": "Conectar maquina de recuperacion y extraer todo el gas. Confirmar vacio total en manometros. El evaporador es parte del circuito cerrado, por lo que se debe vaciar todo el sistema antes de cualquier intervencion.", "url": "https://autofixer.cl/servicios/cambio-evaporador#paso-1", "tool": [{"@type": "HowToTool", "name": "Maquina de recuperacion de refrigerante"}]},
+    {"@type": "HowToStep", "position": 2, "name": "Desmontaje parcial del tablero", "text": "Retirar guantera, panel central, salidas de aire y molduras del lado del pasajero. Desmontar parcialmente el airbag del pasajero si esta presente. Desconectar bateria por seguridad. Tiempo: 60-90 minutos segun el modelo.", "url": "https://autofixer.cl/servicios/cambio-evaporador#paso-2", "tool": [{"@type": "HowToTool", "name": "Kit de herramientas de desmontaje de tablero"}]},
+    {"@type": "HowToStep", "position": 3, "name": "Acceso a la caja del evaporador", "text": "Localizar la caja del evaporador (detras del tablero, lado del pasajero). Quitar los tornillos y abrazaderas que sujetan la tapa de la caja. Desconectar las mangueras deExpansion, el conector electrico de la valvula y las salidas de ventilacion.", "url": "https://autofixer.cl/servicios/cambio-evaporador#paso-3", "tool": [{"@type": "HowToTool", "name": "Manometro de A/C automotriz alta y baja presion"}]},
+    {"@type": "HowToStep", "position": 4, "name": "Extraccion del evaporador danado", "text": "Sacar el evaporador con cuidado para no contaminar el sistema con virutas o restos. Inspeccionar las tuberias deExpansion: si estan obstruidas por oxido o residuos, deben cambiarse junto con el evaporador.", "url": "https://autofixer.cl/servicios/cambio-evaporador#paso-4"},
+    {"@type": "HowToStep", "position": 5, "name": "Limpieza y desinfeccion de la caja", "text": "Limpiar la caja del evaporador con espuma biodegradable para eliminar hongos, bacterias y biofilm. Esto evita que el nuevo evaporador se contamine rapidamente. Aspirar residuos y secar bien antes del montaje.", "url": "https://autofixer.cl/servicios/cambio-evaporador#paso-5", "tool": [{"@type": "HowToTool", "name": "Limpia evaporador en espuma biodegradable"}]},
+    {"@type": "HowToStep", "position": 6, "name": "Instalacion del evaporador nuevo", "text": "Colocar juntas nuevas en las conexiones. Instalar el evaporador nuevo en la caja, conectar tuberias deExpansion con juntas toricas nuevas. Si se sustituyo la valvula deExpansion, conectarla electricamente. Verificar que todo este firme.", "url": "https://autofixer.cl/servicios/cambio-evaporador#paso-6"},
+    {"@type": "HowToStep", "position": 7, "name": "Reensamblaje del tablero", "text": "Cerrar la caja del evaporador, montar todas las salidas de aire, paneles, guantera y molduras retiradas. Reconectar airbag y verificar que los conectores electricos del tablero esten firmes. Tiempo: 60 minutos.", "url": "https://autofixer.cl/servicios/cambio-evaporador#paso-7"},
+    {"@type": "HowToStep", "position": 8, "name": "Vacio, prueba de fugas y carga completa", "text": "Hacer vacio por 45 minutos, verificar hermeticidad, reemplazar filtro secador, cargar R134a por peso. Probar A/C 20 minutos: verificar que salga aire frio (5-10 grados C), sin olores, presiones correctas. Confirmar que el drenaje del evaporador no gotee al interior.", "url": "https://autofixer.cl/servicios/cambio-evaporador#paso-8", "tool": [{"@type": "HowToTool", "name": "Bomba de vacio de doble etapa"}, {"@type": "HowToTool", "name": "Balanza digital para refrigerante"}]}
+  ]
+};
+
 export default function CambioEvaporadorPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
+      <ServiceViewTracker slug="cambio-evaporador" serviceName="Cambio de Evaporador" />
+            <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://autofixer.cl/' },
+            { '@type': 'ListItem', position: 2, name: 'Servicios', item: 'https://autofixer.cl/servicios' },
+            { '@type': 'ListItem', position: 3, name: 'Cambio de Evaporador' }
+          ]
+        }) }}
+      />
+      <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context": "https://schema.org", "@type": "Service", "name": "Cambio de Evaporador de Aire Acondicionado Automotriz", "serviceType": "Reemplazo de evaporador automotriz", "description": "Reemplazo completo de evaporador de aire acondicionado automotriz. Incluye evaporador, filtro de habitaculo, aceite, vacio y carga de gas. Servicio a domicilio en Santiago.", "provider": {"@type": "Organization", "name": "Autofixer", "@id": "https://autofixer.cl/#organization"}, "areaServed": {"@type": "GeoCircle", "geoMidpoint": {"@type": "GeoCoordinates", "latitude": -33.4372, "longitude": -70.6506}, "geoRadius": "25000"}, "url": "https://autofixer.cl/servicios/cambio-evaporador/", "image": "https://autofixer.cl/og-servicio-cambio-evaporador.jpg", "offers": {"@type": "Offer", "priceCurrency": "CLP", "price": "200000", "priceSpecification": {"@type": "PriceSpecification", "priceCurrency": "CLP", "minPrice": "200000", "maxPrice": "500000", "eligibleQuantity": {"@type": "QuantitativeValue", "unitText": "servicio"}}}, "category": "Automotive", "inLanguage": "es-CL"}) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+      />
+      <div className="min-h-screen bg-gray-50">
       <nav className="bg-white border-b py-3">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ol className="flex items-center gap-2 text-sm">
             <li><Link href="/" className="text-gray-500 hover:text-blue-900">Inicio</Link></li>
-            <ChevronDown className="w-4 h-4 text-gray-400" />
+            <ChevronDown className="w-4 h-4 text-gray-500" />
             <li><Link href="/servicios" className="text-gray-500 hover:text-blue-900">Servicios</Link></li>
-            <ChevronDown className="w-4 h-4 text-gray-400" />
+            <ChevronDown className="w-4 h-4 text-gray-500" />
             <li><span className="text-blue-900 font-medium">Cambio de Evaporador</span></li>
           </ol>
         </div>
@@ -43,7 +100,7 @@ export default function CambioEvaporadorPage() {
               Servicio a domicilio en Santiago.
             </p>
             <div className="flex flex-wrap gap-4">
-              <a href="https://wa.me/56935075600?text=Hola%2C%20necesito%20cambiar%20el%20evaporador%20de%20mi%20A%2FC" className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+              <a href="https://wa.me/56935075600?text=Hola%2C%20necesito%20cambiar%20el%20evaporador%20de%20mi%20A%2FC" className="inline-flex items-center gap-2 bg-amber-700 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
                 <Phone className="w-5 h-5" />
                 Solicitar Reemplazo
               </a>
@@ -98,6 +155,76 @@ export default function CambioEvaporadorPage() {
               </div>
 
               <div className="mb-12">
+                              <div className="mb-12">
+                <h2 className="text-3xl font-bold text-gray-900 mb-3">Proceso Paso a Paso</h2>
+                <p className="text-gray-600 mb-8">8 pasos profesionales para cambiar el evaporador A/C automotriz. Tiempo total estimado: 240 minutos. Si lo prefieres, agenda nuestro servicio a domicilio con tecnico certificado e informe escrito.</p>
+                <ol className="space-y-5">
+                  <li id="paso-1" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">01</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Recuperacion completa del refrigerante</h3>
+                      <span className="ml-auto text-sm text-gray-500">10 min</span>
+                    </div>
+                    <p className="text-gray-700">Conectar maquina de recuperacion y extraer todo el gas. Confirmar vacio total en manometros. El evaporador es parte del circuito cerrado, por lo que se debe vaciar todo el sistema antes de cualquier intervencion.</p>
+                  </li>
+                  <li id="paso-2" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">02</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Desmontaje parcial del tablero</h3>
+                      <span className="ml-auto text-sm text-gray-500">60 min</span>
+                    </div>
+                    <p className="text-gray-700">Retirar guantera, panel central, salidas de aire y molduras del lado del pasajero. Desmontar parcialmente el airbag del pasajero si esta presente. Desconectar bateria por seguridad. Tiempo: 60-90 minutos segun el modelo.</p>
+                  </li>
+                  <li id="paso-3" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">03</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Acceso a la caja del evaporador</h3>
+                      <span className="ml-auto text-sm text-gray-500">20 min</span>
+                    </div>
+                    <p className="text-gray-700">Localizar la caja del evaporador (detras del tablero, lado del pasajero). Quitar los tornillos y abrazaderas que sujetan la tapa de la caja. Desconectar las mangueras deExpansion, el conector electrico de la valvula y las salidas de ventilacion.</p>
+                  </li>
+                  <li id="paso-4" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">04</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Extraccion del evaporador danado</h3>
+                      <span className="ml-auto text-sm text-gray-500">10 min</span>
+                    </div>
+                    <p className="text-gray-700">Sacar el evaporador con cuidado para no contaminar el sistema con virutas o restos. Inspeccionar las tuberias deExpansion: si estan obstruidas por oxido o residuos, deben cambiarse junto con el evaporador.</p>
+                  </li>
+                  <li id="paso-5" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">05</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Limpieza y desinfeccion de la caja</h3>
+                      <span className="ml-auto text-sm text-gray-500">20 min</span>
+                    </div>
+                    <p className="text-gray-700">Limpiar la caja del evaporador con espuma biodegradable para eliminar hongos, bacterias y biofilm. Esto evita que el nuevo evaporador se contamine rapidamente. Aspirar residuos y secar bien antes del montaje.</p>
+                  </li>
+                  <li id="paso-6" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">06</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Instalacion del evaporador nuevo</h3>
+                      <span className="ml-auto text-sm text-gray-500">20 min</span>
+                    </div>
+                    <p className="text-gray-700">Colocar juntas nuevas en las conexiones. Instalar el evaporador nuevo en la caja, conectar tuberias deExpansion con juntas toricas nuevas. Si se sustituyo la valvula deExpansion, conectarla electricamente. Verificar que todo este firme.</p>
+                  </li>
+                  <li id="paso-7" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">07</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Reensamblaje del tablero</h3>
+                      <span className="ml-auto text-sm text-gray-500">60 min</span>
+                    </div>
+                    <p className="text-gray-700">Cerrar la caja del evaporador, montar todas las salidas de aire, paneles, guantera y molduras retiradas. Reconectar airbag y verificar que los conectores electricos del tablero esten firmes. Tiempo: 60 minutos.</p>
+                  </li>
+                  <li id="paso-8" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">08</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Vacio, prueba de fugas y carga completa</h3>
+                      <span className="ml-auto text-sm text-gray-500">40 min</span>
+                    </div>
+                    <p className="text-gray-700">Hacer vacio por 45 minutos, verificar hermeticidad, reemplazar filtro secador, cargar R134a por peso. Probar A/C 20 minutos: verificar que salga aire frio (5-10 grados C), sin olores, presiones correctas. Confirmar que el drenaje del evaporador no gotee al interior.</p>
+                  </li>
+                </ol>
+              </div>
                 <h2 className="text-3xl font-bold text-gray-900 mb-6">Preguntas Frecuentes</h2>
                 <div className="space-y-4">
                   {faqs.map((faq, idx) => (
@@ -129,7 +256,7 @@ export default function CambioEvaporadorPage() {
                     </div>
                   ))}
                 </div>
-                <a href="https://wa.me/56935075600" className="block w-full text-center bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-medium mb-3 transition-colors">
+                <a href="https://wa.me/56935075600" className="block w-full text-center bg-amber-700 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-medium mb-3 transition-colors">
                   <Phone className="w-4 h-4 inline mr-2" />
                   Solicitar en WhatsApp
                 </a>
@@ -146,18 +273,19 @@ export default function CambioEvaporadorPage() {
         <h3 className="text-lg font-bold text-gray-900 mb-4">Servicios relacionados que podrian interesarte</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <a href="/servicios/carga-gas" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
-            <h4 className="font-semibold text-blue-600 mb-1">Carga de Gas Refrigerante</h4>
+            <h3 className="font-semibold text-blue-600 mb-1">Carga de Gas Refrigerante</h3>
             <p className="text-sm text-gray-600">Cambio de evaporador requiere recarga completa del sistema.</p>
           </a>
           <a href="/servicios/sanitizacion" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
-            <h4 className="font-semibold text-blue-600 mb-1">Sanitizacion del Sistema</h4>
+            <h3 className="font-semibold text-blue-600 mb-1">Sanitizacion del Sistema</h3>
             <p className="text-sm text-gray-600">Nuevo evaporador requiere sanitizacion para eliminar bacterias.</p>
           </a>
           <a href="/servicios/mantenimiento-preventivo" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
-            <h4 className="font-semibold text-blue-600 mb-1">Mantenimiento Preventivo</h4>
+            <h3 className="font-semibold text-blue-600 mb-1">Mantenimiento Preventivo</h3>
             <p className="text-sm text-gray-600">Revision completa post-reparacion del evaporador.</p>
           </a>        </div>
       </div>
     </div>
+    </>
   )
 }

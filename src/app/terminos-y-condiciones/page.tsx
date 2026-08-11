@@ -103,6 +103,25 @@ export default function TermsPage() {
           </div>
         </div>
       </section>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Términos y Condiciones — Autofixer",
+            "description": "Términos y condiciones del servicio de aire acondicionado automotriz a domicilio de Autofixer en Santiago, Chile.",
+            "url": "https://autofixer.cl/terminos-y-condiciones",
+            "publisher": {
+              "@type": "Organization",
+              "name": "Autofixer SPA",
+              "url": "https://autofixer.cl",
+            },
+            "inLanguage": "es-CL",
+            "dateModified": "2026-07-28",
+          }),
+        }}
+      />
     </main>
   )
 }

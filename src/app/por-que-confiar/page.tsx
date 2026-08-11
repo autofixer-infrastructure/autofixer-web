@@ -118,10 +118,10 @@ export default function Page() {
               {faqs.map((faq, i) => (
                 <ScrollReveal key={i} delay={i * 80}>
                   <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6">
-                    <h4 className="font-body font-semibold text-white mb-2 flex items-start gap-2">
+                    <h3 className="font-body font-semibold text-white mb-2 flex items-start gap-2">
                       <CheckCircle2 size={18} className="text-amber-400 shrink-0 mt-0.5" />
                       {faq.q}
-                    </h4>
+                    </h3>
                     <p className="text-white/40 text-sm leading-relaxed ml-[26px]">{faq.a}</p>
                   </div>
                 </ScrollReveal>

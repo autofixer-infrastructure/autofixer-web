@@ -1,0 +1,16 @@
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Cambio de Evaporador A/C Auto Santiago | Autofixer',
+  description: 'Reemplazo de evaporador de aire acondicionado automotriz. Trabajo limpio con recuperación del gas y prueba de hermeticidad. Servicio a domicilio en Santiago con garantía.',
+  alternates: { canonical: 'https://autofixer.cl/servicios/cambio-evaporador' },
+  openGraph: {
+    url: 'https://autofixer.cl/servicios/cambio-evaporador',
+    title: 'Cambio de Evaporador A/C Auto Santiago | Autofixer',
+    description: 'Reemplazo de evaporador de aire acondicionado automotriz. Trabajo limpio con recuperación del gas y prueba de hermeticidad. Servicio a domicilio en Santiago con garantía.',
+  },
+}
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>
+}

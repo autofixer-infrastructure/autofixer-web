@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: "Nuestro Proceso de Servicio Tecnico a Domicilio | Autofixer",
+  title: "Nuestro Proceso de Servicio Técnico a Domicilio",
   description: "Asi funciona nuestro servicio de aire acondicionado automotriz a domicilio: diagnostico, presupuesto, reparacion y garantia en Santiago.",
   alternates: {
     canonical: "https://autofixer.cl/como-trabajamos",

@@ -1,20 +1,60 @@
-import { MapPin, CheckCircle, Phone, ArrowRight, Wrench, Truck } from 'lucide-react'
+import { MapPin, CheckCircle, Phone, ArrowRight, Wrench, Truck, HelpCircle } from 'lucide-react'
 import { Breadcrumb } from '@/components/layout/Breadcrumb'
+import BreadcrumbJsonLd from '@/components/BreadcrumbJsonLd'
 import Link from 'next/link'
 import { ScrollReveal } from '@/components/ScrollReveal'
 import { generateStaticParams, generateMetadata, getComunaInfo } from '../comuna-data'
+import { notFound } from 'next/navigation'
 
 export { generateStaticParams, generateMetadata }
-export const dynamicParams = true
+
+// ESTRICTO: solo se sirven los slugs declarados en generateStaticParams (con contenido real).
+// Cualquier otro slug => 404. NO hay defaultData templated.
+export const dynamicParams = false
 
 export default async function CoberturaComunaPage({ params }: { params: Promise<{ comuna: string }> }) {
   const { comuna } = await params
   const info = getComunaInfo(comuna)
+  if (!info) {
+    notFound()
+  }
+
+  const faqs = [
+    {
+      q: `¿Cuanto cuesta un tecnico de aire acondicionado automotriz a domicilio en ${info.nombre}?`,
+      a: `El servicio a domicilio en ${info.nombre}${info.fee > 0 ? ` tiene un costo de desplazamiento de $${info.fee.toLocaleString('es-CL')}` : ' no tiene costo de desplazamiento'}. La carga de gas R134a parte desde $35.000, el R1234yf desde $90.000, y el diagnostico es GRATIS si contratas el servicio con nosotros. Te entregamos presupuesto escrito antes de intervenir.`
+    },
+    {
+      q: `¿Cuanto tarda el servicio de A/C automotriz en ${info.nombre}?`,
+      a: `Una carga de gas tipica toma entre 45 y 90 minutos en el lugar. La deteccion y reparacion de fugas puede demorar entre 1.5 y 2.5 horas. En el 90% de los casos resolvemos el problema en una sola visita, el mismo dia de la cotizacion.`
+    },
+    {
+      q: `¿Que incluyen los 90 dias de garantia?`,
+      a: `La garantia escrita cubre mano de obra y los repuestos instalados por nosotros durante 90 dias corridos. Si la misma falla se repite dentro del periodo, retornamos sin costo. Los repuestos mantienen la garantia del fabricante (6 a 12 meses segun el componente).`
+    },
+    {
+      q: `¿Atienden autos hibridos o electricos en ${info.nombre}?`,
+      a: `Si, somos uno de los pocos talleres en Chile con experiencia certificada en sistemas de climatizacion de vehiculos hibridos y electricos (Toyota Prius, Hyundai Ioniq, Tesla Model 3/Y, BYD Dolphin/Seal, entre otros). Usamos gas R1234yf y herramientas aisladas para alta tension.`
+    },
+    {
+      q: `¿Cuales son las formas de pago?`,
+      a: `Efectivo, transferencia bancaria, tarjetas de debito y credito (incluyendo cuotas). El pago se realiza una vez finalizado el servicio y verificado el funcionamiento del A/C. Emitimos boleta o factura segun corresponda.`
+    },
+    {
+      q: `¿Puedo ir al taller si prefiero no atender en domicilio en ${info.nombre}?`,
+      a: `No contamos con taller fisico abierto al publico. Nuestra especialidad es servicio 100% a domicilio, lo que te permite ahorrar tiempo y evitar dejar el auto en un local. Cubrimos toda la Region Metropolitana con tecnicos moviles equipados.`
+    },
+  ]
 
   return (
     <main className="pt-[72px]">
       <div className="max-w-4xl mx-auto px-4 pt-6">
         <Breadcrumb crumbs={[
+          { label: 'Cobertura', href: '/cobertura' },
+          { label: info.nombre },
+        ]} />
+        <BreadcrumbJsonLd crumbs={[
+          { label: 'Inicio', href: '/' },
           { label: 'Cobertura', href: '/cobertura' },
           { label: info.nombre },
         ]} />
@@ -72,7 +112,7 @@ export default async function CoberturaComunaPage({ params }: { params: Promise<
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <h2 className="font-heading font-bold text-2xl text-gray-900 text-center mb-8">
-              Servicios más solicitados en {info.nombre}
+              Servicios mas solicitados en {info.nombre}
             </h2>
           </ScrollReveal>
           <div className="grid sm:grid-cols-2 gap-4">
@@ -88,7 +128,7 @@ export default async function CoberturaComunaPage({ params }: { params: Promise<
                     </div>
                     <span className="font-semibold text-gray-900">{link.label}</span>
                   </div>
-                  <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-secondary group-hover:translate-x-1 transition-all" />
+                  <ArrowRight className="w-5 h-5 text-gray-500 group-hover:text-secondary group-hover:translate-x-1 transition-all" />
                 </Link>
               </ScrollReveal>
             ))}
@@ -119,18 +159,74 @@ export default async function CoberturaComunaPage({ params }: { params: Promise<
         </section>
       )}
 
+      {/* FAQ - Preguntas frecuentes sobre el servicio en la comuna */}
+      <section className="py-16 md:py-20 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal>
+            <div className="text-center mb-10">
+              <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1.5 rounded-full mb-3">
+                <HelpCircle className="w-4 h-4" />
+                <span>Preguntas Frecuentes</span>
+              </div>
+              <h2 className="font-heading font-bold text-2xl sm:text-3xl text-gray-900">
+                Servicio de aire acondicionado automotriz en {info.nombre}
+              </h2>
+              <p className="text-gray-600 mt-2 max-w-2xl mx-auto">
+                Resolvemos las dudas mas comunes sobre nuestro servicio a domicilio en {info.nombre} y el resto de la Region Metropolitana.
+              </p>
+            </div>
+          </ScrollReveal>
+          <div className="space-y-3">
+            {faqs.map((item, i) => (
+              <ScrollReveal key={i} delay={i * 50}>
+                <details className="group bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                  <summary className="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
+                    <h3 className="font-semibold text-gray-900 text-base sm:text-lg">{item.q}</h3>
+                    <span className="shrink-0 w-8 h-8 rounded-full bg-blue-100 group-open:bg-blue-600 flex items-center justify-center transition-colors">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className="text-blue-600 group-open:text-white transition-colors">
+                        <polyline points="6 9 12 15 18 9" className="group-open:hidden" />
+                        <line x1="5" y1="12" x2="19" y2="12" className="hidden group-open:block" />
+                      </svg>
+                    </span>
+                  </summary>
+                  <div className="px-5 pb-5 -mt-1">
+                    <p className="text-gray-700 leading-relaxed">{item.a}</p>
+                  </div>
+                </details>
+              </ScrollReveal>
+            ))}
+          </div>
+
+          {/* FAQPage JSON-LD para rich snippets en Google */}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'FAQPage',
+                mainEntity: faqs.map((f) => ({
+                  '@type': 'Question',
+                  name: f.q,
+                  acceptedAnswer: { '@type': 'Answer', text: f.a },
+                })),
+              }),
+            }}
+          />
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-2xl p-8 md:p-12 text-center">
             <h2 className="text-3xl font-bold text-white mb-4">¿Necesitas servicio de A/C en {info.nombre}?</h2>
             <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
-              Contacta por WhatsApp y te conectamos con el técnico disponible en tu zona. Diagnóstico gratis si contratas el servicio.
+              Contacta por WhatsApp y te conectamos con el tecnico disponible en tu zona. Diagnostico gratis si contratas el servicio.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href={`https://wa.me/56935075600?text=Hola%2C%20necesito%20servicio%20de%20aire%20acondicionado%20en%20${encodeURIComponent(info.nombre)}`}
-                className="inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-semibold transition-colors"
+                className="inline-flex items-center justify-center gap-2 bg-amber-700 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-semibold transition-colors"
               >
                 <Phone className="w-5 h-5" />Solicitar por WhatsApp
               </a>
@@ -144,67 +240,138 @@ export default async function CoberturaComunaPage({ params }: { params: Promise<
           </div>
         </div>
       </section>
-    <section className="py-12 bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">Servicios de aire acondicionado que ofrecemos en tu comuna</h3>
-        <ul className="grid sm:grid-cols-2 gap-3 mb-6">
-      <li>
-        <a href="/servicios/carga-gas" className="flex items-center text-blue-700 hover:text-blue-900 hover:underline">
-          <span className="mr-2">❄️</span> Carga de Gas Refrigerante — Desde $45.000 CLP
-        </a>
-      </li>
-      <li>
-        <a href="/servicios/deteccion-reparacion-fugas" className="flex items-center text-blue-700 hover:text-blue-900 hover:underline">
-          <span className="mr-2">🔍</span> Deteccion y Reparacion de Fugas — Desde $80.000 CLP
-        </a>
-      </li>
-      <li>
-        <a href="/servicios/reparacion-compresor" className="flex items-center text-blue-700 hover:text-blue-900 hover:underline">
-          <span className="mr-2">⚙️</span> Reparacion de Compresor — Diagnostico gratuito
-        </a>
-      </li>
-      <li>
-        <a href="/servicios/cambio-condensador" className="flex items-center text-blue-700 hover:text-blue-900 hover:underline">
-          <span className="mr-2">🔧</span> Cambio de Condensador — Cotizacion personalizada
-        </a>
-      </li>
-      <li>
-        <a href="/servicios/cambio-evaporador" className="flex items-center text-blue-700 hover:text-blue-900 hover:underline">
-          <span className="mr-2">🔧</span> Cambio de Evaporador — Cotizacion personalizada
-        </a>
-      </li>
-      <li>
-        <a href="/servicios/sanitizacion" className="flex items-center text-blue-700 hover:text-blue-900 hover:underline">
-          <span className="mr-2">🌿</span> Sanitizacion del Sistema — Desde $35.000 CLP
-        </a>
-      </li>
-      <li>
-        <a href="/servicios/mantenimiento-preventivo" className="flex items-center text-blue-700 hover:text-blue-900 hover:underline">
-          <span className="mr-2">✅</span> Mantenimiento Preventivo — Desde $55.000 CLP
-        </a>
-      </li>
-      <li>
-        <a href="/servicios/diagnostico" className="flex items-center text-blue-700 hover:text-blue-900 hover:underline">
-          <span className="mr-2">🔬</span> Diagnostico Especializado — Gratuito
-        </a>
-      </li>
-      <li>
-        <a href="/servicios/aire-electrico-hibrido" className="flex items-center text-blue-700 hover:text-blue-900 hover:underline">
-          <span className="mr-2">⚡</span> Aire para Electricos e Hibridos — Desde $60.000 CLP
-        </a>
-      </li>
-      <li>
-        <a href="/servicios/flushing" className="flex items-center text-blue-700 hover:text-blue-900 hover:underline">
-          <span className="mr-2">🧴</span> Flushing del Sistema — Desde $40.000 CLP
-        </a>
-      </li>
-        </ul>
+    {/* ZONAS DE COBERTURA — barrios atendidos en {info.nombre} */}
+    {info.barrios && info.barrios.length > 0 && (
+      <section className="py-12 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal>
+            <h3 className="text-2xl font-heading font-bold text-gray-900 mb-2 text-center">
+              Zonas de cobertura en {info.nombre}
+            </h3>
+            {info.tiempoRespuesta && (
+              <p className="text-center text-sm text-gray-600 mb-6">
+                Tiempo de respuesta habitual: <strong>{info.tiempoRespuesta}</strong>
+              </p>
+            )}
+            <div className="flex flex-wrap gap-2 justify-center">
+              {info.barrios.map((b) => (
+                <span key={b} className="inline-flex items-center gap-1 bg-blue-50 text-blue-800 text-sm font-medium px-3 py-1.5 rounded-full">
+                  <MapPin className="w-3 h-3" /> {b}
+                </span>
+              ))}
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+    )}
+
+    {/* CASOS REALES resueltos en {info.nombre} */}
+    {info.casos && info.casos.length > 0 && (
+      <section className="py-12 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal>
+            <h3 className="text-2xl font-heading font-bold text-gray-900 mb-2 text-center">
+              Trabajos recientes en {info.nombre}
+            </h3>
+            <p className="text-center text-sm text-gray-600 mb-8">
+              Casos reales atendidos en la comuna (datos anonimizados)
+            </p>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {info.casos.map((c, i) => (
+                <ScrollReveal key={i} delay={i * 80}>
+                  <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-bold text-gray-900 text-sm">
+                        {c.marca} {c.modelo}
+                      </span>
+                      <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-semibold">
+                        {c.año}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-700 mb-2">
+                      <strong className="text-red-600">Problema:</strong> {c.problema}
+                    </p>
+                    <p className="text-sm text-gray-700 mb-2">
+                      <strong className="text-emerald-600">Solución:</strong> {c.solucion}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-3 flex items-center gap-1">
+                      ⏱️ Duración: {c.duracion}
+                    </p>
+                  </div>
+                </ScrollReveal>
+              ))}
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+    )}
+
+    {/* HITOS Y REFERENCIAS — lugares que confirman la cobertura */}
+    {info.referencias && info.referencias.length > 0 && (
+      <section className="py-12 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal>
+            <h3 className="text-2xl font-heading font-bold text-gray-900 mb-2 text-center">
+              Hitos y puntos de referencia
+            </h3>
+            <p className="text-center text-sm text-gray-600 mb-6">
+              Atendemos en estos lugares y sus alrededores en {info.nombre}
+            </p>
+            <ul className="grid sm:grid-cols-2 gap-2 max-w-3xl mx-auto">
+              {info.referencias.map((r, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+                  <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
+                  <span>{r}</span>
+                </li>
+              ))}
+            </ul>
+          </ScrollReveal>
+        </div>
+      </section>
+    )}
+
+    {/* FAQ específica de la comuna — preguntas frecuentes LOCALES */}
+    {info.faq && info.faq.length > 0 && (
+      <section className="py-12 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal>
+            <h3 className="text-2xl font-heading font-bold text-gray-900 mb-2 text-center">
+              Preguntas frecuentes de clientes en {info.nombre}
+            </h3>
+            <p className="text-center text-sm text-gray-600 mb-6">
+              Respuestas a dudas especificas de la comuna
+            </p>
+            <div className="space-y-3">
+              {info.faq.map((item, i) => (
+                <details key={i} className="group bg-white rounded-xl shadow-sm">
+                  <summary className="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
+                    <h3 className="font-semibold text-gray-900 text-base">{item.pregunta}</h3>
+                    <span className="shrink-0 w-7 h-7 rounded-full bg-blue-100 group-open:bg-blue-600 flex items-center justify-center transition-colors">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className="text-blue-600 group-open:text-white transition-colors">
+                        <polyline points="6 9 12 15 18 9" className="group-open:hidden" />
+                        <line x1="5" y1="12" x2="19" y2="12" className="hidden group-open:block" />
+                      </svg>
+                    </span>
+                  </summary>
+                  <div className="px-5 pb-5 -mt-1">
+                    <p className="text-gray-700 leading-relaxed text-sm">{item.respuesta}</p>
+                  </div>
+                </details>
+              ))}
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+    )}
+
+    {/* CTA intermedio */}
+    <section className="py-12 bg-white">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <p className="text-sm text-gray-600 mb-4">
-          <strong>Tiempo promedio de llegada:</strong> 25-40 minutos.
-          Servicio a domicilio sin mover tu vehiculo. Garantia de 90 dias en todas las reparaciones.
+          Servicio a domicilio en {info.nombre} sin mover tu vehiculo. Garantia de 90 dias en todas las reparaciones.
         </p>
         <a href="/cotizar" className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
-          Cotizar servicio en tu comuna →
+          Cotizar servicio en {info.nombre} →
         </a>
       </div>
     </section>

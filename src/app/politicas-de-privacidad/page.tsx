@@ -1,8 +1,8 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Politica de Privacidad',
-  description: 'Politica de privacidad de Autofixer. Informacion sobre como protegemos y usamos tus datos personales en cumplimiento con la Ley 19.628 de Chile.',
+  title: 'Política de Privacidad',
+  description: 'Política de privacidad de Autofixer. Informacion sobre como protegemos y usamos tus datos personales en cumplimiento con la Ley 19.628 de Chile.',
   alternates: { canonical: '/politicas-de-privacidad' },
 }
 
@@ -12,7 +12,7 @@ export default function PrivacyPage() {
       <section className="bg-gradient-to-br from-blue-700 to-blue-900 py-12 md:py-16">
         <div className="max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="font-heading font-bold text-3xl sm:text-4xl text-white">
-            Politica de Privacidad
+            Política de Privacidad
           </h1>
           <p className="mt-3 text-blue-100 text-base">
             Ultima actualizacion: Julio 2026
@@ -100,6 +100,25 @@ export default function PrivacyPage() {
           </div>
         </div>
       </section>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "PrivacyPolicy",
+            "name": "Política de Privacidad — Autofixer",
+            "description": "Política de privacidad de Autofixer en cumplimiento con la Ley 19.628 de Chile.",
+            "url": "https://autofixer.cl/politicas-de-privacidad",
+            "publisher": {
+              "@type": "Organization",
+              "name": "Autofixer SPA",
+              "url": "https://autofixer.cl",
+            },
+            "inLanguage": "es-CL",
+            "dateModified": "2026-07-28",
+          }),
+        }}
+      />
     </main>
   )
 }

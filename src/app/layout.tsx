@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 export const revalidate = 86400 // 24 hours for institutional pages
-import { Inter, Outfit } from 'next/font/google'
+import { Inter, Montserrat } from 'next/font/google'
 import { Toaster } from 'sonner'
 import '@/styles/globals.css'
 import { Header } from '@/components/layout/Header'
@@ -9,14 +9,16 @@ import { SchemaMarkup } from '@/components/layout/SchemaMarkup'
 import FloatingCTAs from '@/components/FloatingCTAs'
 import CookieBanner from '@/components/CookieBanner'
 import { Analytics } from '@/components/Analytics'
+import Clarity from '@/components/Clarity'
+import { WebVitalsDebug } from '@/components/WebVitalsDebug'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
-const heading = Outfit({ subsets: ['latin'], variable: '--font-heading', display: 'swap' })
+const heading = Montserrat({ subsets: ['latin'], variable: '--font-heading', display: 'swap' })
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://autofixer.cl'),
   title: {
-    default: 'Autofixer — Carga de Gas y Reparación de Aire Acondicionado Automotriz a Domicilio en Santiago',
+    default: 'Autofixer — A/C Automotriz a Domicilio Santiago',
     template: '%s | Autofixer',
   },
   description: 'Servicio de aire acondicionado automotriz a domicilio en Santiago. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000. Técnicos certificados. Garantía 90 días.',
@@ -47,108 +49,243 @@ export const metadata: Metadata = {
 
 const organizationSchema = {
   '@context': 'https://schema.org',
-  '@type': 'AutoRepair',
-  '@id': 'https://autofixer.cl/#business',
+  '@type': 'Organization',
+  '@id': 'https://autofixer.cl/#organization',
   name: 'Autofixer',
-  image: [
-    { '@type': 'ImageObject', 'url': 'https://autofixer.cl/og-image.png', 'width': 1200, 'height': 630 },
-    { '@type': 'ImageObject', 'url': 'https://autofixer.cl/icon.svg', 'width': 512, 'height': 512 },
-  ],
-  logo: 'https://autofixer.cl/icon.svg',
-  description: 'Servicio de aire acondicionado automotriz a domicilio en Santiago, Region Metropolitana, Chile. Especialistas en carga de gas R134a y R1234yf, deteccion de fugas, cambio de compresor y sanitizacion. Diagnostico gratis si contratas.',
+  alternateName: 'Autofixer - Reparación de Aire Acondicionado Automotriz a Domicilio Santiago',
+  legalName: 'Autofixer Spa',
+  foundingDate: '2024-01-15',
+  founder: {
+    '@id': 'https://autofixer.cl/#founder',
+  },
   url: 'https://autofixer.cl',
+  logo: { '@type': 'ImageObject', url: 'https://autofixer.cl/logo.png', width: '300', height: '60' },
+  description: 'Autofixer Spa, fundada el 15 de enero de 2024, ofrece servicio técnico 100% a domicilio de aire acondicionado automotriz en Santiago, Chile. Carga de gas R134a y R1234yf, diagnóstico, detección de fugas, reparación de compresor. 32 comunas cubiertas en la Región Metropolitana con técnicos certificados y 90 días de garantía. No es una tienda de belleza ni de cuidado personal: es un servicio automotriz profesional.',
+  email: 'contacto@autofixer.cl',
+  telephone: '+56935075600',
+  address: {
+    '@type': 'VirtualLocation',
+    name: 'Autofixer - Servicio 100% a Domicilio (sin local físico)',
+    addressLocality: 'Santiago',
+    addressRegion: 'Región Metropolitana de Santiago',
+    addressCountry: { '@type': 'Country', name: 'Chile' },
+    areaServed: 'Región Metropolitana de Santiago',
+    description: 'Autofixer no atiende en taller físico. Servicio 100% a domicilio en 32 comunas de la Región Metropolitana. El cliente define el lugar (hogar, oficina, estacionamiento).',
+  },
+  priceRange: '$$',
+  currenciesAccepted: 'CLP',
+  paymentAccepted: ['Efectivo', 'Transferencia', 'Tarjeta de débito', 'Tarjeta de crédito'],
+  areaServed: [
+    { '@type': 'City', name: 'Santiago', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Las Condes', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Providencia', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Ñuñoa', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Vitacura', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'La Florida', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Maipú', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Puente Alto', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Independencia', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Recoleta', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Macul', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'La Reina', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Peñalolén', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Pudahuel', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Quilicura', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Estación Central', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Quinta Normal', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Pedro Aguirre Cerda', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'San Miguel', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'San Joaquín', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Cerrillos', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'La Cisterna', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Conchalí', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Cerro Navia', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Lo Prado', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Lo Espejo', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'San Ramón', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'La Granja', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Renca', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'El Bosque', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'La Pintana', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Calera de Tango', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+  ],
+  serviceArea: {
+    '@type': 'GeoCircle',
+    geoMidpoint: {
+      '@type': 'GeoCoordinates',
+      latitude: -33.4372,
+      longitude: -70.6506,
+    },
+    geoRadius: '25000',
+  },
+  openingHoursSpecification: [
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], opens: '08:00', closes: '20:00' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Sunday', opens: '10:00', closes: '14:00' },
+  ],
+  sameAs: [
+    'https://www.facebook.com/profile.php?id=61575046045976',
+    'https://instagram.com/autofixer.spa',
+    'https://wa.me/56935075600',
+  ],
+  contactPoint: [
+    {
+      '@type': 'ContactPoint',
+      telephone: '+56935075600',
+      contactType: 'customer service',
+      contactOption: 'WhatsApp',
+      areaServed: 'CL',
+      availableLanguage: ['Spanish'],
+      hoursAvailable: 'Mo-Sa 08:00-20:00, Su 10:00-14:00',
+    },
+    {
+      '@type': 'ContactPoint',
+      telephone: '+56225830519',
+      contactType: 'customer service',
+      contactOption: 'TollFree',
+      areaServed: 'CL',
+      availableLanguage: ['Spanish'],
+      hoursAvailable: 'Mo-Fr 09:00-18:00',
+    },
+    {
+      '@type': 'ContactPoint',
+      email: 'contacto@autofixer.cl',
+      contactType: 'customer service',
+      areaServed: 'CL',
+      availableLanguage: ['Spanish'],
+    },
+  ],
+  serviceType: 'Aire acondicionado automotriz a domicilio',
+  knowsAbout: [
+    'Aire acondicionado automotriz',
+    'Carga de gas refrigerante R134a',
+    'Carga de gas refrigerante R1234yf',
+    'Diagnóstico de sistema de climatización vehicular',
+    'Detección de fugas con tinte UV',
+    'Reparación de compresor automotriz',
+    'Sanitización de aire acondicionado vehicular',
+    'Servicio técnico automotriz a domicilio',
+  ],
+}
+
+const founderSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': 'https://autofixer.cl/#founder',
+  name: 'Edinson',
+  jobTitle: 'Especialista en Climatización Automotriz y Fundador de Autofixer Spa',
+  description: 'Fundador y técnico principal de Autofixer Spa. Especialista certificado en climatización automotriz con experiencia en sistemas R134a, R1234yf, compresores, diagnosis electrónica y vehículos híbridos/eléctricos. Atiende toda la Región Metropolitana de Santiago a domicilio.',
+  knowsAbout: [
+    'Aire acondicionado automotriz',
+    'Sistemas de climatización vehicular',
+    'Diagnóstico de sistemas A/C',
+    'Carga de gas refrigerante',
+    'Compresores automotrices',
+    'Aire acondicionado eléctrico e híbrido',
+    'Refrigerante R134a',
+    'Refrigerante R1234yf',
+    'Detección de fugas con tinte UV',
+    'Sanitización de sistemas A/C',
+  ],
+  worksFor: {
+    '@id': 'https://autofixer.cl/#organization',
+  },
+  sameAs: [
+    'https://www.facebook.com/profile.php?id=61575046045976',
+    'https://instagram.com/autofixer.spa',
+  ],
+};
+
+const autoRepairSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'AutoRepair',
+  '@id': 'https://autofixer.cl/#autorepair',
+  parentOrganization: { '@id': 'https://autofixer.cl/#organization' },
+  name: 'Autofixer',
+  description: 'Servicio 100% a domicilio de aire acondicionado automotriz en Santiago, Chile. Carga de gas R134a y R1234yf, diagnóstico, detección de fugas, reparación de compresor. 32 comunas cubiertas en la Región Metropolitana con técnicos certificados y 90 días de garantía. No contamos con taller físico: vamos a tu domicilio, oficina o estacionamiento.',
+  url: 'https://autofixer.cl',
+  image: 'https://autofixer.cl/og-image.png',
   telephone: '+56935075600',
   email: 'contacto@autofixer.cl',
   address: {
-    '@type': 'PostalAddress',
+    '@type': 'VirtualLocation',
+    name: 'Autofixer - Servicio 100% a Domicilio (sin local físico)',
     addressLocality: 'Santiago',
-    addressRegion: 'Region Metropolitana',
-    addressCountry: 'CL',
-  },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    reviewCount: '127',
-    bestRating: '5',
-    worstRating: '1'
-  },
-  review: [
-    {
-      '@type': 'Review',
-      author: { '@type': 'Person', name: 'Carlos M.' },
-      datePublished: '2026-06-15',
-      reviewRating: { '@type': 'Rating', ratingValue: '5' },
-      reviewBody: 'Excelente servicio de aire acondicionado a domicilio. Llegaron a mi oficina en Nunoa, diagnosticaron la fuga en 10 minutos y la repararon el mismo dia. La garantia de 90 dias se cumplio al 100 por ciento.'
-    },
-    {
-      '@type': 'Review',
-      author: { '@type': 'Person', name: 'Andrea R.' },
-      datePublished: '2026-05-20',
-      reviewRating: { '@type': 'Rating', ratingValue: '5' },
-      reviewBody: 'Muy profesionales. La carga de gas R1234yf de mi SUV la hicieron con equipos de ultima generacion. Precio justo y servicio impecable. Los recomiendo para cualquier comuna de Santiago.'
-    },
-    {
-      '@type': 'Review',
-      author: { '@type': 'Person', name: 'Pedro S.' },
-      datePublished: '2026-04-10',
-      reviewRating: { '@type': 'Rating', ratingValue: '5' },
-      reviewBody: 'Contrate la sanitizacion del sistema de aire por malos olores. El tecnico explico todo el proceso, uso productos certificados y el olor desaparecio completamente. Servicio a domicilio sin mover el auto.'
-    },
-    {
-      '@type': 'Review',
-      author: { '@type': 'Person', name: 'Maria J.' },
-      datePublished: '2026-03-22',
-      reviewRating: { '@type': 'Rating', ratingValue: '5' },
-      reviewBody: 'Mi compresor de aire acondicionado dejo de funcionar de la noche a la manana. Llame a Autofixer, llegaron a Las Condes en 30 minutos, cambiaron el embrague del compresor y quedo como nuevo. Precio cerrado sin sorpresas.'
-    }
-  ],
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: -33.4489,
-    longitude: -70.6693,
-  },
-  openingHoursSpecification: [
-    {
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-      opens: '08:00',
-      closes: '20:00',
-    },
-  ],
-  areaServed: {
-    '@type': 'State',
-    name: 'Region Metropolitana de Santiago',
-    containsPlace: [
-      { '@type': 'City', name: 'Las Condes' },
-      { '@type': 'City', name: 'Providencia' },
-      { '@type': 'City', name: 'Nunoa' },
-      { '@type': 'City', name: 'La Florida' },
-      { '@type': 'City', name: 'Maipu' },
-      { '@type': 'City', name: 'Santiago' },
-      { '@type': 'City', name: 'Puente Alto' },
-      { '@type': 'City', name: 'Vitacura' },
-      { '@type': 'City', name: 'San Bernardo' },
-      { '@type': 'City', name: 'La Reina' },
-      { '@type': 'City', name: 'Estacion Central' },
-      { '@type': 'City', name: 'Peñalolen' },
-    ],
+    addressRegion: 'Región Metropolitana de Santiago',
+    addressCountry: { '@type': 'Country', name: 'Chile' },
+    areaServed: 'Región Metropolitana de Santiago',
+    description: 'Autofixer no atiende en taller físico. Servicio 100% a domicilio en 32 comunas de la Región Metropolitana. El cliente define el lugar (hogar, oficina, estacionamiento).',
   },
   priceRange: '$$',
-  hasOfferCatalog: {
-    '@type': 'OfferCatalog',
-    name: 'Servicios de aire acondicionado automotriz',
-    url: 'https://autofixer.cl/servicios',
+  currenciesAccepted: 'CLP',
+  paymentAccepted: ['Efectivo', 'Transferencia', 'Tarjeta de débito', 'Tarjeta de crédito'],
+  serviceArea: {
+    '@type': 'GeoCircle',
+    geoMidpoint: {
+      '@type': 'GeoCoordinates',
+      latitude: -33.4372,
+      longitude: -70.6506,
+    },
+    geoRadius: '25000',
   },
-  hasMap: 'https://www.google.com/maps/search/?api=1&query=Autofixer+aire+acondicionado+Santiago+Chile',
+  areaServed: [
+    { '@type': 'City', name: 'Santiago', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Las Condes', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Providencia', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Ñuñoa', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Vitacura', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'La Florida', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Maipú', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Puente Alto', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Independencia', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Recoleta', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Macul', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'La Reina', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Peñalolén', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Pudahuel', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Quilicura', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Estación Central', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Quinta Normal', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Pedro Aguirre Cerda', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'San Miguel', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'San Joaquín', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Cerrillos', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'La Cisterna', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Conchalí', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Cerro Navia', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Lo Prado', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Lo Espejo', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'San Ramón', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'La Granja', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Renca', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'El Bosque', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'La Pintana', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+    { '@type': 'City', name: 'Calera de Tango', containedInPlace: { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' } },
+  ],
+  openingHoursSpecification: [
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], opens: '08:00', closes: '20:00' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Sunday', opens: '10:00', closes: '14:00' },
+  ],
   sameAs: [
-    'https://www.facebook.com/autofixerchile',
     'https://www.instagram.com/autofixer.cl',
-    'https://www.tiktok.com/@autofixer.cl',
+    'https://www.facebook.com/autofixer.cl',
+    'https://wa.me/56935075600',
   ],
   potentialAction: {
     '@type': 'ReserveAction',
-    target: { '@type': 'EntryPoint', 'urlTemplate': 'https://autofixer.cl/cotizar', 'actionPlatform': 'http://schema.org/DesktopWebPlatform' },
-    result: { '@type': 'Reservation', 'name': 'Reserva de servicio de AC automotriz' },
+    target: { '@type': 'EntryPoint', urlTemplate: 'https://autofixer.cl/cotizar', inLanguage: 'es-CL' },
+    result: { '@type': 'Reservation', name: 'Cotización A/C automotriz a domicilio' },
+  },
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Servicios de aire acondicionado automotriz a domicilio',
+    itemListElement: [
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Carga de gas R134a', description: 'Recarga de gas refrigerante R134a a domicilio desde $35.000' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Carga de gas R1234yf', description: 'Recarga de gas R1234yf para vehículos híbridos y eléctricos a domicilio desde $90.000' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Diagnóstico profesional', description: 'Diagnóstico completo del sistema de climatización a domicilio' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Detección de fugas', description: 'Detección y reparación de fugas con tinte UV a domicilio' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Sanitización', description: 'Sanitización antibacterial del sistema a domicilio' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Reparación de compresor', description: 'Reemplazo y reparación de compresor a domicilio' } },
+    ],
   },
 }
 
@@ -160,21 +297,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel='icon' href='/favicon.ico' sizes='any' />
         <link rel='icon' href='/icon.svg' type='image/svg+xml' />
         <meta name='AI-Accessibility' content='public' />
-        <link rel='preconnect' href='https://fonts.googleapis.com' />
-        <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='' />
+        <link rel='preconnect' href='https://www.googletagmanager.com' />
+        <link rel='dns-prefetch' href='https://www.googletagmanager.com' />
         <meta name='X-Frame-Options' content='DENY' />
         <meta name='X-Content-Type-Options' content='nosniff' />
         <meta name='Referrer-Policy' content='strict-origin-when-cross-origin' />
       </head>
       <body className='min-h-screen flex flex-col'>
         <SchemaMarkup schema={organizationSchema} />
+        <SchemaMarkup schema={founderSchema} />
+        <SchemaMarkup schema={autoRepairSchema} />
         <Analytics />
+        <Clarity />
         <Header />
         <main className='flex-1'>{children}</main>
         <Footer />
         <FloatingCTAs />
         <CookieBanner />
         <Toaster position='bottom-right' toastOptions={{ className: 'bg-white shadow-elevated rounded-xl' }} />
+        <WebVitalsDebug />
       </body>
     </html>
   )

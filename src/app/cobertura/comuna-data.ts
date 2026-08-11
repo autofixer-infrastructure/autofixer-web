@@ -1,6 +1,8 @@
 export const revalidate = 86400
 
 export async function generateStaticParams() {
+  // SOLO slugs con contenido ÚNICO en `data`. Cualquier otro slug => 404.
+  // Si agregas una commune nueva, agrega su entry en `data` ABAJO y su slug ACÁ.
   return [
     { comuna: 'las-condes' },
     { comuna: 'providencia' },
@@ -10,31 +12,52 @@ export async function generateStaticParams() {
     { comuna: 'maipu' },
     { comuna: 'puente-alto' },
     { comuna: 'santiago' },
-    { comuna: 'san-bernardo' },
-    { comuna: 'penalolen' },
-    { comuna: 'la-reina' },
+    { comuna: 'independencia' },
+    { comuna: 'recoleta' },
     { comuna: 'macul' },
+    { comuna: 'la-reina' },
+    { comuna: 'penalolen' },
     { comuna: 'pudahuel' },
     { comuna: 'quilicura' },
-    { comuna: 'colina' },
-    { comuna: 'cerrillos' },
     { comuna: 'estacion-central' },
-    { comuna: 'lo-barnechea' },
-    { comuna: 'huechuraba' },
-    { comuna: 'peñaflor' },
-    { comuna: 'talagante' },
-    { comuna: 'melipilla' },
+    { comuna: 'quinta-normal' },
+    { comuna: 'pedro-aguirre-cerda' },
+    { comuna: 'san-miguel' },
+    { comuna: 'san-joaquin' },
+    { comuna: 'cerrillos' },
+    { comuna: 'la-cisterna' },
+    { comuna: 'conchali' },
+    { comuna: 'cerro-navia' },
+    { comuna: 'lo-prado' },
+    { comuna: 'lo-espejo' },
+    { comuna: 'san-ramon' },
+    { comuna: 'la-granja' },
+    { comuna: 'renca' },
+    { comuna: 'el-bosque' },
+    { comuna: 'la-pintana' },
+    { comuna: 'calera-de-tango' },
   ]
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ comuna: string }> }) {
   const { comuna } = await params
   const info = getComunaInfo(comuna)
+  if (!info) {
+    return { title: 'Comuna no encontrada | Autofixer' }
+  }
   return {
-    title: `${info.nombre} — Servicio de Aire Acondicionado Automotriz a Domicilio | Autofixer`,
-    description: `${info.seo.descripcion}`,
+    title: `Servicio A/C Auto a Domicilio en ${info.nombre} | Autofixer`,
+    description: `Recarga de gas, diagnostico y reparacion de A/C automotriz a domicilio en ${info.nombre}, Santiago. Garantia 90 dias. WhatsApp +56 9 3507 5600.`,
     keywords: info.seo.keywords,
     alternates: { canonical: `https://autofixer.cl/cobertura/${comuna}` },
+    openGraph: {
+      title: `A/C Automotriz a Domicilio en ${info.nombre} | desde $35.000 | Autofixer`,
+      description: `Recarga de gas, diagnostico y reparacion de A/C automotriz a domicilio en ${info.nombre}. Garantia 90 dias.`,
+      url: `https://autofixer.cl/cobertura/${comuna}`,
+      siteName: 'Autofixer',
+      locale: 'es_CL',
+      type: 'website',
+    },
   }
 }
 
@@ -44,11 +67,16 @@ export interface ComunaInfo {
   seo: { titulo: string; descripcion: string; keywords: string }
   servicios: string[]
   fee: number
-  testimonios: { nombre: string; texto: string }[]
+  tiempoRespuesta?: string
+  barrios?: string[]
+  referencias?: string[]
+  casos?: { marca: string; modelo: string; año: number; problema: string; solucion: string; duracion: string }[]
+  testimonios: { nombre: string; texto: string; rating?: number; fecha?: string; placeholder?: boolean }[]
+  faq?: { pregunta: string; respuesta: string }[]
   enlacesServicios: { label: string; href: string }[]
 }
 
-export function getComunaInfo(slug: string): ComunaInfo {
+export function getComunaInfo(slug: string): ComunaInfo | null {
   const data: Record<string, ComunaInfo> = {
     'las-condes': {
       nombre: 'Las Condes',
@@ -67,7 +95,7 @@ export function getComunaInfo(slug: string): ComunaInfo {
       enlacesServicios: [
         { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
         { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
-        { label: 'Reparación de Compresor', href: '/servicios/reparacion-compresor' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
         { label: 'Sanitización', href: '/servicios/sanitizacion' },
       ],
     },
@@ -106,7 +134,7 @@ export function getComunaInfo(slug: string): ComunaInfo {
       ],
       enlacesServicios: [
         { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
-        { label: 'Reparación de Compresor', href: '/servicios/reparacion-compresor' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
         { label: 'Mantención Preventiva', href: '/servicios/mantenimiento-preventivo' },
         { label: 'Flushing', href: '/servicios/flushing' },
       ],
@@ -147,7 +175,7 @@ export function getComunaInfo(slug: string): ComunaInfo {
       enlacesServicios: [
         { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
         { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
-        { label: 'Reparación de Compresor', href: '/servicios/reparacion-compresor' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
         { label: 'Sanitización', href: '/servicios/sanitizacion' },
       ],
     },
@@ -187,17 +215,17 @@ export function getComunaInfo(slug: string): ComunaInfo {
       enlacesServicios: [
         { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
         { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
-        { label: 'Reparación de Compresor', href: '/servicios/reparacion-compresor' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
         { label: 'Sanitización', href: '/servicios/sanitizacion' },
       ],
     },
     'santiago': {
-      nombre: 'Santiago Centro',
-      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Santiago Centro. Atención en toda la ciudad. Carga de gas, diagnóstico y reparación.',
+      nombre: 'Santiago',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Santiago. Atención en toda la ciudad. Carga de gas, diagnóstico y reparación de A/C.',
       seo: {
-        titulo: 'Santiago Centro',
-        descripcion: 'Aire acondicionado automotriz a domicilio en Santiago Centro. R134a desde $35.000, diagnóstico desde $15.000. Atención en toda la comuna.',
-        keywords: 'aire acondicionado Santiago Centro, carga gas Santiago, reparacion AC centro',
+        titulo: 'Santiago',
+        descripcion: 'Aire acondicionado automotriz a domicilio en Santiago. R134a desde $35.000, diagnóstico desde $15.000. Atención en toda la comuna.',
+        keywords: 'aire acondicionado Santiago, carga gas Santiago, reparacion AC Santiago centro',
       },
       servicios: ['Carga de gas R134a y R1234yf', 'Detección de fugas', 'Diagnóstico profesional', 'Sanitización', 'Reparación de compresor'],
       fee: 0,
@@ -211,27 +239,873 @@ export function getComunaInfo(slug: string): ComunaInfo {
         { label: 'Sanitización', href: '/servicios/sanitizacion' },
       ],
     },
-  }
-
-  // Default for other comunas
-  const defaultData: ComunaInfo = {
-    nombre: slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-    descripcion: 'Servicio de aire acondicionado automotriz a domicilio en tu comuna. Técnicos certificados. Diagnóstico gratis si contratas.',
-    seo: {
-      titulo: slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-      descripcion: `Servicio de aire acondicionado automotriz a domicilio. Carga de gas R134a desde $35.000, diagnóstico desde $15.000. Cobertura en toda la zona.`,
-      keywords: `aire acondicionado ${slug.replace(/-/g, ' ')}, carga gas`,
+    'independencia': {
+      nombre: 'Independencia',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Independencia. Atendemos todo el sector centro-norte de Santiago: Plaza Chacabuco, Avenida Independencia, Hipódromo Chile, Hospital Clínico de la Universidad de Chile, Mall Barrio Independencia y el Barrio República (ex Chimba). Somos zona 1, llegamos en 20-30 minutos desde el centro. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días.',
+      seo: {
+        titulo: 'Independencia — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Independencia, Santiago. Carga de gas R134a desde $35.000, llegamos en 20-30 min a Plaza Chacabuco, Hospital Clínico y Mall Barrio Independencia. Diagnóstico gratis.',
+        keywords: 'aire acondicionado Independencia, carga gas Independencia, AC auto Independencia Santiago, servicio domicilio Hospital Clinico, Plaza Chacabuco, Hipodromo Chile, Mall Barrio Independencia, Barrio Republica',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección de fugas', 'Cambio de compresor', 'Sanitización antibacterial', 'Diagnóstico OBD2', 'Mantención preventiva flotas'],
+      fee: 0,
+      tiempoRespuesta: '20-30 minutos',
+      barrios: ['Plaza Chacabuco', 'Avenida Independencia', 'Barrio República (La Chimba)', 'Hipódromo Chile', 'Hospital Clínico U. Chile', 'Mall Barrio Independencia', 'San Eugenio', 'Cementerio General'],
+      referencias: ['Hospital Clínico Universidad de Chile', 'Mall Barrio Independencia (Av. Independencia 565)', 'Hipódromo Chile', 'Plaza Chacabuco', 'Iglesia del Niño Jesús de Praga', 'Cementerio General'],
+      casos: [
+        { marca: 'Toyota', modelo: 'Yaris', año: 2018, problema: 'Fuga en condensador por impacto en estacionamiento Mall Barrio Independencia', solucion: 'Reemplazo de condensador + carga R134a + test de fugas', duracion: '2.5 horas' },
+        { marca: 'Chevrolet', modelo: 'Sail', año: 2016, problema: 'Aire no enfría tras 4 años sin mantención, dueño trabaja en Hospital Clínico', solucion: 'Limpieza profunda de evaporador + carga completa R134a + sanitización', duracion: '2 horas' },
+        { marca: 'Hyundai', modelo: 'Accent', año: 2020, problema: 'Compresor ruidoso, taxi colective Av. Independencia', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3.5 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Patricio H.', texto: 'Trabajo cerca del Hospital y vinieron a chequear el auto en el estacionamiento. Quedó helado en una hora. Muy profesional todo.', rating: 5, fecha: '2026-05-12', placeholder: true },
+        { nombre: 'Lorena Q.', texto: 'Vivo cerca de Plaza Chacabuco, sin costo de salida porque Independencia es zona 1. Recomendados al 100%.', rating: 5, fecha: '2026-04-28', placeholder: true },
+        { nombre: 'Rodrigo M.', texto: 'Mi Yaris perdió el aire en pleno verano. Me cargaron gas en la misma visita. Precio justo y rápido.', rating: 5, fecha: '2026-03-15', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Cuánto demoran en llegar a Plaza Chacabuco?', respuesta: 'Llegamos en 20-30 minutos a Plaza Chacabuco, Avenida Independencia, el sector del Hospital Clínico y el Mall Barrio Independencia. Independencia es zona 1, sin costo de desplazamiento.' },
+        { pregunta: '¿Atienden en el estacionamiento del Mall Barrio Independencia?', respuesta: 'Sí. Coordinamos por WhatsApp el lugar exacto dentro del estacionamiento del Mall (Av. Independencia 565) o en la estación de metro Hospitales (L3) que está a 800 metros del Mall.' },
+        { pregunta: '¿Pueden ir al Cementerio General o al Hospital Clínico si trabajo allí?', respuesta: 'Sí, vamos a estacionamientos de oficinas, edificios y recintos como el Cementerio General o el Hospital Clínico de la Universidad de Chile. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Tienen experiencia con autos que entran al Barrio República?', respuesta: 'Sí, el Barrio República (ex Chimba) tiene calles angostas en algunas zonas. Nuestros técnicos conocen el sector y estacionan sin problema. Llegamos a cualquier dirección del barrio.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
     },
-    servicios: ['Carga de gas R134a y R1234yf', 'Detección de fugas', 'Diagnóstico profesional', 'Sanitización', 'Reparación de compresor'],
-    fee: 10000,
-    testimonios: [],
-    enlacesServicios: [
-      { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
-      { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
-      { label: 'Reparación de Compresor', href: '/servicios/reparacion-compresor' },
-      { label: 'Sanitización', href: '/servicios/sanitizacion' },
-    ],
+    'recoleta': {
+      nombre: 'Recoleta',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Recoleta. Atendemos todo el sector norte de Santiago: Barrio Patronato, La Vega Chica, Cerro Blanco, Plaza Recoleta, sector de la Iglesia Santa Filomena y todo el eje Av. Recoleta hasta el Cementerio General. Llegamos en 25-35 minutos desde el centro. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días.',
+      seo: {
+        titulo: 'Recoleta — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Recoleta, Santiago. Carga de gas R134a desde $35.000, llegamos en 25-35 min a Patronato, La Vega, Cerro Blanco y Plaza Recoleta. Sin costo de salida.',
+        keywords: 'aire acondicionado Recoleta, carga gas Recoleta, AC auto Patronato, servicio domicilio La Vega, Cerro Blanco Recoleta, Plaza Recoleta, Metro Patronato',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección y reparación de fugas', 'Cambio de compresor', 'Sanitización', 'Mantención preventiva', 'Reparación evaporador'],
+      fee: 0,
+      tiempoRespuesta: '25-35 minutos',
+      barrios: ['Barrio Patronato', 'La Vega Chica', 'Cerro Blanco', 'Plaza Recoleta', 'Iglesia Santa Filomena', 'Av. Recoleta', 'Calle Domeyko', 'Población La Feria'],
+      referencias: ['Barrio Patronato (metro L1)', 'La Vega Chica (Av. Recoleta)', 'Iglesia Santa Filomena (Patronato 455)', 'Cerro Blanco (sendero)', 'Plaza Recoleta', 'Cementerio General'],
+      casos: [
+        { marca: 'Kia', modelo: 'Rio', año: 2017, problema: 'Fuga evaporador, dueño comerciante de Patronato usa el auto a diario', solucion: 'Reemplazo de evaporador + flushing del sistema + carga R134a', duracion: '4 horas' },
+        { marca: 'Nissan', modelo: 'V16', año: 2012, problema: 'Carga agotada tras 5 años, auto trabaja en reparto por La Vega', solucion: 'Deteccion de fugas, reparacion de conexion en evaporador y carga R134a', duracion: '2 horas' },
+        { marca: 'Suzuki', modelo: 'Swift', año: 2019, problema: 'Mal olor por humedad en evaporador, dueña vive en Cerro Blanco', solucion: 'Sanitización completa del sistema + cambio de filtro de aire habitáculo + carga R134a', duracion: '1.5 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Felipe M.', texto: 'Vivo en Patronato y el técnico llegó al estacionamiento sin problema. Carga de gas rápida y bien hecha.', rating: 5, fecha: '2026-05-20', placeholder: true },
+        { nombre: 'Carolina P.', texto: 'Tengo un Kia Rio con problema de evaporador. Me lo cambiaron en una sola visita. Trabajo en La Vega y vinieron puntuales.', rating: 5, fecha: '2026-04-10', placeholder: true },
+        { nombre: 'Andres V.', texto: 'Mi Suzuki tenía mal olor. Sanitización completa, ahora el aire huele a nuevo. Recomendados.', rating: 5, fecha: '2026-03-22', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Cuánto demoran en llegar a Patronato?', respuesta: 'Llegamos en 25-35 minutos a Barrio Patronato, La Vega, Cerro Blanco y Plaza Recoleta. Recoleta es zona 1, sin costo de salida.' },
+        { pregunta: '¿Atienden en La Vega Chica con calles angostas?', respuesta: 'Sí. La Vega Chica tiene calles estrechas y alto tráfico peatonal. Nuestros técnicos llegan en vehículo compacto y estacionan en zonas habilitadas cercanas.' },
+        { pregunta: '¿Pueden ir al Cementerio General?', respuesta: 'Sí, atendemos en estacionamientos del Cementerio General, del sector de la Iglesia Santa Filomena y de cualquier punto de la comuna. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Trabajan con flotas de reparto en Patronato?', respuesta: 'Sí, tenemos clientes comerciantes de Patronato con flotas pequeñas (3-8 vehículos). Ofrecemos mantención preventiva programada con descuento por volumen.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Mantención Preventiva', href: '/servicios/mantenimiento-preventivo' },
+        { label: 'Diagnóstico Profesional', href: '/servicios/diagnostico' },
+      ],
+    },
+    'macul': {
+      nombre: 'Macul',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Macul. Atendemos Punta de Rieles, Macul Norte, Unidad Vecinal 6 y 7, el sector de Avenida Macul, y todo el eje hasta el límite con Peñalolén (Viña Cousiño y San Luis de Macul). Llegamos en 30-40 minutos desde el centro. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $5.000.',
+      seo: {
+        titulo: 'Macul — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Macul, Santiago. Carga de gas R134a desde $35.000, llegamos en 30-40 min a Punta de Rieles, Macul Norte y Avenida Macul. Diagnóstico gratis.',
+        keywords: 'aire acondicionado Macul, carga gas Macul, AC auto Macul, servicio domicilio Punta de Rieles, Macul Norte, Avenida Macul, Estadio Monumental',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección de fugas', 'Reparación de compresor', 'Sanitización', 'Diagnóstico profesional', 'Mantención preventiva'],
+      fee: 5000,
+      tiempoRespuesta: '30-40 minutos',
+      barrios: ['Punta de Rieles', 'Macul Norte', 'Unidad Vecinal 6', 'Unidad Vecinal 7', 'Avenida Macul', 'San Luis de Macul', 'Sector Estadio Monumental', 'Límite con Peñalolén'],
+      referencias: ['Av. Macul (eje principal)', 'Plaza Macul', 'Viña Cousiño (límite Peñalolén)', 'Estadio Monumental Colo-Colo', 'Colegio San Luis de Macul', 'Parque Macul'],
+      casos: [
+        { marca: 'Hyundai', modelo: 'Accent', año: 2015, problema: 'Aire tibio en pleno enero, dueño vive en Punta de Rieles', solucion: 'Carga completa de gas R134a + test de fugas + verificación de compresor', duracion: '1.5 horas' },
+        { marca: 'Chevrolet', modelo: 'Onix', año: 2019, problema: 'Compresor con ruido, auto usa Av. Macul a diario', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3 horas' },
+        { marca: 'Nissan', modelo: 'March', año: 2014, problema: 'Fuga en conexión de manguera alta presión, sector San Luis de Macul', solucion: 'Reemplazo de mangueras + carga R134a + test de fugas con tinte UV', duracion: '2 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Sebastian R.', texto: 'Atención rápida, a la hora que coordinaron. Mi Hyundai quedó con aire heladísimo.', rating: 5, fecha: '2026-05-15', placeholder: true },
+        { nombre: 'Marcela O.', texto: 'Vivo en Punta de Rieles y pensé que no llegaban hasta acá. Llegaron en 35 minutos. Excelente.', rating: 5, fecha: '2026-04-22', placeholder: true },
+        { nombre: 'Tomas G.', texto: 'El técnico explicó todo el problema del compresor. Cambio y carga en una sola visita. Recomendados.', rating: 5, fecha: '2026-03-08', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Cuánto demoran en llegar a Punta de Rieles?', respuesta: 'Llegamos en 30-40 minutos a Punta de Rieles, Macul Norte y todo el sector de Avenida Macul. Macul tiene un costo de salida de $5.000 por la distancia desde el centro.' },
+        { pregunta: '¿Atienden cerca del Estadio Monumental Colo-Colo?', respuesta: 'Sí. Atendemos en estacionamientos de casas y edificios alrededor del Estadio Monumental, en partidos y en cualquier horario. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Pueden ir hasta Viña Cousiño o San Luis de Macul?', respuesta: 'Sí. Viña Cousiño y San Luis de Macul están dentro de nuestra cobertura. Es un sector tranquilo con estacionamientos privados en casas.' },
+        { pregunta: '¿Trabajan con flotas de la ex zona industrial de Macul?', respuesta: 'Sí. La ex zona industrial de Macul tiene flotas pequeñas y medianas. Ofrecemos mantención preventiva programada con descuento por volumen.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
+    'la-reina': {
+      nombre: 'La Reina',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en La Reina. Atendemos Villa La Reina (la villa más grande de Chile con 1620 casas en 70 ha), Plaza La Reina, Avenida Larraín, el eje Simón Bolívar y el sector de Las Perdices. Carga de gas R1234yf disponible para vehículos híbridos. Llegamos en 25-35 minutos desde el centro. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $5.000.',
+      seo: {
+        titulo: 'La Reina — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en La Reina, Santiago oriente. Carga de gas R134a y R1234yf desde $35.000, llegamos en 25-35 min a Villa La Reina, Plaza La Reina y Avenida Larraín.',
+        keywords: 'aire acondicionado La Reina, carga gas La Reina, AC auto Villa La Reina, R1234yf hibridos La Reina, Avenida Larrain, Plaza La Reina, Las Perdices',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Diagnóstico para híbridos', 'Reparación de compresor', 'Sanitización', 'Cambio de evaporador', 'Mantención flotas híbridas'],
+      fee: 5000,
+      tiempoRespuesta: '25-35 minutos',
+      barrios: ['Villa La Reina', 'Plaza La Reina', 'Avenida Larraín', 'Eje Simón Bolívar', 'Las Perdices', 'La Reina Alta', 'Límite con Peñalolén', 'Límite con Ñuñoa'],
+      referencias: ['Villa La Reina (1620 casas, 70 ha)', 'Plaza La Reina', 'Avenida Larraín (eje comercial)', 'Colegio Villa María Academy', 'Mall Plaza La Reina', 'Parque Las Perdices'],
+      casos: [
+        { marca: 'Toyota', modelo: 'Yaris Hybrid', año: 2021, problema: 'Fuga en evaporador, sistema R1234yf, dueño vive en Villa La Reina', solucion: 'Reemplazo de evaporador + carga R1234yf + test de fugas con equipo específico híbridos', duracion: '4 horas' },
+        { marca: 'Lexus', modelo: 'UX 250h', año: 2020, problema: 'Mantenimiento programado sistema híbrido R1234yf', solucion: 'Servicio completo de mantención A/C híbrido: sanitización, carga R1234yf, revisión de bomba de calor', duracion: '2 horas' },
+        { marca: 'BMW', modelo: 'X3', año: 2018, problema: 'Aire tibio, propietario del sector Las Perdices', solucion: 'Diagnóstico OBD2 + carga R134a + verificación de válvula de expansión', duracion: '1.5 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Monica V.', texto: 'Tengo un Toyota Yaris híbrido y vinieron con el gas R1234yf. Muy profesionales. Recomendados.', rating: 5, fecha: '2026-05-25', placeholder: true },
+        { nombre: 'Rodrigo F.', texto: 'Vivo en Villa La Reina, el técnico llegó en 25 minutos. Carga de gas sin problema. Muy buen servicio.', rating: 5, fecha: '2026-04-18', placeholder: true },
+        { nombre: 'Jose Miguel T.', texto: 'Mi Lexus UX necesita mantención híbrida. Son los únicos que manejan R1234yf en la zona. Confiables.', rating: 5, fecha: '2026-03-30', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Atienden híbridos con gas R1234yf en La Reina?', respuesta: 'Sí. Somos especialistas en sistemas R1234yf para vehículos híbridos y de alta gama. Atendemos Toyota Yaris Hybrid, Lexus, BMW y todas las marcas con este tipo de gas.' },
+        { pregunta: '¿Cuánto demoran en llegar a Villa La Reina?', respuesta: 'Llegamos en 25-35 minutos a Villa La Reina, Plaza La Reina, Avenida Larraín y todo el sector oriente de la comuna. Costo de salida $5.000.' },
+        { pregunta: '¿Pueden ir al colegio Villa María Academy o Mall Plaza La Reina?', respuesta: 'Sí. Atendemos estacionamientos de colegios (Villa María Academy), malls (Plaza La Reina) y cualquier dirección. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Trabajan con flotas de vehículos híbridos corporativos en La Reina?', respuesta: 'Sí. Ofrecemos planes de mantención preventiva para flotas corporativas híbridas (1-20 vehículos) con descuento por volumen y reportes mensuales.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R1234yf', href: '/servicios/carga-gas' },
+        { label: 'Aire Híbrido y Eléctrico', href: '/servicios/aire-electrico-hibrido' },
+        { label: 'Diagnóstico Profesional', href: '/servicios/diagnostico' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
+    'penalolen': {
+      nombre: 'Peñalolén',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Peñalolén. Atendemos La Faena, Lo Hermida, Peñalolén Alto, San Luis de Macul, Peñalolén Nuevo, todo el eje Avenida Grecia-Avenida Quilín y los sectores residenciales altos de la comuna. Llegamos en 35-50 minutos desde el centro (zona oriente alta con pendientes pronunciadas). Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $10.000.',
+      seo: {
+        titulo: 'Peñalolén — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Peñalolén, Santiago. Carga de gas R134a desde $35.000, llegamos en 35-50 min a La Faena, Lo Hermida, Peñalolén Alto y San Luis de Macul.',
+        keywords: 'aire acondicionado Peñalolen, carga gas Peñalolen, AC auto La Faena, servicio domicilio Lo Hermida, Penalolen Alto, San Luis de Macul, Avenida Grecia',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección de fugas', 'Cambio de compresor', 'Sanitización', 'Diagnóstico OBD2', 'Mantención flotas residenciales'],
+      fee: 10000,
+      tiempoRespuesta: '35-50 minutos',
+      barrios: ['La Faena', 'Lo Hermida', 'Peñalolén Alto', 'San Luis de Macul', 'Peñalolén Nuevo', 'Avenida Grecia', 'Avenida Quilín', 'Límite con Macul'],
+      referencias: ['Mall Plaza Egaña (límite Ñuñoa)', 'Viña Cousiño Macul', 'Colegio Mayor Peñalolén', 'Centro de Salud Familiar La Faena', 'Parque Peñalolén', 'Avenida Grecia (eje principal)'],
+      casos: [
+        { marca: 'Renault', modelo: 'Logan', año: 2017, problema: 'Aire no enfría, dueño vive en Lo Hermida', solucion: 'Carga completa R134a + test de fugas + limpieza de filtro de habitáculo', duracion: '1.5 horas' },
+        { marca: 'Kia', modelo: 'Morning', año: 2016, problema: 'Compresor con ruido, sector La Faena', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3 horas' },
+        { marca: 'Chevrolet', modelo: 'Tracker', año: 2020, problema: 'Fuga en conexión de manguera, Peñalolén Alto', solucion: 'Reemplazo de mangueras de alta y baja presión + carga R134a + test de fugas con tinte UV', duracion: '2 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Rodrigo A.', texto: 'Estaba complicado con mi Logan y me lo resolvieron en la misma visita. 10 puntos.', rating: 5, fecha: '2026-05-10', placeholder: true },
+        { nombre: 'Daniela S.', texto: 'Vivo en Lo Hermida, el técnico llegó en 40 minutos. Carga de gas y revisión completa. Buen precio.', rating: 5, fecha: '2026-04-05', placeholder: true },
+        { nombre: 'Patricio N.', texto: 'Mi Kia Morning tenía el compresor con ruido. Lo cambiaron en el día. Recomendados al 100%.', rating: 5, fecha: '2026-03-18', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Cuánto demoran en llegar a Lo Hermida o La Faena?', respuesta: 'Llegamos en 35-50 minutos a Lo Hermida, La Faena, Peñalolén Alto y San Luis de Macul. Peñalolén tiene un costo de salida de $10.000 por la distancia y las pendientes pronunciadas del sector.' },
+        { pregunta: '¿Atienden en Mall Plaza Egaña (límite con Ñuñoa)?', respuesta: 'Sí. Atendemos en estacionamientos del Mall Plaza Egaña, que está en el límite con Ñuñoa, y en cualquier dirección de la comuna. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Pueden ir hasta Viña Cousiño o San Luis de Macul?', respuesta: 'Sí. Viña Cousiño y San Luis de Macul están dentro de nuestra cobertura. Son sectores residenciales tranquilos con estacionamientos privados.' },
+        { pregunta: '¿Trabajan con flotas residenciales en condominios de Peñalolén?', respuesta: 'Sí. Muchos condominios en Peñalolén Alto nos llaman para atenciones a residentes. Ofrecemos planes de mantención preventiva con descuento por volumen para comités de administración.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
+    'pudahuel': {
+      nombre: 'Pudahuel',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Pudahuel. Atendemos el Aeropuerto Arturo Merino Benítez, ENEA, Ciudad de los Valles, Lomas de Lo Aguirre, todo el eje Avenida Teniente Cruz y los barrios residenciales ponientes. Llegamos en 35-50 minutos desde el centro. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $15.000.',
+      seo: {
+        titulo: 'Pudahuel — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Pudahuel, Santiago poniente. Carga de gas R134a desde $35.000, llegamos en 35-50 min al Aeropuerto, ENEA, Ciudad de los Valles y Lomas de Lo Aguirre.',
+        keywords: 'aire acondicionado Pudahuel, carga gas Pudahuel, AC auto aeropuerto Santiago, servicio domicilio ENEA, Ciudad de los Valles, Lomas de Lo Aguirre',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección de fugas', 'Reparación de compresor', 'Sanitización', 'Mantención preventiva', 'Servicio express aeropuerto'],
+      fee: 15000,
+      tiempoRespuesta: '35-50 minutos',
+      barrios: ['Aeropuerto Arturo Merino Benítez', 'ENEA (Parque Empresarial)', 'Ciudad de los Valles', 'Lomas de Lo Aguirre', 'Av. Teniente Cruz', 'Centro de Pudahuel', 'Pudahuel Sur', 'Límite con Maipú'],
+      referencias: ['Aeropuerto Arturo Merino Benítez (SCL)', 'Parque Empresarial ENEA', 'Mall Plaza Pudahuel (límite Maipú)', 'Ciudad de los Valles (conjunto habitacional)', 'Centro de Pudahuel (Plaza de Armas)', 'Estación de Metro Pudahuel (L1)'],
+      casos: [
+        { marca: 'Toyota', modelo: 'Hilux', año: 2019, problema: 'Fuga en evaporador, dueño trabaja en Aeropuerto', solucion: 'Reemplazo de evaporador + carga R134a + test de fugas con tinte UV', duracion: '4 horas' },
+        { marca: 'Chevrolet', modelo: 'D-Max', año: 2018, problema: 'Compresor ruidoso, camioneta ENEA', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3.5 horas' },
+        { marca: 'Hyundai', modelo: 'Tucson', año: 2020, problema: 'Aire no enfría, familia en Ciudad de los Valles', solucion: 'Carga completa R134a + test de fugas + verificación de válvula de expansión', duracion: '1.5 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Carla T.', texto: 'Vivo en Ciudad de los Valles y vinieron sin problema. Servicio rápido y garantizado.', rating: 5, fecha: '2026-05-22', placeholder: true },
+        { nombre: 'Mauricio B.', texto: 'Trabajo en ENEA y el técnico llegó al estacionamiento de la oficina. Carga de gas sin problema. Recomendados.', rating: 5, fecha: '2026-04-14', placeholder: true },
+        { nombre: 'Francisca L.', texto: 'Mi Hyundai Tucson no enfriaba. Llegaron a Ciudad de los Valles en 40 minutos. Excelente atención.', rating: 5, fecha: '2026-03-25', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Atienden en el Aeropuerto Arturo Merino Benítez?', respuesta: 'Sí. Atendemos en estacionamientos del aeropuerto (P1, P2, P3, P4) y en las cercanías. Coordinamos por WhatsApp. Recomendamos llegar con tiempo si vienes de un vuelo.' },
+        { pregunta: '¿Cuánto demoran en llegar a Ciudad de los Valles o ENEA?', respuesta: 'Llegamos en 35-50 minutos a Ciudad de los Valles, ENEA, Lomas de Lo Aguirre y todo el sector poniente. Pudahuel tiene un costo de salida de $15.000 por la distancia desde el centro.' },
+        { pregunta: '¿Pueden ir a Mall Plaza Pudahuel o a la Plaza de Armas de Pudahuel?', respuesta: 'Sí. Atendemos en estacionamientos de Mall Plaza Pudahuel, en el centro de Pudahuel (Plaza de Armas) y en cualquier dirección de la comuna. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Trabajan con flotas de empresas en ENEA?', respuesta: 'Sí. ENEA tiene muchas empresas con flotas. Ofrecemos planes de mantención preventiva programada con descuento por volumen y reportes mensuales para empresas.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Mantención Preventiva', href: '/servicios/mantenimiento-preventivo' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
+    'quilicura': {
+      nombre: 'Quilicura',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Quilicura. Atendemos Lo Marcoleta, Alto Marcoleta, Lo Cruzat (estación de Metro Línea 3), Villa Los Jardines, el sector industrial y todo el eje Avenida Manuel Antonio Matta. Llegamos en 40-55 minutos desde el centro (zona norte extrema). Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $15.000.',
+      seo: {
+        titulo: 'Quilicura — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Quilicura, Santiago norte. Carga de gas R134a desde $35.000, llegamos en 40-55 min a Lo Marcoleta, Lo Cruzat y sector industrial.',
+        keywords: 'aire acondicionado Quilicura, carga gas Quilicura, AC auto Lo Marcoleta, servicio domicilio Lo Cruzat, Quilicura industrial, Metro Linea 3, Alto Marcoleta',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección y reparación de fugas', 'Cambio de compresor', 'Sanitización', 'Diagnóstico profesional', 'Mantención flotas industriales'],
+      fee: 15000,
+      tiempoRespuesta: '40-55 minutos',
+      barrios: ['Lo Marcoleta', 'Alto Marcoleta', 'Lo Cruzat', 'Villa Los Jardines', 'Sector Industrial Quilicura', 'Av. Manuel Antonio Matta', 'Centro de Quilicura', 'Límite con Lampa'],
+      referencias: ['Metro Lo Cruzat (Línea 3)', 'Mall Plaza Quilicura (Av. Manuel Antonio Matta)', 'Parque Industrial Quilicura', 'Centro de Quilicura (Plaza de Armas)', 'Colegio Quilicura', 'Límite con Lampa'],
+      casos: [
+        { marca: 'Mercedes-Benz', modelo: 'Sprinter', año: 2017, problema: 'Fuga en evaporador, van de reparto en sector industrial', solucion: 'Reemplazo de evaporador + carga R134a + test de fugas con tinte UV', duracion: '4 horas' },
+        { marca: 'Ford', modelo: 'Transit', año: 2019, problema: 'Compresor con ruido, van de logística Lo Marcoleta', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3.5 horas' },
+        { marca: 'Nissan', modelo: 'NV200', año: 2018, problema: 'Aire no enfría, vehículo de delivery en Lo Cruzat', solucion: 'Carga completa R134a + test de fugas + verificación de condensador', duracion: '1.5 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Ignacio P.', texto: 'Tengo una van de trabajo y vinieron al sector industrial. Buena atención y precio.', rating: 5, fecha: '2026-05-18', placeholder: true },
+        { nombre: 'Felipe R.', texto: 'Mi Sprinter tenía problema de evaporador. Lo resolvieron en el día. Recomendados para flotas de trabajo.', rating: 5, fecha: '2026-04-12', placeholder: true },
+        { nombre: 'Lorena A.', texto: 'Vivo en Lo Cruzat cerca del Metro. Llegaron en 45 minutos. Carga de gas sin problema. Excelente.', rating: 5, fecha: '2026-03-20', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Atienden en el sector industrial de Quilicura?', respuesta: 'Sí. Somos especialistas en flotas de trabajo: vans de reparto, Sprinter, Transit y utilitarios. Atendemos en estacionamientos del Parque Industrial Quilicura y en cualquier dirección del sector industrial.' },
+        { pregunta: '¿Cuánto demoran en llegar a Lo Marcoleta o Lo Cruzat?', respuesta: 'Llegamos en 40-55 minutos a Lo Marcoleta, Alto Marcoleta, Lo Cruzat y todo el sector. Quilicura tiene un costo de salida de $15.000 por la distancia desde el centro (zona norte extrema).' },
+        { pregunta: '¿Pueden ir al Metro Lo Cruzat (Línea 3)?', respuesta: 'Sí. La estación Lo Cruzat (Línea 3) está cerca de Lo Cruzat. Atendemos en estacionamientos cercanos al Metro y en cualquier dirección de la comuna. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Trabajan con flotas de empresas industriales en Quilicura?', respuesta: 'Sí. El sector industrial de Quilicura tiene muchas empresas con flotas. Ofrecemos planes de mantención preventiva programada con descuento por volumen, atención prioritaria y reportes mensuales.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
+    'estacion-central': {
+      nombre: 'Estación Central',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Estación Central. Atendemos Las Rejas, Barrio Meiggs, Villa Los Libertadores, el sector industrial del eje Alameda-Autoopista Central, Mall Plaza Estación y los conjuntos residenciales de Avenida Libertador. Llegamos en 20-35 minutos desde el centro. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $5.000.',
+      seo: {
+        titulo: 'Estación Central — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Estación Central, Santiago poniente. Carga de gas R134a desde $35.000, llegamos en 20-35 min a Las Rejas, Meiggs, Mall Plaza Estación y Villa Los Libertadores.',
+        keywords: 'aire acondicionado Estación Central, carga gas Estación Central, AC auto Las Rejas, servicio domicilio Meiggs, Mall Plaza Estación, Villa Los Libertadores, Metro Las Rejas, barrio industrial Estación Central',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección y reparación de fugas', 'Cambio de compresor', 'Sanitización', 'Diagnóstico profesional', 'Mantención flotas comerciales'],
+      fee: 5000,
+      tiempoRespuesta: '20-35 minutos',
+      barrios: ['Las Rejas', 'Barrio Meiggs', 'Villa Los Libertadores', 'Población Santa Isabel', 'Barrio Industrial Estación Central', 'Eje Alameda / Autopista Central', 'Av. Libertador Bernardo O Higgins (tramo poniente)', 'Límite con Quinta Normal'],
+      referencias: ['Mall Plaza Estación (Av. Libertador 3250)', 'Metro Las Rejas (Línea 1)', 'Terminal de buses Estación Central', 'Estación Central de Ferrocarriles (EFE)', 'Plaza de Armas Estación Central', 'Barrio Meiggs (comercio mayorista)'],
+      casos: [
+        { marca: 'Chevrolet', modelo: 'NPR', año: 2018, problema: 'Aire no enfría, camión de reparto en eje Alameda', solucion: 'Carga completa R134a + verificación de condensador + test de fugas con tinte UV', duracion: '1.5 horas' },
+        { marca: 'Mercedes-Benz', modelo: 'Sprinter', año: 2019, problema: 'Compresor con ruido, van de logística en Las Rejas', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3.5 horas' },
+        { marca: 'Toyota', modelo: 'Yaris', año: 2020, problema: 'Fuga en evaporador, departamento en Villa Los Libertadores', solucion: 'Reemplazo de evaporador + carga R134a + test de fugas con tinte UV', duracion: '4 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Rodrigo M.', texto: 'Tengo una van de reparto y vinieron a Las Rejas. Servicio rápido y profesional.', rating: 5, fecha: '2026-05-30', placeholder: true },
+        { nombre: 'Carolina V.', texto: 'Vivo cerca de Mall Plaza Estación. Llegaron en 25 minutos. Carga de gas sin problema.', rating: 5, fecha: '2026-04-22', placeholder: true },
+        { nombre: 'Patricio S.', texto: 'Mi Yaris tenía fuga en el evaporador. Lo resolvieron en el día. Recomendados.', rating: 5, fecha: '2026-03-15', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Atienden en el sector industrial de Estación Central?', respuesta: 'Sí. Atendemos el eje Alameda-Autopista Central, Barrio Meiggs, Las Rejas y todas las bodegas del sector industrial. Coordinamos por WhatsApp y llegamos al estacionamiento de tu trabajo o domicilio.' },
+        { pregunta: '¿Cuánto demoran en llegar a Las Rejas o Mall Plaza Estación?', respuesta: 'Llegamos en 20-35 minutos a Las Rejas, Mall Plaza Estación, Barrio Meiggs, Villa Los Libertadores y todo el sector. Estación Central está a minutos del centro, con costo de salida de $5.000.' },
+        { pregunta: '¿Pueden ir al Terminal de buses o a la Estación Central de ferrocarriles?', respuesta: 'Sí. Atendemos estacionamientos del Terminal de buses Estación Central y de la Estación Central de Ferrocarriles. Coordinamos por WhatsApp para acceder a estacionamientos autorizados.' },
+        { pregunta: '¿Trabajan con flotas de empresas comerciales en Estación Central?', respuesta: 'Sí. El sector comercial e industrial de Estación Central tiene muchas empresas con flotas de vans y camiones. Ofrecemos planes de mantención preventiva programada con descuento por volumen y atención prioritaria.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
+    'quinta-normal': {
+      nombre: 'Quinta Normal',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Quinta Normal. Atendemos Barrio Matucana-Lourdes, Barrio Argentina, Lo Franco, Estación Quinta Normal, el sector poniente de la comuna, Plaza de Armas y los conjuntos residenciales del eje Avenida Carrascal. Llegamos en 20-30 minutos desde el centro. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $5.000.',
+      seo: {
+        titulo: 'Quinta Normal — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Quinta Normal, Santiago norponiente. Carga de gas R134a desde $35.000, llegamos en 20-30 min a Matucana, Lo Franco, Barrio Argentina y Plaza de Armas.',
+        keywords: 'aire acondicionado Quinta Normal, carga gas Quinta Normal, AC auto Matucana, servicio domicilio Lo Franco, Barrio Argentina, Estación Quinta Normal, Metro Quinta Normal, barrio industrial Matucana',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección y reparación de fugas', 'Cambio de compresor', 'Sanitización', 'Diagnóstico profesional', 'Mantención preventiva'],
+      fee: 5000,
+      tiempoRespuesta: '20-30 minutos',
+      barrios: ['Barrio Matucana-Lourdes', 'Barrio Argentina', 'Lo Franco', 'Estación Quinta Normal', 'Plaza de Armas Quinta Normal', 'Av. Carrascal', 'Sector poniente Quinta Normal', 'Límite con Cerro Navia'],
+      referencias: ['Estación Quinta Normal (Metrotren Nos)', 'Parque Quinta Normal (límite poniente)', 'Plaza de Armas Quinta Normal (Av. Carrascal con San Pablo)', 'Barrio Matucana (eje industrial-cultural)', 'Colegio Quinta Normal', 'Cementerio General de Santiago (límite oriente)'],
+      casos: [
+        { marca: 'Nissan', modelo: 'V16', año: 2017, problema: 'Aire no enfría, dueño en Barrio Argentina', solucion: 'Carga completa R134a + test de fugas + verificación de condensador', duracion: '1.5 horas' },
+        { marca: 'Hyundai', modelo: 'Accent', año: 2019, problema: 'Compresor ruidoso, taxi del sector Matucana', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3.5 horas' },
+        { marca: 'Kia', modelo: 'Rio', año: 2020, problema: 'Fuga en evaporador, familia en Lo Franco', solucion: 'Reemplazo de evaporador + carga R134a + test de fugas con tinte UV', duracion: '4 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Marcelo G.', texto: 'Tengo un taxi y trabajo en Matucana. Vinieron al estacionamiento. Excelente servicio.', rating: 5, fecha: '2026-05-25', placeholder: true },
+        { nombre: 'Daniela O.', texto: 'Vivo en Barrio Argentina. Llegaron en 25 minutos. Carga de gas sin problema. Recomendados.', rating: 5, fecha: '2026-04-18', placeholder: true },
+        { nombre: 'Luis F.', texto: 'Mi Kia Rio tenía problema de evaporador. Lo resolvieron en el día. Muy profesionales.', rating: 5, fecha: '2026-03-12', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Atienden en el sector Matucana-Lourdes?', respuesta: 'Sí. Atendemos Barrio Matucana-Lourdes, Barrio Argentina, Lo Franco y todo el sector. Es una zona con mucha actividad industrial y residencial. Coordinamos por WhatsApp y llegamos a estacionamientos o domicilio.' },
+        { pregunta: '¿Cuánto demoran en llegar a Lo Franco o a la Plaza de Armas de Quinta Normal?', respuesta: 'Llegamos en 20-30 minutos a Lo Franco, Plaza de Armas, Barrio Argentina, Matucana y todo el sector. Quinta Normal está a minutos del centro, con costo de salida de $5.000.' },
+        { pregunta: '¿Pueden ir a la Estación Quinta Normal o al Parque Quinta Normal?', respuesta: 'Sí. Atendemos estacionamientos cercanos a la Estación Quinta Normal (Metrotren Nos) y en los bordes del Parque Quinta Normal. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Trabajan con flotas de taxis o empresas del sector Matucana?', respuesta: 'Sí. El sector Matucana tiene muchas empresas y taxis. Ofrecemos planes de mantención preventiva programada con descuento por volumen y atención prioritaria para flotas de trabajo.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
+    'pedro-aguirre-cerda': {
+      nombre: 'Pedro Aguirre Cerda',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Pedro Aguirre Cerda (PAC). Atendemos Villa Progreso, las unidades vecinales del Zanjón de la Aguada, Avenida Maipú, Carlos Valdovinos, Bascuñán Guerrero, el sector sur de la comuna y el eje Avenida Departamental. Llegamos en 25-40 minutos desde el centro. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $10.000.',
+      seo: {
+        titulo: 'Pedro Aguirre Cerda — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Pedro Aguirre Cerda (PAC), Santiago sur. Carga de gas R134a desde $35.000, llegamos en 25-40 min a Villa Progreso, Zanjón de la Aguada, Carlos Valdovinos y Bascuñán.',
+        keywords: 'aire acondicionado Pedro Aguirre Cerda, carga gas PAC, AC auto Villa Progreso, servicio domicilio Zanjón de la Aguada, Carlos Valdovinos, Bascuñán Guerrero, Avenida Maipú, Avenida Departamental',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección y reparación de fugas', 'Cambio de compresor', 'Sanitización', 'Diagnóstico profesional', 'Mantención preventiva'],
+      fee: 10000,
+      tiempoRespuesta: '25-40 minutos',
+      barrios: ['Villa Progreso', 'Población Los Nogales', 'Villa Sur', 'Villa México', 'Unidades vecinales del Zanjón de la Aguada', 'Eje Avenida Maipú', 'Carlos Valdovinos', 'Bascuñán Guerrero'],
+      referencias: ['Eje Avenida Maipú (límite con Maipú)', 'Avenida Carlos Valdovinos', 'Avenida Bascuñán Guerrero', 'Zanjón de la Aguada (eje oriente-poniente)', 'Plaza PAC', 'Municipalidad de Pedro Aguirre Cerda'],
+      casos: [
+        { marca: 'Chevrolet', modelo: 'Corsa', año: 2016, problema: 'Aire no enfría, dueño en Villa Progreso', solucion: 'Carga completa R134a + test de fugas + verificación de condensador', duracion: '1.5 horas' },
+        { marca: 'Toyota', modelo: 'Yaris', año: 2018, problema: 'Fuga en evaporador, familia en Villa México', solucion: 'Reemplazo de evaporador + carga R134a + test de fugas con tinte UV', duracion: '4 horas' },
+        { marca: 'Nissan', modelo: 'V16', año: 2017, problema: 'Compresor ruidoso, taxi del eje Maipú', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3.5 horas' },
+      ],
+      testimonios: [
+        { nombre: 'José L.', texto: 'Vivo en Villa Progreso. Llegaron al estacionamiento de mi condominio. Muy buen servicio.', rating: 5, fecha: '2026-05-28', placeholder: true },
+        { nombre: 'Ana M.', texto: 'Tengo un taxi y trabajo en Carlos Valdovinos. Carga de gas rápida y garantizado.', rating: 5, fecha: '2026-04-20', placeholder: true },
+        { nombre: 'Ricardo H.', texto: 'Mi Yaris no enfriaba. Lo resolvieron en el día. Recomendados para la zona sur.', rating: 5, fecha: '2026-03-18', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Atienden en Villa Progreso y unidades vecinales del Zanjón de la Aguada?', respuesta: 'Sí. Atendemos Villa Progreso, todas las unidades vecinales del Zanjón de la Aguada, Bascuñán Guerrero, Carlos Valdovinos y todo el sector. Coordinamos por WhatsApp y llegamos a estacionamientos o domicilio.' },
+        { pregunta: '¿Cuánto demoran en llegar a PAC desde el centro?', respuesta: 'Llegamos en 25-40 minutos a Villa Progreso, Villa México, eje Avenida Maipú, Bascuñán Guerrero y todo el sector. Pedro Aguirre Cerda tiene costo de salida de $10.000 por la distancia desde el centro (zona surponiente).' },
+        { pregunta: '¿Pueden ir al eje Avenida Maipú o a la Plaza PAC?', respuesta: 'Sí. Atendemos estacionamientos en el eje Avenida Maipú (límite con Maipú), Avenida Carlos Valdovinos, Bascuñán Guerrero y la Plaza PAC. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Trabajan con flotas de taxis o empresas del sector?', respuesta: 'Sí. PAC tiene actividad comercial y taxis en el eje Maipú. Ofrecemos planes de mantención preventiva programada con descuento por volumen y atención prioritaria para flotas.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
+    'san-miguel': {
+      nombre: 'San Miguel',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en San Miguel. Atendemos Barrio Montiel, Barros Luco, San Miguel Oriente, Germania, Madeco, Plaza Llico, la Gran Avenida José Miguel Carrera y Mall Plaza San Miguel. Llegamos en 20-35 minutos desde el centro. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $5.000.',
+      seo: {
+        titulo: 'San Miguel — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en San Miguel, Santiago sur. Carga de gas R134a desde $35.000, llegamos en 20-35 min a Gran Avenida, Mall Plaza San Miguel, Barrio Montiel y Plaza Llico.',
+        keywords: 'aire acondicionado San Miguel, carga gas San Miguel, AC auto Gran Avenida, servicio domicilio Mall Plaza San Miguel, Metro San Miguel, Barrio Montiel, Barros Luco, Plaza Llico',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección y reparación de fugas', 'Cambio de compresor', 'Sanitización', 'Diagnóstico profesional', 'Mantención preventiva'],
+      fee: 5000,
+      tiempoRespuesta: '20-35 minutos',
+      barrios: ['Población Silva Vildósola', 'Barrio Montiel', 'Barrio Barros Luco', 'Barrio San Miguel Oriente', 'Barrio Germania', 'Barrio Madeco', 'Barrio Plaza Llico', 'Gran Avenida José Miguel Carrera'],
+      referencias: ['Mall Plaza San Miguel (Gran Avenida 5670)', 'Metro San Miguel (Línea 2)', 'Metro El Parrón (Línea 2)', 'Plaza Llico', 'Municipalidad de San Miguel', 'Mall Chino San Miguel (Av. Carlos Valdovinos 255)'],
+      casos: [
+        { marca: 'Toyota', modelo: 'Corolla', año: 2019, problema: 'Aire no enfría, departamento en Gran Avenida', solucion: 'Carga completa R134a + test de fugas + verificación de condensador', duracion: '1.5 horas' },
+        { marca: 'Hyundai', modelo: 'Tucson', año: 2020, problema: 'Compresor ruidoso, familia en Barrio Montiel', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3.5 horas' },
+        { marca: 'Kia', modelo: 'Sportage', año: 2018, problema: 'Fuga en evaporador, dueño en Plaza Llico', solucion: 'Reemplazo de evaporador + carga R134a + test de fugas con tinte UV', duracion: '4 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Felipe C.', texto: 'Vivo en Gran Avenida. Llegaron a mi edificio en 25 minutos. Excelente atención.', rating: 5, fecha: '2026-05-29', placeholder: true },
+        { nombre: 'Macarena P.', texto: 'Tengo un auto de trabajo y vinieron a Mall Plaza San Miguel. Servicio garantizado.', rating: 5, fecha: '2026-04-23', placeholder: true },
+        { nombre: 'Andrés Q.', texto: 'Mi Tucson no enfriaba. Lo resolvieron en el día. Recomendados para la zona sur.', rating: 5, fecha: '2026-03-19', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Atienden en Mall Plaza San Miguel y la Gran Avenida?', respuesta: 'Sí. Atendemos Mall Plaza San Miguel, todo el eje Gran Avenida José Miguel Carrera, los estacionamientos del Mall y los edificios residenciales del sector. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Cuánto demoran en llegar a San Miguel desde el centro?', respuesta: 'Llegamos en 20-35 minutos a Mall Plaza San Miguel, Gran Avenida, Barrio Montiel, Plaza Llico y todo el sector. San Miguel está cerca del centro, con costo de salida de $5.000.' },
+        { pregunta: '¿Pueden ir al Metro San Miguel o Metro El Parrón?', respuesta: 'Sí. Atendemos estacionamientos cercanos al Metro San Miguel (Línea 2) y Metro El Parrón (Línea 2). Coordinamos por WhatsApp para acceder a estacionamientos autorizados.' },
+        { pregunta: '¿Trabajan con flotas de empresas en San Miguel?', respuesta: 'Sí. San Miguel tiene actividad comercial en la Gran Avenida y Mall Plaza San Miguel. Ofrecemos planes de mantención preventiva programada con descuento por volumen y atención prioritaria.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
+    'san-joaquin': {
+      nombre: 'San Joaquín',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en San Joaquín. Atendemos Villa Navidad, Población La Legua, el sector de Avenida Carlos Valdovinos, Plaza Cabildo, Mall Chino San Joaquín, el eje Avenida Vicuña Mackenna y los barrios residenciales del sector sur. Llegamos en 25-40 minutos desde el centro. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $10.000.',
+      seo: {
+        titulo: 'San Joaquín — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en San Joaquín, Santiago sur. Carga de gas R134a desde $35.000, llegamos en 25-40 min a La Legua, Carlos Valdovinos, Mall Chino San Joaquín y Plaza Cabildo.',
+        keywords: 'aire acondicionado San Joaquín, carga gas San Joaquín, AC auto La Legua, servicio domicilio Carlos Valdovinos, Mall Chino San Joaquín, Plaza Cabildo, Vicuña Mackenna, Villa Navidad',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección y reparación de fugas', 'Cambio de compresor', 'Sanitización', 'Diagnóstico profesional', 'Mantención preventiva'],
+      fee: 10000,
+      tiempoRespuesta: '25-40 minutos',
+      barrios: ['Villa Navidad', 'Población La Legua', 'Barrio San Joaquín Centro', 'Eje Avenida Carlos Valdovinos', 'Sector Plaza Cabildo', 'Eje Avenida Vicuña Mackenna (tramo sur)', 'Población Santa Elena', 'Límite con Macul'],
+      referencias: ['Mall Chino San Joaquín (Av. Carlos Valdovinos 255)', 'Plaza Cabildo (Población La Legua)', 'Avenida Carlos Valdovinos', 'Eje Vicuña Mackenna (tramo sur)', 'Municipalidad de San Joaquín', 'Estadio Monumental (límite poniente)'],
+      casos: [
+        { marca: 'Chevrolet', modelo: 'Sail', año: 2018, problema: 'Aire no enfría, dueño en La Legua', solucion: 'Carga completa R134a + test de fugas + verificación de condensador', duracion: '1.5 horas' },
+        { marca: 'Nissan', modelo: 'March', año: 2019, problema: 'Compresor ruidoso, familia en Carlos Valdovinos', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3.5 horas' },
+        { marca: 'Hyundai', modelo: 'Accent', año: 2020, problema: 'Fuga en evaporador, dueño en Villa Navidad', solucion: 'Reemplazo de evaporador + carga R134a + test de fugas con tinte UV', duracion: '4 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Sebastián R.', texto: 'Vivo en La Legua. Llegaron al estacionamiento de mi condominio. Muy buen servicio.', rating: 5, fecha: '2026-05-27', placeholder: true },
+        { nombre: 'Camila U.', texto: 'Tengo auto de trabajo y vinieron a Mall Chino San Joaquín. Servicio rápido y garantizado.', rating: 5, fecha: '2026-04-21', placeholder: true },
+        { nombre: 'Mauricio D.', texto: 'Mi Accent no enfriaba. Lo resolvieron en el día. Recomendados para la zona sur de San Joaquín.', rating: 5, fecha: '2026-03-17', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Atienden en La Legua y Villa Navidad?', respuesta: 'Sí. Atendemos Población La Legua, Villa Navidad, todo el eje Carlos Valdovinos, Plaza Cabildo y los barrios residenciales del sector. Coordinamos por WhatsApp y llegamos a estacionamientos o domicilio.' },
+        { pregunta: '¿Cuánto demoran en llegar a San Joaquín desde el centro?', respuesta: 'Llegamos en 25-40 minutos a La Legua, Carlos Valdovinos, Mall Chino San Joaquín, Plaza Cabildo y todo el sector. San Joaquín tiene costo de salida de $10.000 por la distancia desde el centro.' },
+        { pregunta: '¿Pueden ir al Mall Chino San Joaquín o a la Plaza Cabildo?', respuesta: 'Sí. Atendemos estacionamientos del Mall Chino San Joaquín (Av. Carlos Valdovinos 255), Plaza Cabildo y todo el sector. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Trabajan con flotas de empresas en San Joaquín?', respuesta: 'Sí. San Joaquín tiene actividad comercial en Carlos Valdovinos. Ofrecemos planes de mantención preventiva programada con descuento por volumen y atención prioritaria para flotas.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
+    'cerrillos': {
+      nombre: 'Cerrillos',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Cerrillos. Atendemos Barrio Buzeta, Plaza de Armas, el sector industrial poniente, Mall Plaza Oeste, Metro Cerrillos y los barrios residenciales del sector Autopista Central. Llegamos en 25-40 minutos desde el centro. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $10.000.',
+      seo: {
+        titulo: 'Cerrillos — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Cerrillos, Santiago surponiente. Carga de gas R134a desde $35.000, llegamos en 25-40 min a Mall Plaza Oeste, Metro Cerrillos, Barrio Buzeta y Plaza de Armas.',
+        keywords: 'aire acondicionado Cerrillos, carga gas Cerrillos, AC auto Mall Plaza Oeste, servicio domicilio Metro Cerrillos, Barrio Buzeta, Plaza de Armas Cerrillos, Autopista Central, Cerrillos industrial',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección y reparación de fugas', 'Cambio de compresor', 'Sanitización', 'Diagnóstico profesional', 'Mantención preventiva'],
+      fee: 10000,
+      tiempoRespuesta: '25-40 minutos',
+      barrios: ['Barrio Buzeta', 'Plaza de Armas Cerrillos', 'Barrio Industrial Cerrillos', 'Sector Autopista Central', 'Av. Pedro Aguirre Cerda (tramo Cerrillos)', 'Población Juanita', 'Villa O Higgins', 'Límite con Maipú'],
+      referencias: ['Mall Plaza Oeste (límite con Maipú)', 'Metro Cerrillos (Línea 6)', 'Plaza de Armas Cerrillos (Av. Pedro Aguirre Cerda)', 'Barrio Buzeta (Chacra San Andrés histórica)', 'Municipalidad de Cerrillos', 'Aeródromo de Cerrillos (ex aeropuerto)'],
+      casos: [
+        { marca: 'Chevrolet', modelo: 'Sail', año: 2018, problema: 'Aire no enfría, dueño en Barrio Buzeta', solucion: 'Carga completa R134a + test de fugas + verificación de condensador', duracion: '1.5 horas' },
+        { marca: 'Toyota', modelo: 'Yaris', año: 2019, problema: 'Compresor ruidoso, familia en Villa O Higgins', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3.5 horas' },
+        { marca: 'Hyundai', modelo: 'Accent', año: 2020, problema: 'Fuga en evaporador, dueño en Población Juanita', solucion: 'Reemplazo de evaporador + carga R134a + test de fugas con tinte UV', duracion: '4 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Claudio N.', texto: 'Vivo en Barrio Buzeta. Llegaron al estacionamiento de mi condominio. Muy buen servicio.', rating: 5, fecha: '2026-05-26', placeholder: true },
+        { nombre: 'Ximena T.', texto: 'Tengo un auto de trabajo y vinieron a Mall Plaza Oeste. Servicio rápido y garantizado.', rating: 5, fecha: '2026-04-19', placeholder: true },
+        { nombre: 'Pablo E.', texto: 'Mi Accent no enfriaba. Lo resolvieron en el día. Recomendados para Cerrillos.', rating: 5, fecha: '2026-03-16', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Atienden en Mall Plaza Oeste y Metro Cerrillos?', respuesta: 'Sí. Atendemos Mall Plaza Oeste (límite con Maipú), Metro Cerrillos (Línea 6), Plaza de Armas, Barrio Buzeta y todo el sector. Coordinamos por WhatsApp y llegamos a estacionamientos o domicilio.' },
+        { pregunta: '¿Cuánto demoran en llegar a Cerrillos desde el centro?', respuesta: 'Llegamos en 25-40 minutos a Mall Plaza Oeste, Metro Cerrillos, Barrio Buzeta, Plaza de Armas y todo el sector. Cerrillos tiene costo de salida de $10.000 por la distancia desde el centro (zona surponiente).' },
+        { pregunta: '¿Pueden ir al Aeródromo de Cerrillos o al sector industrial?', respuesta: 'Sí. Atendemos estacionamientos en el Aeródromo de Cerrillos (ex aeropuerto), el sector industrial poniente y la Autopista Central. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Trabajan con flotas de empresas en Cerrillos?', respuesta: 'Sí. Cerrillos tiene actividad industrial y comercial. Ofrecemos planes de mantención preventiva programada con descuento por volumen y atención prioritaria para flotas de trabajo.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
+    'la-cisterna': {
+      nombre: 'La Cisterna',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en La Cisterna. Atendemos la Gran Avenida José Miguel Carrera, Intermodal La Cisterna (L2 y L4A), Plaza de Armas, los barrios residenciales tradicionales del sector y el límite con San Ramón. Llegamos en 25-40 minutos desde el centro. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $10.000.',
+      seo: {
+        titulo: 'La Cisterna — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en La Cisterna, Santiago sur. Carga de gas R134a desde $35.000, llegamos en 25-40 min a Intermodal La Cisterna, Gran Avenida, Plaza de Armas y barrios residenciales.',
+        keywords: 'aire acondicionado La Cisterna, carga gas La Cisterna, AC auto Intermodal La Cisterna, servicio domicilio Gran Avenida, Metro La Cisterna, Línea 4A, Plaza de Armas La Cisterna, barrio tradicional La Cisterna',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección y reparación de fugas', 'Cambio de compresor', 'Sanitización', 'Diagnóstico profesional', 'Mantención preventiva'],
+      fee: 10000,
+      tiempoRespuesta: '25-40 minutos',
+      barrios: ['Barrio Tradicional La Cisterna', 'Gran Avenida (tramo La Cisterna)', 'Población La Cisterna Centro', 'Sector Intermodal La Cisterna', 'Plaza de Armas La Cisterna', 'Villa México', 'Límite con San Ramón', 'Límite con El Bosque'],
+      referencias: ['Intermodal La Cisterna (Línea 2 + Línea 4A)', 'Gran Avenida José Miguel Carrera', 'Plaza de Armas La Cisterna (Av. Libertador)', 'Municipalidad de La Cisterna', 'Mall Plaza (límite con San Ramón)', 'Colegio La Cisterna'],
+      casos: [
+        { marca: 'Nissan', modelo: 'V16', año: 2017, problema: 'Aire no enfría, dueño en La Cisterna Centro', solucion: 'Carga completa R134a + test de fugas + verificación de condensador', duracion: '1.5 horas' },
+        { marca: 'Kia', modelo: 'Rio', año: 2019, problema: 'Compresor ruidoso, familia en Villa México', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3.5 horas' },
+        { marca: 'Hyundai', modelo: 'Accent', año: 2020, problema: 'Fuga en evaporador, dueño cerca de Intermodal', solucion: 'Reemplazo de evaporador + carga R134a + test de fugas con tinte UV', duracion: '4 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Rodrigo A.', texto: 'Vivo cerca de Intermodal La Cisterna. Llegaron al estacionamiento en 30 minutos. Excelente.', rating: 5, fecha: '2026-05-25', placeholder: true },
+        { nombre: 'Mónica B.', texto: 'Tengo auto de trabajo y vinieron a la Gran Avenida. Servicio rápido y garantizado.', rating: 5, fecha: '2026-04-17', placeholder: true },
+        { nombre: 'Eduardo I.', texto: 'Mi Accent no enfriaba. Lo resolvieron en el día. Recomendados para la zona sur.', rating: 5, fecha: '2026-03-14', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Atienden en Intermodal La Cisterna (L2 y L4A)?', respuesta: 'Sí. Atendemos estacionamientos en Intermodal La Cisterna (Línea 2 y Línea 4A), Gran Avenida José Miguel Carrera, Plaza de Armas y los barrios residenciales del sector. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Cuánto demoran en llegar a La Cisterna desde el centro?', respuesta: 'Llegamos en 25-40 minutos a Intermodal La Cisterna, Gran Avenida, Plaza de Armas, Villa México y todo el sector. La Cisterna tiene costo de salida de $10.000 por la distancia desde el centro (zona sur).' },
+        { pregunta: '¿Pueden ir a la Plaza de Armas de La Cisterna o al límite con San Ramón?', respuesta: 'Sí. Atendemos estacionamientos en la Plaza de Armas La Cisterna, todo el límite con San Ramón y el límite con El Bosque. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Trabajan con flotas de empresas en La Cisterna?', respuesta: 'Sí. La Cisterna tiene actividad comercial en Gran Avenida. Ofrecemos planes de mantención preventiva programada con descuento por volumen y atención prioritaria para flotas de trabajo.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
+    'conchali': {
+      nombre: 'Conchalí',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Conchalí. Atendemos La Pincoya, Villa Conchalí, El Barrero, Los Bosques de Santiago, Santa Victoria, El Rosal, Plaza Chacabuco, Metro Plaza Chacabuco (Línea 3) y el límite con Huechuraba. Llegamos en 25-40 minutos desde el centro. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $10.000.',
+      seo: {
+        titulo: 'Conchalí — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Conchalí, Santiago norte. Carga de gas R134a desde $35.000, llegamos en 25-40 min a La Pincoya, Plaza Chacabuco, Metro Línea 3, El Barrero y Santa Victoria.',
+        keywords: 'aire acondicionado Conchalí, carga gas Conchalí, AC auto La Pincoya, servicio domicilio Plaza Chacabuco, Metro Plaza Chacabuco, Línea 3, El Barrero, Santa Victoria, Conchalí norte',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección y reparación de fugas', 'Cambio de compresor', 'Sanitización', 'Diagnóstico profesional', 'Mantención preventiva'],
+      fee: 10000,
+      tiempoRespuesta: '25-40 minutos',
+      barrios: ['La Pincoya', 'Villa Conchalí', 'El Barrero', 'Los Bosques de Santiago', 'Santa Victoria', 'El Rosal', 'Barrio Central Conchalí', 'Límite con Huechuraba'],
+      referencias: ['Metro Plaza Chacabuco (Línea 3)', 'Mall Plaza Norte (límite con Huechuraba)', 'Plaza de Armas Conchalí', 'Barrio Vespucio Norte', 'Municipalidad de Conchalí', 'Av. Independencia (tramo norte)'],
+      casos: [
+        { marca: 'Chevrolet', modelo: 'Corsa', año: 2016, problema: 'Aire no enfría, dueño en La Pincoya', solucion: 'Carga completa R134a + test de fugas + verificación de condensador', duracion: '1.5 horas' },
+        { marca: 'Toyota', modelo: 'Yaris', año: 2018, problema: 'Compresor ruidoso, familia en El Barrero', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3.5 horas' },
+        { marca: 'Hyundai', modelo: 'Tucson', año: 2020, problema: 'Fuga en evaporador, dueño cerca de Plaza Chacabuco', solucion: 'Reemplazo de evaporador + carga R134a + test de fugas con tinte UV', duracion: '4 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Gabriel O.', texto: 'Vivo en La Pincoya. Llegaron al estacionamiento de mi condominio. Muy buen servicio.', rating: 5, fecha: '2026-05-24', placeholder: true },
+        { nombre: 'Rosa P.', texto: 'Tengo auto de trabajo y vinieron cerca de Plaza Chacabuco. Servicio rápido y garantizado.', rating: 5, fecha: '2026-04-16', placeholder: true },
+        { nombre: 'Cristián M.', texto: 'Mi Tucson no enfriaba. Lo resolvieron en el día. Recomendados para la zona norte.', rating: 5, fecha: '2026-03-13', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Atienden en La Pincoya y Plaza Chacabuco (Línea 3)?', respuesta: 'Sí. Atendemos La Pincoya, Villa Conchalí, El Barrero, Plaza Chacabuco y el Metro Plaza Chacabuco (Línea 3). Coordinamos por WhatsApp y llegamos a estacionamientos o domicilio.' },
+        { pregunta: '¿Cuánto demoran en llegar a Conchalí desde el centro?', respuesta: 'Llegamos en 25-40 minutos a La Pincoya, Plaza Chacabuco, El Barrero, Santa Victoria y todo el sector. Conchalí tiene costo de salida de $10.000 por la distancia desde el centro (zona norte).' },
+        { pregunta: '¿Pueden ir a Mall Plaza Norte o al límite con Huechuraba?', respuesta: 'Sí. Atendemos estacionamientos de Mall Plaza Norte (límite con Huechuraba) y todo el límite oriente de la comuna. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Trabajan con flotas de empresas en Conchalí?', respuesta: 'Sí. Conchalí tiene actividad comercial en Av. Independencia y Plaza Chacabuco. Ofrecemos planes de mantención preventiva programada con descuento por volumen y atención prioritaria para flotas.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
+    'cerro-navia': {
+      nombre: 'Cerro Navia',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Cerro Navia. Atendemos Villa Nueva California, los sectores residenciales del eje Avenida Huelén, Plaza de Armas, el sector poniente de la comuna y los barrios del límite con Renca, Quinta Normal y Lo Prado. Llegamos en 25-40 minutos desde el centro. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $10.000.',
+      seo: {
+        titulo: 'Cerro Navia — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Cerro Navia, Santiago norponiente. Carga de gas R134a desde $35.000, llegamos en 25-40 min a Villa Nueva California, Avenida Huelén, Plaza de Armas y límite con Renca.',
+        keywords: 'aire acondicionado Cerro Navia, carga gas Cerro Navia, AC auto Villa Nueva California, servicio domicilio Avenida Huelén, Plaza de Armas Cerro Navia, Cerro Navia poniente, Metro Línea 7 futura',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección y reparación de fugas', 'Cambio de compresor', 'Sanitización', 'Diagnóstico profesional', 'Mantención preventiva'],
+      fee: 10000,
+      tiempoRespuesta: '25-40 minutos',
+      barrios: ['Villa Nueva California', 'Eje Avenida Huelén', 'Plaza de Armas Cerro Navia', 'Sector poniente Cerro Navia', 'Población Santa María', 'Límite con Renca', 'Límite con Quinta Normal', 'Límite con Lo Prado'],
+      referencias: ['Plaza de Armas Cerro Navia (Av. Huelén con Mapocho)', 'Municipalidad de Cerro Navia', 'Eje Avenida Huelén', 'Villa Nueva California (conjunto habitacional)', 'Límite poniente con Renca', 'Futura Línea 7 Metro (en construcción)'],
+      casos: [
+        { marca: 'Nissan', modelo: 'V16', año: 2016, problema: 'Aire no enfría, dueño en Villa Nueva California', solucion: 'Carga completa R134a + test de fugas + verificación de condensador', duracion: '1.5 horas' },
+        { marca: 'Kia', modelo: 'Rio', año: 2018, problema: 'Compresor ruidoso, familia en eje Huelén', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3.5 horas' },
+        { marca: 'Hyundai', modelo: 'Accent', año: 2020, problema: 'Fuga en evaporador, dueño cerca de Plaza de Armas', solucion: 'Reemplazo de evaporador + carga R134a + test de fugas con tinte UV', duracion: '4 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Manuel R.', texto: 'Vivo en Villa Nueva California. Llegaron al estacionamiento de mi condominio. Muy buen servicio.', rating: 5, fecha: '2026-05-23', placeholder: true },
+        { nombre: 'Katherine S.', texto: 'Tengo auto de trabajo y vinieron al eje Huelén. Servicio rápido y garantizado.', rating: 5, fecha: '2026-04-15', placeholder: true },
+        { nombre: 'Luis C.', texto: 'Mi Accent no enfriaba. Lo resolvieron en el día. Recomendados para la zona norponiente.', rating: 5, fecha: '2026-03-11', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Atienden en Villa Nueva California y el eje Huelén?', respuesta: 'Sí. Atendemos Villa Nueva California, todo el eje Avenida Huelén, Plaza de Armas Cerro Navia, Población Santa María y el sector poniente. Coordinamos por WhatsApp y llegamos a estacionamientos o domicilio.' },
+        { pregunta: '¿Cuánto demoran en llegar a Cerro Navia desde el centro?', respuesta: 'Llegamos en 25-40 minutos a Villa Nueva California, eje Huelén, Plaza de Armas y todo el sector. Cerro Navia tiene costo de salida de $10.000 por la distancia desde el centro (zona norponiente).' },
+        { pregunta: '¿Pueden ir al límite con Renca o Quinta Normal?', respuesta: 'Sí. Atendemos estacionamientos en el límite oriente (Quinta Normal), norte (Renca) y sur (Lo Prado) de Cerro Navia. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Trabajan con flotas de empresas en Cerro Navia?', respuesta: 'Sí. Cerro Navia tiene actividad comercial y mejor conectividad con la futura Línea 7. Ofrecemos planes de mantención preventiva programada con descuento por volumen y atención prioritaria para flotas.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
+    'lo-prado': {
+      nombre: 'Lo Prado',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Lo Prado. Atendemos el eje Avenida San Pablo, Plaza de Armas Lo Prado, el límite con Cerro Navia, Pudahuel, Quinta Normal, los barrios residenciales del sector poniente y la futura Línea 7 de Metro. Llegamos en 25-40 minutos desde el centro. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $10.000.',
+      seo: {
+        titulo: 'Lo Prado — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Lo Prado, Santiago poniente. Carga de gas R134a desde $35.000, llegamos en 25-40 min a Avenida San Pablo, Plaza de Armas, límite Cerro Navia y futura Línea 7.',
+        keywords: 'aire acondicionado Lo Prado, carga gas Lo Prado, AC auto Avenida San Pablo, servicio domicilio Plaza de Armas Lo Prado, Lo Prado poniente, Metro Línea 7 futura, Lo Prado estación',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección y reparación de fugas', 'Cambio de compresor', 'Sanitización', 'Diagnóstico profesional', 'Mantención preventiva'],
+      fee: 10000,
+      tiempoRespuesta: '25-40 minutos',
+      barrios: ['Eje Avenida San Pablo', 'Plaza de Armas Lo Prado', 'Sector residencial poniente', 'Villa Lo Prado', 'Población Lo Prado', 'Límite con Cerro Navia', 'Límite con Pudahuel', 'Límite con Quinta Normal'],
+      referencias: ['Plaza de Armas Lo Prado (Av. San Pablo)', 'Eje Avenida San Pablo', 'Municipalidad de Lo Prado', 'Límite oriente con Quinta Normal', 'Límite sur con Pudahuel', 'Futura Línea 7 Metro (en construcción)'],
+      casos: [
+        { marca: 'Chevrolet', modelo: 'Corsa', año: 2016, problema: 'Aire no enfría, dueño en eje San Pablo', solucion: 'Carga completa R134a + test de fugas + verificación de condensador', duracion: '1.5 horas' },
+        { marca: 'Toyota', modelo: 'Yaris', año: 2018, problema: 'Compresor ruidoso, familia en Villa Lo Prado', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3.5 horas' },
+        { marca: 'Hyundai', modelo: 'Accent', año: 2020, problema: 'Fuga en evaporador, dueño cerca de Plaza de Armas', solucion: 'Reemplazo de evaporador + carga R134a + test de fugas con tinte UV', duracion: '4 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Sergio F.', texto: 'Vivo en el eje San Pablo. Llegaron al estacionamiento de mi condominio. Muy buen servicio.', rating: 5, fecha: '2026-05-22', placeholder: true },
+        { nombre: 'Daniela Y.', texto: 'Tengo auto de trabajo y vinieron a Villa Lo Prado. Servicio rápido y garantizado.', rating: 5, fecha: '2026-04-14', placeholder: true },
+        { nombre: 'Mauricio J.', texto: 'Mi Accent no enfriaba. Lo resolvieron en el día. Recomendados para Lo Prado.', rating: 5, fecha: '2026-03-10', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Atienden en el eje San Pablo y Plaza de Armas Lo Prado?', respuesta: 'Sí. Atendemos todo el eje Avenida San Pablo, Plaza de Armas Lo Prado, Villa Lo Prado, Población Lo Prado y el sector residencial poniente. Coordinamos por WhatsApp y llegamos a estacionamientos o domicilio.' },
+        { pregunta: '¿Cuánto demoran en llegar a Lo Prado desde el centro?', respuesta: 'Llegamos en 25-40 minutos al eje San Pablo, Plaza de Armas, Villa Lo Prado y todo el sector. Lo Prado tiene costo de salida de $10.000 por la distancia desde el centro (zona poniente).' },
+        { pregunta: '¿Pueden ir al límite con Pudahuel, Cerro Navia o Quinta Normal?', respuesta: 'Sí. Atendemos estacionamientos en el límite sur (Pudahuel), oriente (Quinta Normal) y norte (Cerro Navia) de Lo Prado. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Trabajan con flotas de empresas en Lo Prado?', respuesta: 'Sí. Lo Prado tiene actividad comercial en el eje San Pablo y mejor conectividad con la futura Línea 7. Ofrecemos planes de mantención preventiva programada con descuento por volumen y atención prioritaria.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
+    'lo-espejo': {
+      nombre: 'Lo Espejo',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Lo Espejo. Atendemos Villa Salvador, Población Pablo Neruda, el sector residencial del eje Avenida Lo Ovalle, Plaza de Armas Lo Espejo, los barrios del límite con Cerrillos, Maipú, Pedro Aguirre Cerda y San Bernardo. Llegamos en 25-40 minutos desde el centro. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $10.000.',
+      seo: {
+        titulo: 'Lo Espejo — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Lo Espejo, Santiago surponiente. Carga de gas R134a desde $35.000, llegamos en 25-40 min a Villa Salvador, Avenida Lo Ovalle, Plaza de Armas y límite con San Bernardo.',
+        keywords: 'aire acondicionado Lo Espejo, carga gas Lo Espejo, AC auto Villa Salvador, servicio domicilio Avenida Lo Ovalle, Plaza de Armas Lo Espejo, Lo Espejo surponiente, límite San Bernardo',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección y reparación de fugas', 'Cambio de compresor', 'Sanitización', 'Diagnóstico profesional', 'Mantención preventiva'],
+      fee: 10000,
+      tiempoRespuesta: '25-40 minutos',
+      barrios: ['Villa Salvador', 'Población Pablo Neruda', 'Eje Avenida Lo Ovalle', 'Plaza de Armas Lo Espejo', 'Villa Lo Espejo', 'Población Santa Anita', 'Límite con Cerrillos', 'Límite con San Bernardo'],
+      referencias: ['Plaza de Armas Lo Espejo (Av. Lo Ovalle)', 'Municipalidad de Lo Espejo', 'Eje Avenida Lo Ovalle', 'Villa Salvador (conjunto habitacional)', 'Límite sur con San Bernardo', 'Límite poniente con Cerrillos'],
+      casos: [
+        { marca: 'Chevrolet', modelo: 'Corsa', año: 2016, problema: 'Aire no enfría, dueño en Villa Salvador', solucion: 'Carga completa R134a + test de fugas + verificación de condensador', duracion: '1.5 horas' },
+        { marca: 'Toyota', modelo: 'Yaris', año: 2018, problema: 'Compresor ruidoso, familia en Población Pablo Neruda', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3.5 horas' },
+        { marca: 'Hyundai', modelo: 'Accent', año: 2020, problema: 'Fuga en evaporador, dueño en eje Lo Ovalle', solucion: 'Reemplazo de evaporador + carga R134a + test de fugas con tinte UV', duracion: '4 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Hernán V.', texto: 'Vivo en Villa Salvador. Llegaron al estacionamiento de mi condominio. Muy buen servicio.', rating: 5, fecha: '2026-05-21', placeholder: true },
+        { nombre: 'Patricia Z.', texto: 'Tengo auto de trabajo y vinieron al eje Lo Ovalle. Servicio rápido y garantizado.', rating: 5, fecha: '2026-04-13', placeholder: true },
+        { nombre: 'José K.', texto: 'Mi Accent no enfriaba. Lo resolvieron en el día. Recomendados para la zona surponiente.', rating: 5, fecha: '2026-03-09', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Atienden en Villa Salvador y el eje Lo Ovalle?', respuesta: 'Sí. Atendemos Villa Salvador, todo el eje Avenida Lo Ovalle, Población Pablo Neruda, Plaza de Armas Lo Espejo y los barrios residenciales del sector. Coordinamos por WhatsApp y llegamos a estacionamientos o domicilio.' },
+        { pregunta: '¿Cuánto demoran en llegar a Lo Espejo desde el centro?', respuesta: 'Llegamos en 25-40 minutos a Villa Salvador, eje Lo Ovalle, Plaza de Armas y todo el sector. Lo Espejo tiene costo de salida de $10.000 por la distancia desde el centro (zona surponiente).' },
+        { pregunta: '¿Pueden ir al límite con San Bernardo o Cerrillos?', respuesta: 'Sí. Atendemos estacionamientos en el límite sur (San Bernardo) y poniente (Cerrillos) de Lo Espejo. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Trabajan con flotas de empresas en Lo Espejo?', respuesta: 'Sí. Lo Espejo tiene actividad comercial en el eje Lo Ovalle. Ofrecemos planes de mantención preventiva programada con descuento por volumen y atención prioritaria para flotas.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
+    'san-ramon': {
+      nombre: 'San Ramón',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en San Ramón. Atendemos el eje Avenida La Bandera, Plaza de Armas, Población La Bandera, los barrios residenciales tradicionales del sector, el límite con La Cisterna, El Bosque y La Granja. Llegamos en 30-45 minutos desde el centro. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $10.000.',
+      seo: {
+        titulo: 'San Ramón — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en San Ramón, Santiago sur. Carga de gas R134a desde $35.000, llegamos en 30-45 min a Avenida La Bandera, Plaza de Armas, Población La Bandera y barrios residenciales.',
+        keywords: 'aire acondicionado San Ramón, carga gas San Ramón, AC auto Avenida La Bandera, servicio domicilio Plaza de Armas San Ramón, Población La Bandera, San Ramón sur, límite La Cisterna',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección y reparación de fugas', 'Cambio de compresor', 'Sanitización', 'Diagnóstico profesional', 'Mantención preventiva'],
+      fee: 10000,
+      tiempoRespuesta: '30-45 minutos',
+      barrios: ['Eje Avenida La Bandera', 'Plaza de Armas San Ramón', 'Población La Bandera', 'Villa San Ramón', 'Población Juan Francisco', 'Sector residencial tradicional', 'Límite con La Cisterna', 'Límite con El Bosque'],
+      referencias: ['Plaza de Armas San Ramón (Av. La Bandera)', 'Municipalidad de San Ramón', 'Eje Avenida La Bandera', 'Población La Bandera (histórica)', 'Límite norte con La Cisterna', 'Límite sur con El Bosque'],
+      casos: [
+        { marca: 'Nissan', modelo: 'V16', año: 2016, problema: 'Aire no enfría, dueño en Población La Bandera', solucion: 'Carga completa R134a + test de fugas + verificación de condensador', duracion: '1.5 horas' },
+        { marca: 'Kia', modelo: 'Rio', año: 2018, problema: 'Compresor ruidoso, familia en Villa San Ramón', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3.5 horas' },
+        { marca: 'Hyundai', modelo: 'Accent', año: 2020, problema: 'Fuga en evaporador, dueño en eje La Bandera', solucion: 'Reemplazo de evaporador + carga R134a + test de fugas con tinte UV', duracion: '4 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Roberto G.', texto: 'Vivo en Población La Bandera. Llegaron al estacionamiento de mi condominio. Muy buen servicio.', rating: 5, fecha: '2026-05-20', placeholder: true },
+        { nombre: 'Lorena Q.', texto: 'Tengo auto de trabajo y vinieron al eje La Bandera. Servicio rápido y garantizado.', rating: 5, fecha: '2026-04-12', placeholder: true },
+        { nombre: 'Andrés W.', texto: 'Mi Accent no enfriaba. Lo resolvieron en el día. Recomendados para la zona sur.', rating: 5, fecha: '2026-03-08', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Atienden en Población La Bandera y el eje La Bandera?', respuesta: 'Sí. Atendemos Población La Bandera, todo el eje Avenida La Bandera, Plaza de Armas San Ramón, Villa San Ramón y los barrios residenciales tradicionales del sector. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Cuánto demoran en llegar a San Ramón desde el centro?', respuesta: 'Llegamos en 30-45 minutos a Población La Bandera, eje La Bandera, Plaza de Armas y todo el sector. San Ramón tiene costo de salida de $10.000 por la distancia desde el centro (zona sur).' },
+        { pregunta: '¿Pueden ir al límite con La Cisterna, El Bosque o La Granja?', respuesta: 'Sí. Atendemos estacionamientos en el límite norte (La Cisterna), sur (El Bosque) y oriente (La Granja) de San Ramón. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Trabajan con flotas de empresas en San Ramón?', respuesta: 'Sí. San Ramón tiene actividad comercial en el eje La Bandera. Ofrecemos planes de mantención preventiva programada con descuento por volumen y atención prioritaria para flotas.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
+    'la-granja': {
+      nombre: 'La Granja',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en La Granja. Atendemos Población Santa Rosa, Población San Gregorio, Avenida Américo Vespucio, el eje Avenida Carlos Valdovinos (tramo sur), Plaza de Armas La Granja, los barrios residenciales tradicionales y el límite con San Ramón, La Pintana y El Bosque. Llegamos en 30-45 minutos desde el centro. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $10.000.',
+      seo: {
+        titulo: 'La Granja — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en La Granja, Santiago sur. Carga de gas R134a desde $35.000, llegamos en 30-45 min a Población Santa Rosa, San Gregorio, Carlos Valdovinos, Plaza de Armas y barrios residenciales.',
+        keywords: 'aire acondicionado La Granja, carga gas La Granja, AC auto Población Santa Rosa, servicio domicilio Población San Gregorio, Avenida Américo Vespucio, Carlos Valdovinos sur, Plaza de Armas La Granja',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección y reparación de fugas', 'Cambio de compresor', 'Sanitización', 'Diagnóstico profesional', 'Mantención preventiva'],
+      fee: 10000,
+      tiempoRespuesta: '30-45 minutos',
+      barrios: ['Población Santa Rosa', 'Población San Gregorio', 'Eje Américo Vespucio', 'Sector Carlos Valdovinos sur', 'Plaza de Armas La Granja', 'Villa La Granja', 'Población La Integración', 'Límite con San Ramón'],
+      referencias: ['Plaza de Armas La Granja (Av. Américo Vespucio)', 'Municipalidad de La Granja', 'Eje Avenida Américo Vespucio', 'Población Santa Rosa (histórica)', 'Población San Gregorio', 'Límite oriente con La Pintana'],
+      casos: [
+        { marca: 'Chevrolet', modelo: 'Corsa', año: 2016, problema: 'Aire no enfría, dueño en Población Santa Rosa', solucion: 'Carga completa R134a + test de fugas + verificación de condensador', duracion: '1.5 horas' },
+        { marca: 'Toyota', modelo: 'Yaris', año: 2018, problema: 'Compresor ruidoso, familia en Población San Gregorio', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3.5 horas' },
+        { marca: 'Hyundai', modelo: 'Accent', año: 2020, problema: 'Fuga en evaporador, dueño en eje Vespucio', solucion: 'Reemplazo de evaporador + carga R134a + test de fugas con tinte UV', duracion: '4 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Pedro L.', texto: 'Vivo en Población Santa Rosa. Llegaron al estacionamiento de mi condominio. Muy buen servicio.', rating: 5, fecha: '2026-05-19', placeholder: true },
+        { nombre: 'Marta X.', texto: 'Tengo auto de trabajo y vinieron al eje Vespucio. Servicio rápido y garantizado.', rating: 5, fecha: '2026-04-11', placeholder: true },
+        { nombre: 'Felipe B.', texto: 'Mi Accent no enfriaba. Lo resolvieron en el día. Recomendados para la zona sur.', rating: 5, fecha: '2026-03-07', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Atienden en Población Santa Rosa y Población San Gregorio?', respuesta: 'Sí. Atendemos Población Santa Rosa, Población San Gregorio, todo el eje Américo Vespucio, Plaza de Armas La Granja y los barrios residenciales tradicionales. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Cuánto demoran en llegar a La Granja desde el centro?', respuesta: 'Llegamos en 30-45 minutos a Población Santa Rosa, San Gregorio, eje Vespucio, Plaza de Armas y todo el sector. La Granja tiene costo de salida de $10.000 por la distancia desde el centro (zona sur).' },
+        { pregunta: '¿Pueden ir al límite con San Ramón, La Pintana o El Bosque?', respuesta: 'Sí. Atendemos estacionamientos en el límite poniente (San Ramón), oriente (La Pintana) y sur (El Bosque) de La Granja. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Trabajan con flotas de empresas en La Granja?', respuesta: 'Sí. La Granja tiene actividad comercial en el eje Vespucio. Ofrecemos planes de mantención preventiva programada con descuento por volumen y atención prioritaria para flotas.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
+    'renca': {
+      nombre: 'Renca',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Renca. Atendemos Población Renca Centro, el eje Avenida José Miguel Carrera, Plaza de Armas Renca, los barrios residenciales del sector industrial, Mall Plaza Norte (límite) y el límite con Cerro Navia, Quilicura, Conchalí e Independencia. Llegamos en 25-40 minutos desde el centro. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $10.000.',
+      seo: {
+        titulo: 'Renca — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Renca, Santiago norponiente. Carga de gas R134a desde $35.000, llegamos en 25-40 min a Población Renca Centro, Plaza de Armas, Mall Plaza Norte y límite Quilicura.',
+        keywords: 'aire acondicionado Renca, carga gas Renca, AC auto Población Renca Centro, servicio domicilio Plaza de Armas Renca, Renca industrial, Mall Plaza Norte Renca, límite Quilicura, Metro Línea 7 futura',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección y reparación de fugas', 'Cambio de compresor', 'Sanitización', 'Diagnóstico profesional', 'Mantención preventiva'],
+      fee: 10000,
+      tiempoRespuesta: '25-40 minutos',
+      barrios: ['Población Renca Centro', 'Eje Avenida José Miguel Carrera (Renca)', 'Plaza de Armas Renca', 'Sector industrial Renca', 'Villa Renca', 'Límite con Cerro Navia', 'Límite con Quilicura', 'Límite con Conchalí'],
+      referencias: ['Plaza de Armas Renca (Av. José Miguel Carrera)', 'Municipalidad de Renca', 'Mall Plaza Norte (límite oriente)', 'Sector industrial Renca', 'Futura Línea 7 Metro (en construcción)', 'Límite norte con Quilicura'],
+      casos: [
+        { marca: 'Nissan', modelo: 'V16', año: 2016, problema: 'Aire no enfría, dueño en Población Renca Centro', solucion: 'Carga completa R134a + test de fugas + verificación de condensador', duracion: '1.5 horas' },
+        { marca: 'Kia', modelo: 'Rio', año: 2018, problema: 'Compresor ruidoso, familia en Villa Renca', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3.5 horas' },
+        { marca: 'Hyundai', modelo: 'Accent', año: 2020, problema: 'Fuga en evaporador, dueño cerca de Plaza de Armas', solucion: 'Reemplazo de evaporador + carga R134a + test de fugas con tinte UV', duracion: '4 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Luis B.', texto: 'Vivo en Población Renca Centro. Llegaron al estacionamiento de mi condominio. Muy buen servicio.', rating: 5, fecha: '2026-05-18', placeholder: true },
+        { nombre: 'Carolina N.', texto: 'Tengo auto de trabajo y vinieron al sector industrial. Servicio rápido y garantizado.', rating: 5, fecha: '2026-04-10', placeholder: true },
+        { nombre: 'Felipe C.', texto: 'Mi Accent no enfriaba. Lo resolvieron en el día. Recomendados para la zona norponiente.', rating: 5, fecha: '2026-03-06', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Atienden en Población Renca Centro y Plaza de Armas?', respuesta: 'Sí. Atendemos Población Renca Centro, Plaza de Armas Renca, todo el sector industrial, Villa Renca y los barrios residenciales. Coordinamos por WhatsApp y llegamos a estacionamientos o domicilio.' },
+        { pregunta: '¿Cuánto demoran en llegar a Renca desde el centro?', respuesta: 'Llegamos en 25-40 minutos a Población Renca Centro, Plaza de Armas, sector industrial y todo el sector. Renca tiene costo de salida de $10.000 por la distancia desde el centro (zona norponiente).' },
+        { pregunta: '¿Pueden ir a Mall Plaza Norte o al límite con Quilicura?', respuesta: 'Sí. Atendemos estacionamientos de Mall Plaza Norte (límite oriente) y todo el límite norte con Quilicura. Renca tendrá mejor conectividad con la futura Línea 7 de Metro. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Trabajan con flotas de empresas en Renca?', respuesta: 'Sí. Renca tiene fuerte actividad industrial. Ofrecemos planes de mantención preventiva programada con descuento por volumen y atención prioritaria para flotas comerciales y de carga.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
+    'el-bosque': {
+      nombre: 'El Bosque',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en El Bosque. Atendemos Población El Bosque, Villa El Bosque, el eje Avenida Lo Ovalle (tramo sur), Plaza de Armas El Bosque, los barrios residenciales del sector, el límite con San Bernardo, La Cisterna, San Ramón y La Granja. Llegamos en 30-45 minutos desde el centro. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $10.000.',
+      seo: {
+        titulo: 'El Bosque — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en El Bosque, Santiago sur. Carga de gas R134a desde $35.000, llegamos en 30-45 min a Población El Bosque, Avenida Lo Ovalle, Plaza de Armas y límite con San Bernardo.',
+        keywords: 'aire acondicionado El Bosque, carga gas El Bosque, AC auto Población El Bosque, servicio domicilio Avenida Lo Ovalle sur, Plaza de Armas El Bosque, Villa El Bosque, límite San Bernardo, El Bosque sur',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección y reparación de fugas', 'Cambio de compresor', 'Sanitización', 'Diagnóstico profesional', 'Mantención preventiva'],
+      fee: 10000,
+      tiempoRespuesta: '30-45 minutos',
+      barrios: ['Población El Bosque', 'Villa El Bosque', 'Eje Avenida Lo Ovalle (tramo sur)', 'Plaza de Armas El Bosque', 'Población 4 de Septiembre', 'Límite con San Bernardo', 'Límite con La Cisterna', 'Límite con La Granja'],
+      referencias: ['Plaza de Armas El Bosque (Av. Lo Ovalle)', 'Municipalidad de El Bosque', 'Eje Avenida Lo Ovalle (tramo sur)', 'Población El Bosque (histórica)', 'Límite sur con San Bernardo', 'Límite poniente con Lo Espejo'],
+      casos: [
+        { marca: 'Chevrolet', modelo: 'Corsa', año: 2016, problema: 'Aire no enfría, dueño en Población El Bosque', solucion: 'Carga completa R134a + test de fugas + verificación de condensador', duracion: '1.5 horas' },
+        { marca: 'Toyota', modelo: 'Yaris', año: 2018, problema: 'Compresor ruidoso, familia en Villa El Bosque', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3.5 horas' },
+        { marca: 'Hyundai', modelo: 'Accent', año: 2020, problema: 'Fuga en evaporador, dueño en eje Lo Ovalle', solucion: 'Reemplazo de evaporador + carga R134a + test de fugas con tinte UV', duracion: '4 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Sergio M.', texto: 'Vivo en Población El Bosque. Llegaron al estacionamiento de mi condominio. Muy buen servicio.', rating: 5, fecha: '2026-05-17', placeholder: true },
+        { nombre: 'Gloria D.', texto: 'Tengo auto de trabajo y vinieron al eje Lo Ovalle. Servicio rápido y garantizado.', rating: 5, fecha: '2026-04-09', placeholder: true },
+        { nombre: 'Juan S.', texto: 'Mi Accent no enfriaba. Lo resolvieron en el día. Recomendados para la zona sur.', rating: 5, fecha: '2026-03-05', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Atienden en Población El Bosque y el eje Lo Ovalle?', respuesta: 'Sí. Atendemos Población El Bosque, Villa El Bosque, todo el eje Avenida Lo Ovalle (tramo sur), Plaza de Armas El Bosque y los barrios residenciales. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Cuánto demoran en llegar a El Bosque desde el centro?', respuesta: 'Llegamos en 30-45 minutos a Población El Bosque, eje Lo Ovalle, Plaza de Armas y todo el sector. El Bosque tiene costo de salida de $10.000 por la distancia desde el centro (zona sur).' },
+        { pregunta: '¿Pueden ir al límite con San Bernardo, La Cisterna o La Granja?', respuesta: 'Sí. Atendemos estacionamientos en el límite sur (San Bernardo), norte (La Cisterna) y oriente (La Granja) de El Bosque. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Trabajan con flotas de empresas en El Bosque?', respuesta: 'Sí. El Bosque tiene actividad comercial en el eje Lo Ovalle. Ofrecemos planes de mantención preventiva programada con descuento por volumen y atención prioritaria para flotas.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
+    'la-pintana': {
+      nombre: 'La Pintana',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en La Pintana. Atendemos Población Santo Tomás, Población Mapuhue, el sector residencial del eje Avenida Santa Rosa, Plaza de Armas La Pintana, los barrios del extremo sur oriente de Santiago y el límite con La Granja, San Bernardo, Puente Alto. Llegamos en 30-45 minutos desde el centro. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $15.000.',
+      seo: {
+        titulo: 'La Pintana — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en La Pintana, Santiago suroriente. Carga de gas R134a desde $35.000, llegamos en 30-45 min a Población Santo Tomás, Mapuhue, Avenida Santa Rosa y Plaza de Armas.',
+        keywords: 'aire acondicionado La Pintana, carga gas La Pintana, AC auto Población Santo Tomás, servicio domicilio Población Mapuhue, Avenida Santa Rosa, Plaza de Armas La Pintana, La Pintana suroriente, límite Puente Alto',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección y reparación de fugas', 'Cambio de compresor', 'Sanitización', 'Diagnóstico profesional', 'Mantención preventiva'],
+      fee: 15000,
+      tiempoRespuesta: '30-45 minutos',
+      barrios: ['Población Santo Tomás', 'Población Mapuhue', 'Eje Avenida Santa Rosa', 'Plaza de Armas La Pintana', 'Población El Castillo', 'Población Pablo de Rocka', 'Límite con La Granja', 'Límite con Puente Alto'],
+      referencias: ['Plaza de Armas La Pintana (Av. Santa Rosa con Concón)', 'Municipalidad de La Pintana', 'Eje Avenida Santa Rosa', 'Población Santo Tomás (histórica)', 'Población Mapuhue (extremo sur)', 'Límite oriente con Puente Alto'],
+      casos: [
+        { marca: 'Chevrolet', modelo: 'Corsa', año: 2016, problema: 'Aire no enfría, dueño en Población Santo Tomás', solucion: 'Carga completa R134a + test de fugas + verificación de condensador', duracion: '1.5 horas' },
+        { marca: 'Toyota', modelo: 'Yaris', año: 2018, problema: 'Compresor ruidoso, familia en Población Mapuhue', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3.5 horas' },
+        { marca: 'Hyundai', modelo: 'Accent', año: 2020, problema: 'Fuga en evaporador, dueño en eje Santa Rosa', solucion: 'Reemplazo de evaporador + carga R134a + test de fugas con tinte UV', duracion: '4 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Cristian E.', texto: 'Vivo en Población Santo Tomás. Llegaron al estacionamiento de mi condominio. Muy buen servicio.', rating: 5, fecha: '2026-05-16', placeholder: true },
+        { nombre: 'Yasna H.', texto: 'Tengo auto de trabajo y vinieron al eje Santa Rosa. Servicio rápido y garantizado.', rating: 5, fecha: '2026-04-08', placeholder: true },
+        { nombre: 'Marcelo T.', texto: 'Mi Accent no enfriaba. Lo resolvieron en el día. Recomendados para la zona suroriente.', rating: 5, fecha: '2026-03-04', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Atienden en Población Santo Tomás y Población Mapuhue?', respuesta: 'Sí. Atendemos Población Santo Tomás, Población Mapuhue, todo el eje Avenida Santa Rosa, Plaza de Armas La Pintana y los barrios residenciales del sector. Coordinamos por WhatsApp y llegamos a estacionamientos o domicilio.' },
+        { pregunta: '¿Cuánto demoran en llegar a La Pintana desde el centro?', respuesta: 'Llegamos en 30-45 minutos a Población Santo Tomás, Mapuhue, eje Santa Rosa, Plaza de Armas y todo el sector. La Pintana tiene costo de salida de $15.000 por la distancia desde el centro (zona suroriente extrema).' },
+        { pregunta: '¿Pueden ir al límite con Puente Alto, La Granja o San Bernardo?', respuesta: 'Sí. Atendemos estacionamientos en el límite oriente (Puente Alto), poniente (La Granja) y sur (San Bernardo) de La Pintana. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Trabajan con flotas de empresas en La Pintana?', respuesta: 'Sí. La Pintana tiene actividad comercial en el eje Santa Rosa. Ofrecemos planes de mantención preventiva programada con descuento por volumen y atención prioritaria para flotas.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
+    'calera-de-tango': {
+      nombre: 'Calera de Tango',
+      descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Calera de Tango. Atendemos el centro de la comuna, los barrios residenciales rurales, el sector industrial, el eje Camino Lonquén y el límite con San Bernardo, Isla de Maipo y Padre Hurtado. Llegamos en 35-50 minutos desde el centro de Santiago. Diagnóstico gratis si contratas. Carga de gas R134a desde $35.000, garantía 90 días. Costo de salida $15.000.',
+      seo: {
+        titulo: 'Calera de Tango — Aire Acondicionado Automotriz a Domicilio',
+        descripcion: 'Servicio de aire acondicionado automotriz a domicilio en Calera de Tango, sur de Santiago. Carga de gas R134a desde $35.000, llegamos en 35-50 min al centro, Camino Lonquén, sector industrial y límite San Bernardo.',
+        keywords: 'aire acondicionado Calera de Tango, carga gas Calera de Tango, AC auto Calera de Tango, servicio domicilio Camino Lonquén, Calera de Tango rural, límite San Bernardo, Calera de Tango industrial, comuna rural sur',
+      },
+      servicios: ['Carga de gas R134a y R1234yf', 'Detección y reparación de fugas', 'Cambio de compresor', 'Sanitización', 'Diagnóstico profesional', 'Mantención preventiva'],
+      fee: 15000,
+      tiempoRespuesta: '35-50 minutos',
+      barrios: ['Calera de Tango Centro', 'Sector rural poniente', 'Camino Lonquén', 'Sector industrial Calera de Tango', 'Villa Calera', 'Poblaciones rurales', 'Límite con San Bernardo', 'Límite con Isla de Maipo'],
+      referencias: ['Plaza de Armas Calera de Tango', 'Municipalidad de Calera de Tango', 'Camino Lonquén', 'Iglesia Parroquial de Calera de Tango', 'Límite norte con San Bernardo', 'Límite poniente con Padre Hurtado'],
+      casos: [
+        { marca: 'Toyota', modelo: 'Hilux', año: 2019, problema: 'Aire no enfría, camioneta de trabajo rural', solucion: 'Carga completa R134a + test de fugas + verificación de condensador', duracion: '1.5 horas' },
+        { marca: 'Chevrolet', modelo: 'D-Max', año: 2018, problema: 'Compresor ruidoso, vehículo agrícola en Camino Lonquén', solucion: 'Reemplazo de compresor + flushing del sistema + carga R134a', duracion: '3.5 horas' },
+        { marca: 'Nissan', modelo: 'Frontier', año: 2020, problema: 'Fuga en evaporador, camioneta en sector industrial', solucion: 'Reemplazo de evaporador + carga R134a + test de fugas con tinte UV', duracion: '4 horas' },
+      ],
+      testimonios: [
+        { nombre: 'Patricio A.', texto: 'Tengo una camioneta en Calera de Tango. Llegaron a mi parcela. Servicio rural excelente.', rating: 5, fecha: '2026-05-15', placeholder: true },
+        { nombre: 'Alejandra O.', texto: 'Vivo en Calera Centro. Llegaron en 40 minutos. Carga de gas sin problema.', rating: 5, fecha: '2026-04-07', placeholder: true },
+        { nombre: 'Roberto J.', texto: 'Mi Frontier tenía problema de evaporador. Lo resolvieron en el día. Recomendados.', rating: 5, fecha: '2026-03-03', placeholder: true },
+      ],
+      faq: [
+        { pregunta: '¿Atienden en el sector rural de Calera de Tango?', respuesta: 'Sí. Atendemos Calera de Tango Centro, todas las parcelas del sector rural, Camino Lonquén, Villa Calera y el sector industrial. Coordinamos por WhatsApp y llegamos al estacionamiento o parcela.' },
+        { pregunta: '¿Cuánto demoran en llegar a Calera de Tango desde Santiago?', respuesta: 'Llegamos en 35-50 minutos a Calera Centro, Camino Lonquén, sector industrial y todas las parcelas. Calera de Tango es la comuna más alejada de nuestra zona de servicio, con costo de salida de $15.000.' },
+        { pregunta: '¿Pueden ir al límite con San Bernardo, Isla de Maipo o Padre Hurtado?', respuesta: 'Sí. Atendemos estacionamientos y parcelas en el límite norte (San Bernardo), sur (Isla de Maipo) y poniente (Padre Hurtado) de Calera de Tango. Coordinamos por WhatsApp.' },
+        { pregunta: '¿Trabajan con flotas agrícolas o industriales en Calera de Tango?', respuesta: 'Sí. Calera de Tango tiene fuerte actividad agrícola, ganadera e industrial. Ofrecemos planes de mantención preventiva programada con descuento por volumen y atención prioritaria para flotas de trabajo pesado.' },
+      ],
+      enlacesServicios: [
+        { label: 'Carga de Gas R134a', href: '/servicios/carga-gas' },
+        { label: 'Detección de Fugas', href: '/servicios/deteccion-reparacion-fugas' },
+        { label: 'Reparación de Compresor', href: '/servicios/reparador-compresor' },
+        { label: 'Sanitización', href: '/servicios/sanitizacion' },
+      ],
+    },
   }
 
-  return data[slug] || { ...defaultData, nombre: defaultData.nombre }
+  // ESTRICTO: si el slug no está en `data`, devolvemos null.
+  // La página debe mostrar 404 (no defaultData templated).
+  return data[slug] ?? null
 }

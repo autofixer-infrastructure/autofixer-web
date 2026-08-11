@@ -166,7 +166,7 @@ export default function PreciosPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="https://wa.me/56935075600?text=Hola%2C%20quiero%20un%20presupuesto%20para%20servicio%20de%20aire%20acondicionado"
-                className="inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-semibold transition-colors"
+                className="inline-flex items-center justify-center gap-2 bg-amber-700 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-semibold transition-colors"
               >
                 <Phone className="w-5 h-5" />
                 Solicitar Presupuesto

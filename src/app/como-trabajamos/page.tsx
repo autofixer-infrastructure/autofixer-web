@@ -76,10 +76,89 @@ const slas = [
   { channel: 'Visita Programada', time: '< 24 horas', icon: Calendar },
 ]
 
+const howtoSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  '@id': 'https://autofixer.cl/como-trabajamos#howto',
+  name: 'Cómo Trabajamos — Servicio de Aire Acondicionado Automotriz a Domicilio en Santiago',
+  description:
+    'Proceso profesional paso a paso de Autofixer para diagnóstico, cotización, reparación y entrega de servicio de aire acondicionado automotriz a domicilio en Santiago de Chile. Incluye 7 etapas, SLA de respuesta y garantía escrita de 90 días.',
+  totalTime: 'PT120M',
+  estimatedCost: {
+    '@type': 'MonetaryAmount',
+    currency: 'CLP',
+    minValue: 15000,
+    maxValue: 250000,
+    value: '15000-250000',
+  },
+  tool: [
+    { '@type': 'HowToTool', name: 'Escáner electrónico automotriz' },
+    { '@type': 'HowToTool', name: 'Manómetros digitales de alta y baja presión' },
+    { '@type': 'HowToTool', name: 'Detector electrónico de fugas' },
+    { '@type': 'HowToTool', name: 'Termómetro digital infrarrojo' },
+    { '@type': 'HowToTool', name: 'Unidad móvil con instrumental certificado' },
+  ],
+  step: [
+    {
+      '@type': 'HowToStep',
+      position: 1,
+      name: 'Solicitud Rápida',
+      text: 'Escríbenos por WhatsApp, llámanos al +56 9 3507 5600 o completa el formulario web. Nuestro equipo te responderá en menos de 10 minutos.',
+      url: 'https://autofixer.cl/como-trabajamos#paso-01',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 2,
+      name: 'Diagnóstico en Terreno',
+      text: 'Nuestra unidad móvil llega a tu ubicación equipada con escáner electrónico, manómetros digitales y detector de fugas. El diagnóstico toma 20-30 minutos.',
+      url: 'https://autofixer.cl/como-trabajamos#paso-02',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 3,
+      name: 'Cotización Clara y Detallada',
+      text: 'Te entregamos un precio cerrado in situ, sin letra pequeña ni costos ocultos. Aprobás antes de que iniciemos cualquier trabajo.',
+      url: 'https://autofixer.cl/como-trabajamos#paso-03',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 4,
+      name: 'Aprobación del Cliente',
+      text: 'Sin presión. Tomá la decisión con toda la información. Si decidís no continuar, solo pagás el diagnóstico (que se bonifica si realizás el servicio).',
+      url: 'https://autofixer.cl/como-trabajamos#paso-04',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 5,
+      name: 'Reparación o Servicio',
+      text: 'Trabajo técnico limpio y profesional. Protegemos tu vehículo con coberturas. Usamos herramientas digitales y repuestos certificados.',
+      url: 'https://autofixer.cl/como-trabajamos#paso-05',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 6,
+      name: 'Pruebas Finales y Entrega',
+      text: 'Medición de temperatura en rejillas con termómetro digital. Verificación de presiones. Activación de garantía de 90 días por escrito.',
+      url: 'https://autofixer.cl/como-trabajamos#paso-06',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 7,
+      name: 'Seguimiento Post-Servicio',
+      text: 'Control de calidad automatizado a los 7 días. Recordatorio de mantención a los 6 meses. Campaña de reactivación pre-verano.',
+      url: 'https://autofixer.cl/como-trabajamos#paso-07',
+    },
+  ],
+}
+
 export default function ComoTrabajamos() {
   return (
     <>
       <FAQSchemaMarkup />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howtoSchema) }}
+      />
 
       <div className="pt-[72px]">
         {/* Hero */}
@@ -202,7 +281,7 @@ export default function ComoTrabajamos() {
                   <ScrollReveal key={sla.channel} delay={i * 100}>
                     <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6 text-center hover:border-amber-500/20 transition-all">
                       <Icon size={28} className="text-amber-400 mx-auto mb-3" />
-                      <h4 className="font-body font-semibold text-white">{sla.channel}</h4>
+                      <h3 className="font-body font-semibold text-white">{sla.channel}</h3>
                       <p className="text-amber-400 font-bold text-lg mt-1">{sla.time}</p>
                     </div>
                   </ScrollReveal>

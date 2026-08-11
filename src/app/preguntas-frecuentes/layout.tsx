@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: "Preguntas Frecuentes sobre Climatizacion Automotriz | Autofixer",
+  title: "Preguntas Frecuentes sobre Climatización Automotriz",
   description: "Resuelve tus dudas sobre carga de gas, diagnostico y reparacion de aire acondicionado automotriz. 90 dias de garantia en todos los servicios.",
   alternates: {
     canonical: "https://autofixer.cl/preguntas-frecuentes",

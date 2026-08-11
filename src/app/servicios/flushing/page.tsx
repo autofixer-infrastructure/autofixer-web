@@ -1,6 +1,14 @@
-"use client"
 import Link from 'next/link'
+import ServiceViewTracker from '@/components/tracking/ServiceViewTracker'
 import { Droplets, CheckCircle, Phone, ChevronDown } from 'lucide-react'
+
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Flushing y Limpieza de Circuito A/C Auto a Domicilio | Autofixer',
+  description: 'Lavado y limpieza profesional del circuito de A/C automotriz a domicilio en Santiago. Elimina contaminacion y humedad. Garantia 90 dias. WhatsApp +56 9 3507 5600.',
+  alternates: { canonical: 'https://autofixer.cl/servicios/flushing' },
+}
 
 const faqs = [
   { question: 'Cuando es necesario hacer flushing?', answer: 'El flushing es necesario cuando el sistema tiene contaminantes como humedad residual, aceite degradado, particulas de metal o residuos de refrigerante viejo. Tambien se hace antes de instalar un compresor nuevo para garantizar un sistema limpio.' },
@@ -18,16 +26,60 @@ const zonePricing = [
   { zone: 'Zona 5', areas: 'Colina, Chicureo, Pirque, San Jose de Maipo', price: 25000 },
 ]
 
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Como hacer flushing del sistema A/C automotriz en 5 pasos",
+  "description": "Procedimiento profesional de 5 pasos para hacer flushing del sistema A/C automotriz: recuperacion, desconexion de componentes, inyeccion de solvente, secado con nitrogeno y reensamblaje con vacio y carga.",
+  "totalTime": "PT110M",
+  "estimatedCost": {"@type": "MonetaryAmount", "currency": "CLP", "value": "80000-150000"},
+  "tool": [
+    {"@type": "HowToTool", "name": "Maquina de recuperacion de refrigerante"},
+    {"@type": "HowToTool", "name": "Kit de flushing con solvente A/C"},
+    {"@type": "HowToTool", "name": "Nitrogeno seco o aire comprimido con filtro de particulas"},
+    {"@type": "HowToTool", "name": "Bomba de vacio de doble etapa"}
+  ],
+  "step": [
+    {"@type": "HowToStep", "position": 1, "name": "Recuperacion completa del refrigerante", "text": "Conectar la maquina de recuperacion y extraer el 100 por ciento del gas del sistema. Confirmar que los manometros marquen vacio total. Este gas se almacena para reciclaje, no se libera.", "url": "https://autofixer.cl/servicios/flushing#paso-1", "tool": [{"@type": "HowToTool", "name": "Maquina de recuperacion de refrigerante"}]},
+    {"@type": "HowToStep", "position": 2, "name": "Desconexion de componentes del circuito", "text": "Desmontar el compresor, condensador, filtro secador y mangueras del circuito. Marcar cada conexion y componente. Inspeccionar visualmente cada pieza: el condensador y el evaporador pueden contener restos metalicos o goma del compresor fallado.", "url": "https://autofixer.cl/servicios/flushing#paso-2"},
+    {"@type": "HowToStep", "position": 3, "name": "Inyeccion de solvente de flushing", "text": "Inyectar solvente especifico A/C en cada linea y componente con el kit de flushing. Hacer circular el solvente en ambas direcciones hasta que salga limpio. Esto arrastra particulas metalicas, goma y residuos que contaminan el sistema nuevo.", "url": "https://autofixer.cl/servicios/flushing#paso-3", "tool": [{"@type": "HowToTool", "name": "Kit de flushing con solvente A/C"}]},
+    {"@type": "HowToStep", "position": 4, "name": "Secado con nitrogeno o aire filtrado", "text": "Por cada componente y linea, aplicar flujo de nitrogeno seco (o aire comprimido con filtro de particulas) hasta que salga completamente limpio y seco. El nitrogeno evita oxidacion y desplaza la humedad residual del solvente.", "url": "https://autofixer.cl/servicios/flushing#paso-4", "tool": [{"@type": "HowToTool", "name": "Nitrogeno seco o aire comprimido con filtro de particulas"}]},
+    {"@type": "HowToStep", "position": 5, "name": "Reensamblaje, vacio y carga completa", "text": "Reinstalar filtro secador nuevo (obligatorio tras flushing), reensamblar componentes con juntas nuevas. Hacer vacio profundo 30 min, verificar hermeticidad y cargar R134a por peso. Probar A/C 15 min para confirmar presiones y temperatura correctas.", "url": "https://autofixer.cl/servicios/flushing#paso-5", "tool": [{"@type": "HowToTool", "name": "Bomba de vacio de doble etapa"}]}
+  ]
+};
+
 export default function FlushingPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
+      <ServiceViewTracker slug="flushing" serviceName="Flushing del Sistema" />
+            <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://autofixer.cl/' },
+            { '@type': 'ListItem', position: 2, name: 'Servicios', item: 'https://autofixer.cl/servicios' },
+            { '@type': 'ListItem', position: 3, name: 'Flushing' }
+          ]
+        }) }}
+      />
+      <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context": "https://schema.org", "@type": "Service", "name": "Flushing del Sistema de Aire Acondicionado Automotriz", "serviceType": "Limpieza profunda del sistema de A/C automotriz", "description": "Flushing profesional del sistema de aire acondicionado automotriz. Limpieza profunda de lineas, evaporador y condensador para eliminar contaminantes. Servicio a domicilio en Santiago.", "provider": {"@type": "Organization", "name": "Autofixer", "@id": "https://autofixer.cl/#organization"}, "areaServed": {"@type": "GeoCircle", "geoMidpoint": {"@type": "GeoCoordinates", "latitude": -33.4372, "longitude": -70.6506}, "geoRadius": "25000"}, "url": "https://autofixer.cl/servicios/flushing/", "image": "https://autofixer.cl/og-servicio-flushing.jpg", "offers": {"@type": "Offer", "priceCurrency": "CLP", "price": "50000", "priceSpecification": {"@type": "PriceSpecification", "priceCurrency": "CLP", "minPrice": "50000", "maxPrice": "80000", "eligibleQuantity": {"@type": "QuantitativeValue", "unitText": "servicio"}}}, "category": "Automotive", "inLanguage": "es-CL"}) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+      />
+      <div className="min-h-screen bg-gray-50">
       <nav className="bg-white border-b py-3">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ol className="flex items-center gap-2 text-sm">
             <li><Link href="/" className="text-gray-500 hover:text-blue-900">Inicio</Link></li>
-            <ChevronDown className="w-4 h-4 text-gray-400" />
+            <ChevronDown className="w-4 h-4 text-gray-500" />
             <li><Link href="/servicios" className="text-gray-500 hover:text-blue-900">Servicios</Link></li>
-            <ChevronDown className="w-4 h-4 text-gray-400" />
+            <ChevronDown className="w-4 h-4 text-gray-500" />
             <li><span className="text-blue-900 font-medium">Flushing</span></li>
           </ol>
         </div>
@@ -46,7 +98,7 @@ export default function FlushingPage() {
               Necesario antes de instalar compresor nuevo o despues de una reparacion mayor.
             </p>
             <div className="flex flex-wrap gap-4">
-              <a href="https://wa.me/56935075600?text=Hola%2C%20necesito%20flushing%20de%20mi%20A%2FC" className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+              <a href="https://wa.me/56935075600?text=Hola%2C%20necesito%20flushing%20de%20mi%20A%2FC" className="inline-flex items-center gap-2 bg-amber-700 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
                 <Phone className="w-5 h-5" />
                 Solicitar Flushing
               </a>
@@ -100,6 +152,52 @@ export default function FlushingPage() {
               </div>
 
               <div className="mb-12">
+                              <div className="mb-12">
+                <h2 className="text-3xl font-bold text-gray-900 mb-3">Proceso Paso a Paso</h2>
+                <p className="text-gray-600 mb-8">5 pasos profesionales para hacer flushing del sistema A/C automotriz. Tiempo total estimado: 110 minutos. Si lo prefieres, agenda nuestro servicio a domicilio con tecnico certificado e informe escrito.</p>
+                <ol className="space-y-5">
+                  <li id="paso-1" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">01</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Recuperacion completa del refrigerante</h3>
+                      <span className="ml-auto text-sm text-gray-500">10 min</span>
+                    </div>
+                    <p className="text-gray-700">Conectar la maquina de recuperacion y extraer el 100 por ciento del gas del sistema. Confirmar que los manometros marquen vacio total. Este gas se almacena para reciclaje, no se libera.</p>
+                  </li>
+                  <li id="paso-2" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">02</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Desconexion de componentes del circuito</h3>
+                      <span className="ml-auto text-sm text-gray-500">15 min</span>
+                    </div>
+                    <p className="text-gray-700">Desmontar el compresor, condensador, filtro secador y mangueras del circuito. Marcar cada conexion y componente. Inspeccionar visualmente cada pieza: el condensador y el evaporador pueden contener restos metalicos o goma del compresor fallado.</p>
+                  </li>
+                  <li id="paso-3" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">03</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Inyeccion de solvente de flushing</h3>
+                      <span className="ml-auto text-sm text-gray-500">20 min</span>
+                    </div>
+                    <p className="text-gray-700">Inyectar solvente especifico A/C en cada linea y componente con el kit de flushing. Hacer circular el solvente en ambas direcciones hasta que salga limpio. Esto arrastra particulas metalicas, goma y residuos que contaminan el sistema nuevo.</p>
+                  </li>
+                  <li id="paso-4" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">04</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Secado con nitrogeno o aire filtrado</h3>
+                      <span className="ml-auto text-sm text-gray-500">15 min</span>
+                    </div>
+                    <p className="text-gray-700">Por cada componente y linea, aplicar flujo de nitrogeno seco (o aire comprimido con filtro de particulas) hasta que salga completamente limpio y seco. El nitrogeno evita oxidacion y desplaza la humedad residual del solvente.</p>
+                  </li>
+                  <li id="paso-5" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">05</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Reensamblaje, vacio y carga completa</h3>
+                      <span className="ml-auto text-sm text-gray-500">50 min</span>
+                    </div>
+                    <p className="text-gray-700">Reinstalar filtro secador nuevo (obligatorio tras flushing), reensamblar componentes con juntas nuevas. Hacer vacio profundo 30 min, verificar hermeticidad y cargar R134a por peso. Probar A/C 15 min para confirmar presiones y temperatura correctas.</p>
+                  </li>
+                </ol>
+              </div>
                 <h2 className="text-3xl font-bold text-gray-900 mb-6">Preguntas Frecuentes</h2>
                 <div className="space-y-4">
                   {faqs.map((faq, idx) => (
@@ -131,7 +229,7 @@ export default function FlushingPage() {
                     </div>
                   ))}
                 </div>
-                <a href="https://wa.me/56935075600?text=Hola%2C%20necesito%20flushing%20del%20sistema%20A%2FC" className="block w-full text-center bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-medium mb-3 transition-colors">
+                <a href="https://wa.me/56935075600?text=Hola%2C%20necesito%20flushing%20del%20sistema%20A%2FC" className="block w-full text-center bg-amber-700 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-medium mb-3 transition-colors">
                   <Phone className="w-4 h-4 inline mr-2" />
                   Solicitar en WhatsApp
                 </a>
@@ -150,7 +248,7 @@ export default function FlushingPage() {
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Sistema Limpio, Rendimiento Optimo</h2>
           <p className="text-xl text-blue-100 mb-8">El flushing elimina contaminantes que dañan tu compresor y reducen la eficiencia. Ideal antes del verano o despues de una reparacion mayor.</p>
           <div className="flex flex-wrap justify-center gap-4">
-            <a href="https://wa.me/56935075600?text=Hola%2C%20quiero%20hacer%20flushing%20a%20mi%20A%2FC" className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-lg font-medium text-lg transition-colors">
+            <a href="https://wa.me/56935075600?text=Hola%2C%20quiero%20hacer%20flushing%20a%20mi%20A%2FC" className="inline-flex items-center gap-2 bg-amber-700 hover:bg-amber-600 text-white px-8 py-4 rounded-lg font-medium text-lg transition-colors">
               <Phone className="w-5 h-5" />
               Solicitar Flushing
             </a>
@@ -164,18 +262,19 @@ export default function FlushingPage() {
         <h3 className="text-lg font-bold text-gray-900 mb-4">Servicios relacionados que podrian interesarte</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <a href="/servicios/carga-gas" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
-            <h4 className="font-semibold text-blue-600 mb-1">Carga de Gas Refrigerante</h4>
+            <h3 className="font-semibold text-blue-600 mb-1">Carga de Gas Refrigerante</h3>
             <p className="text-sm text-gray-600">Despues del flushing, el sistema necesita recarga completa de gas.</p>
           </a>
           <a href="/servicios/mantenimiento-preventivo" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
-            <h4 className="font-semibold text-blue-600 mb-1">Mantenimiento Preventivo</h4>
+            <h3 className="font-semibold text-blue-600 mb-1">Mantenimiento Preventivo</h3>
             <p className="text-sm text-gray-600">Flushing como parte del mantenimiento preventivo del sistema.</p>
           </a>
           <a href="/servicios/deteccion-reparacion-fugas" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
-            <h4 className="font-semibold text-blue-600 mb-1">Deteccion y Reparacion de Fugas</h4>
+            <h3 className="font-semibold text-blue-600 mb-1">Deteccion y Reparacion de Fugas</h3>
             <p className="text-sm text-gray-600">Flushing puede revelar fugas internas en el sistema.</p>
           </a>        </div>
       </div>
     </div>
+    </>
   )
 }

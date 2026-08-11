@@ -193,7 +193,7 @@ export default function CoberturaPage() {
                 <p className="text-sm text-white/50 mb-4">{zone.description}</p>
 
                 <div className="mb-4">
-                  <h4 className="font-semibold text-white/70 text-sm mb-2">Comunas:</h4>
+                  <h3 className="font-semibold text-white/70 text-sm mb-2">Comunas:</h3>
                   <div className="flex flex-wrap gap-2">
                     {zone.communes.map((commune) => (
                       <span

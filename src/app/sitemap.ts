@@ -13,6 +13,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/preguntas-frecuentes`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/cobertura`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/problemas`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/contacto`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/cotizar`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/casos-reales`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/blog`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
   ]
 
   const servicioPages: MetadataRoute.Sitemap = [
@@ -26,6 +30,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/servicios/cambio-evaporador`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/servicios/flushing`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/servicios/aire-electrico-hibrido`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/servicios/recarga-r1234yf`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
   ]
 
   const coberturaPages: MetadataRoute.Sitemap = [
@@ -41,6 +46,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const blogPages: MetadataRoute.Sitemap = [
     { url: `${baseUrl}/blog/como-saber-si-mi-ac-necesita-recarga`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/blog/cuanto-cuesta-cargar-gas-aire-acondicionado-auto-santiago`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/blog/por-que-mi-aire-acondicionado-de-auto-no-enfria`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
   ]
 
   return [...staticPages, ...servicioPages, ...coberturaPages, ...blogPages]

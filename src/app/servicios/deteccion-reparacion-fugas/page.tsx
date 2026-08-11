@@ -1,6 +1,20 @@
-'use client'
+import type { Metadata } from 'next'
 import Link from 'next/link'
+import ServiceViewTracker from '@/components/tracking/ServiceViewTracker'
 import { Search, CheckCircle, Phone, ChevronDown, AlertTriangle } from 'lucide-react'
+
+export const metadata: Metadata = {
+  title: 'Deteccion y Reparacion de Fugas A/C Auto a Domicilio | desde $35.000',
+  description: 'Deteccion y reparacion de fugas en aire acondicionado automotriz a domicilio en Santiago. Nitrogeno, tinte UV y recarga. Garantia 90 dias. WhatsApp +56 9 3507 5600.',
+  keywords: ['detección fugas aire acondicionado auto', 'reparación fugas A/C automotriz', 'fuga gas refrigerante auto', 'trazador UV A/C Santiago', 'soldadura aire acondicionado auto'],
+  alternates: { canonical: 'https://autofixer.cl/servicios/deteccion-reparacion-fugas' },
+  openGraph: {
+    url: 'https://autofixer.cl/servicios/deteccion-reparacion-fugas',
+    title: 'Detección y Reparación de Fugas A/C Automotriz en Santiago | Autofixer',
+    description: 'Servicio profesional de detección y reparación de fugas con equipamiento certificado. Servicio a domicilio en Santiago.',
+    images: [{ url: 'https://autofixer.cl/og-image.png', width: 1200, height: 630, alt: 'Detección y Reparación de Fugas A/C' }],
+  },
+}
 
 const faqs = [
   { question: '¿Cómo detectan las fugas?', answer: 'Usamos múltiples métodos: presurización con nitrógeno para detectar fugas grandes, trazador UV con luz ultravioleta para fugas pequeñas, y verificación con manómetros para pérdidas de presión.' },
@@ -19,16 +33,62 @@ const zonePricing = [
 ]
 
 
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Como detectar y reparar fugas en el aire acondicionado automotriz en 6 pasos",
+  "description": "Procedimiento profesional de 6 pasos para detectar y reparar fugas en el sistema A/C automotriz. Usa tinte fluorescente UV, manometros y termometro. Localiza microfugas en mangueras, juntas, condensador y evaporador.",
+  "totalTime": "PT70M",
+  "estimatedCost": {"@type": "MonetaryAmount", "currency": "CLP", "value": "20000-45000"},
+  "tool": [
+    {"@type": "HowToTool", "name": "Lampara UV detector de fugas con gafas protectoras"},
+    {"@type": "HowToTool", "name": "Tinte fluorescente para sistema A/C"},
+    {"@type": "HowToTool", "name": "Manometro de A/C automotriz"},
+    {"@type": "HowToTool", "name": "Termometro infrarrojo"},
+    {"@type": "HowToTool", "name": "Kit de reparacion de mangueras y juntas"}
+  ],
+  "step": [
+    {"@type": "HowToStep", "position": 1, "name": "Inspeccion visual y revision de presiones", "text": "Conectar manometros y verificar presion del sistema. Presion baja sostenida confirma perdida de refrigerante. Inspeccionar visualmente mangueras, conexiones, condensador y evaporador en busca de manchas de aceite.", "url": "https://autofixer.cl/servicios/deteccion-reparacion-fugas#paso-1", "tool": [{"@type": "HowToTool", "name": "Manometro de A/C automotriz"}]},
+    {"@type": "HowToStep", "position": 2, "name": "Inyeccion de tinte fluorescente UV", "text": "Si el sistema no tiene tinte previo, inyectarlo por la valvula de servicio de baja presion. El tinte circula con el refrigerante y se acumula en cualquier punto de fuga, haciendolo visible bajo luz UV.", "url": "https://autofixer.cl/servicios/deteccion-reparacion-fugas#paso-2", "tool": [{"@type": "HowToTool", "name": "Tinte fluorescente para sistema A/C"}]},
+    {"@type": "HowToStep", "position": 3, "name": "Operacion del A/C durante 15 minutos", "text": "Encender A/C en maximo por 15 minutos para que el refrigerante y el tinte circulen por todo el sistema. Esto fuerza la salida del tinte por cualquier microfuga, facilitando su localizacion posterior.", "url": "https://autofixer.cl/servicios/deteccion-reparacion-fugas#paso-3"},
+    {"@type": "HowToStep", "position": 4, "name": "Inspeccion con lampara UV", "text": "Con el sistema en operacion, revisar con lampara UV todas las uniones, mangueras, valvulas de servicio, condensador frontal y drenajes. Las fugas aparecen como manchas amarillo-verdosas brillantes. Anotar cada hallazgo.", "url": "https://autofixer.cl/servicios/deteccion-reparacion-fugas#paso-4", "tool": [{"@type": "HowToTool", "name": "Lampara UV detector de fugas con gafas protectoras"}]},
+    {"@type": "HowToStep", "position": 5, "name": "Identificacion del tipo y ubicacion de fuga", "text": "Clasificar cada fuga: en manguera (reemplazo), en conexion (ajuste o reempaquetado), en condensador (soldadura o cambio), en evaporador (cambio de evaporador). Priorizar por urgencia y costo.", "url": "https://autofixer.cl/servicios/deteccion-reparacion-fugas#paso-5", "tool": [{"@type": "HowToTool", "name": "Termometro infrarrojo"}]},
+    {"@type": "HowToStep", "position": 6, "name": "Reparacion segun hallazgo", "text": "Ejecutar la reparacion especifica: ajuste de conexiones, cambio de juntas toricas, soldado de condensador o reemplazo del componente. Tras reparar, repetir ciclo de vacio y recarga de refrigerante. Verificar con UV que no quede ninguna fuga activa.", "url": "https://autofixer.cl/servicios/deteccion-reparacion-fugas#paso-6", "tool": [{"@type": "HowToTool", "name": "Kit de reparacion de mangueras y juntas"}]}
+  ]
+};
+
 export default function DeteccionFugasPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
+      <ServiceViewTracker slug="deteccion-reparacion-fugas" serviceName="Deteccion y Reparacion de Fugas" />
+            <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://autofixer.cl/' },
+            { '@type': 'ListItem', position: 2, name: 'Servicios', item: 'https://autofixer.cl/servicios' },
+            { '@type': 'ListItem', position: 3, name: 'Detección de Fugas' }
+          ]
+        }) }}
+      />
+      <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context": "https://schema.org", "@type": "Service", "name": "Deteccion y Reparacion de Fugas en Aire Acondicionado Automotriz", "serviceType": "Deteccion y reparacion de fugas de gas refrigerante", "description": "Deteccion de fugas con tinte UV y gas trazador en el sistema de aire acondicionado automotriz. Reparacion de mangueras, conexiones, evaporador y condensador. Servicio a domicilio en Santiago.", "provider": {"@type": "Organization", "name": "Autofixer", "@id": "https://autofixer.cl/#organization"}, "areaServed": {"@type": "GeoCircle", "geoMidpoint": {"@type": "GeoCoordinates", "latitude": -33.4372, "longitude": -70.6506}, "geoRadius": "25000"}, "url": "https://autofixer.cl/servicios/deteccion-reparacion-fugas/", "image": "https://autofixer.cl/og-servicio-deteccion-fugas.jpg", "offers": {"@type": "Offer", "priceCurrency": "CLP", "price": "40000", "priceSpecification": {"@type": "PriceSpecification", "priceCurrency": "CLP", "minPrice": "40000", "maxPrice": "200000", "eligibleQuantity": {"@type": "QuantitativeValue", "unitText": "servicio"}}}, "category": "Automotive", "inLanguage": "es-CL"}) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+      />
+      <div className="min-h-screen bg-gray-50">
       <nav className="bg-white border-b py-3">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ol className="flex items-center gap-2 text-sm">
             <li><Link href="/" className="text-gray-500 hover:text-blue-900">Inicio</Link></li>
-            <ChevronDown className="w-4 h-4 text-gray-400" />
+            <ChevronDown className="w-4 h-4 text-gray-500" />
             <li><Link href="/servicios" className="text-gray-500 hover:text-blue-900">Servicios</Link></li>
-            <ChevronDown className="w-4 h-4 text-gray-400" />
+            <ChevronDown className="w-4 h-4 text-gray-500" />
             <li><span className="text-blue-900 font-medium">Detección de Fugas</span></li>
           </ol>
         </div>
@@ -47,7 +107,7 @@ export default function DeteccionFugasPage() {
               Presurización con nitrógeno, trazador UV y soldadura TIG. Reparación garantizada.
             </p>
             <div className="flex flex-wrap gap-4">
-              <a href="https://wa.me/56935075600?text=Hola%2C%20creo%20que%20mi%20A%2FC%20tiene%20una%20fuga" className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+              <a href="https://wa.me/56935075600?text=Hola%2C%20creo%20que%20mi%20A%2FC%20tiene%20una%20fuga" className="inline-flex items-center gap-2 bg-amber-700 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
                 <Phone className="w-5 h-5" />
                 Solicitar Detección
               </a>
@@ -120,6 +180,60 @@ export default function DeteccionFugasPage() {
               </div>
 
               <div className="mb-12">
+                              <div className="mb-12">
+                <h2 className="text-3xl font-bold text-gray-900 mb-3">Proceso Paso a Paso</h2>
+                <p className="text-gray-600 mb-8">6 pasos profesionales para detectar y reparar fugas en el sistema A/C automotriz. Tiempo total estimado: 70 minutos. Si lo prefieres, agenda nuestro servicio a domicilio con tecnico certificado e informe escrito.</p>
+                <ol className="space-y-5">
+                  <li id="paso-1" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">01</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Inspeccion visual y revision de presiones</h3>
+                      <span className="ml-auto text-sm text-gray-500">15 min</span>
+                    </div>
+                    <p className="text-gray-700">Conectar manometros y verificar presion del sistema. Presion baja sostenida confirma perdida de refrigerante. Inspeccionar visualmente mangueras, conexiones, condensador y evaporador en busca de manchas de aceite.</p>
+                  </li>
+                  <li id="paso-2" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">02</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Inyeccion de tinte fluorescente UV</h3>
+                      <span className="ml-auto text-sm text-gray-500">10 min</span>
+                    </div>
+                    <p className="text-gray-700">Si el sistema no tiene tinte previo, inyectarlo por la valvula de servicio de baja presion. El tinte circula con el refrigerante y se acumula en cualquier punto de fuga, haciendolo visible bajo luz UV.</p>
+                  </li>
+                  <li id="paso-3" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">03</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Operacion del A/C durante 15 minutos</h3>
+                      <span className="ml-auto text-sm text-gray-500">5 min</span>
+                    </div>
+                    <p className="text-gray-700">Encender A/C en maximo por 15 minutos para que el refrigerante y el tinte circulen por todo el sistema. Esto fuerza la salida del tinte por cualquier microfuga, facilitando su localizacion posterior.</p>
+                  </li>
+                  <li id="paso-4" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">04</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Inspeccion con lampara UV</h3>
+                      <span className="ml-auto text-sm text-gray-500">15 min</span>
+                    </div>
+                    <p className="text-gray-700">Con el sistema en operacion, revisar con lampara UV todas las uniones, mangueras, valvulas de servicio, condensador frontal y drenajes. Las fugas aparecen como manchas amarillo-verdosas brillantes. Anotar cada hallazgo.</p>
+                  </li>
+                  <li id="paso-5" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">05</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Identificacion del tipo y ubicacion de fuga</h3>
+                      <span className="ml-auto text-sm text-gray-500">10 min</span>
+                    </div>
+                    <p className="text-gray-700">Clasificar cada fuga: en manguera (reemplazo), en conexion (ajuste o reempaquetado), en condensador (soldadura o cambio), en evaporador (cambio de evaporador). Priorizar por urgencia y costo.</p>
+                  </li>
+                  <li id="paso-6" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">06</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Reparacion segun hallazgo</h3>
+                      <span className="ml-auto text-sm text-gray-500">Variable</span>
+                    </div>
+                    <p className="text-gray-700">Ejecutar la reparacion especifica: ajuste de conexiones, cambio de juntas toricas, soldado de condensador o reemplazo del componente. Tras reparar, repetir ciclo de vacio y recarga de refrigerante. Verificar con UV que no quede ninguna fuga activa.</p>
+                  </li>
+                </ol>
+              </div>
                 <h2 className="text-3xl font-bold text-gray-900 mb-6">Preguntas Frecuentes</h2>
                 <div className="space-y-4">
                   {faqs.map((faq, idx) => (
@@ -151,7 +265,7 @@ export default function DeteccionFugasPage() {
                     </div>
                   ))}
                 </div>
-                <a href="https://wa.me/56935075600?text=Hola%2C%20creo%20que%20mi%20A%2FC%20tiene%20fuga" className="block w-full text-center bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-medium mb-3 transition-colors">
+                <a href="https://wa.me/56935075600?text=Hola%2C%20creo%20que%20mi%20A%2FC%20tiene%20fuga" className="block w-full text-center bg-amber-700 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-medium mb-3 transition-colors">
                   <Phone className="w-4 h-4 inline mr-2" />
                   Solicitar en WhatsApp
                 </a>
@@ -170,7 +284,7 @@ export default function DeteccionFugasPage() {
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Tu A/C Pierde Gas? Encontramos la Fuga</h2>
           <p className="text-xl text-red-100 mb-8">Diagnosticamos y reparamos cualquier fuga. Si no hay fuga visible, te informamos antes de cobrarte diagnóstico adicional.</p>
           <div className="flex flex-wrap justify-center gap-4">
-            <a href="https://wa.me/56935075600?text=Hola%2C%20mi%20A%2FC%20pierde%20gas" className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-lg font-medium text-lg transition-colors">
+            <a href="https://wa.me/56935075600?text=Hola%2C%20mi%20A%2FC%20pierde%20gas" className="inline-flex items-center gap-2 bg-amber-700 hover:bg-amber-600 text-white px-8 py-4 rounded-lg font-medium text-lg transition-colors">
               <Phone className="w-5 h-5" />
               Solicitar Detección
             </a>
@@ -184,18 +298,19 @@ export default function DeteccionFugasPage() {
         <h3 className="text-lg font-bold text-gray-900 mb-4">Servicios relacionados que podrian interesarte</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <a href="/servicios/carga-gas" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
-            <h4 className="font-semibold text-blue-600 mb-1">Carga de Gas Refrigerante</h4>
+            <h3 className="font-semibold text-blue-600 mb-1">Carga de Gas Refrigerante</h3>
             <p className="text-sm text-gray-600">Una vez sellada la fuga, recargamos el gas con medicion precisa por gramo.</p>
           </a>
           <a href="/servicios/reparacion-compresor" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
-            <h4 className="font-semibold text-blue-600 mb-1">Reparacion de Compresor</h4>
+            <h3 className="font-semibold text-blue-600 mb-1">Reparacion de Compresor</h3>
             <p className="text-sm text-gray-600">Las fugas pueden danar el compresor. Diagnostico completo.</p>
           </a>
           <a href="/servicios/mantenimiento-preventivo" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
-            <h4 className="font-semibold text-blue-600 mb-1">Mantenimiento Preventivo</h4>
+            <h3 className="font-semibold text-blue-600 mb-1">Mantenimiento Preventivo</h3>
             <p className="text-sm text-gray-600">Evita futuras fugas con revision periodica del sistema.</p>
           </a>        </div>
       </div>
     </div>
+    </>
   )
 }

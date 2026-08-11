@@ -1,6 +1,20 @@
-"use client"
+import type { Metadata } from 'next'
 import Link from 'next/link'
+import ServiceViewTracker from '@/components/tracking/ServiceViewTracker'
 import { Settings, CheckCircle, Phone, ChevronDown } from 'lucide-react'
+
+export const metadata: Metadata = {
+  title: 'Reparacion de Compresor A/C Auto a Domicilio | desde $180.000',
+  description: 'Reparacion y reemplazo de compresor de A/C automotriz a domicilio en Santiago. Diagnostico sin costo. Garantia 90 dias. WhatsApp +56 9 3507 5600.',
+  keywords: ['reparación compresor aire acondicionado auto', 'cambio compresor A/C automotriz', 'compresor A/C Santiago'],
+  alternates: { canonical: 'https://autofixer.cl/servicios/reparacion-compresor/' },
+  openGraph: {
+    url: 'https://autofixer.cl/servicios/reparacion-compresor/',
+    title: 'Reparación de Compresor de Aire Acondicionado Auto | Autofixer Santiago',
+    description: 'Reparación y reemplazo de compresor de aire acondicionado automotriz. Servicio a domicilio en Santiago. Garantía 90 días. Presupuesto transparente.',
+    images: [{ url: 'https://autofixer.cl/og-image.png', width: 1200, height: 630, alt: 'reparacion-compresor' }],
+  },
+}
 
 const faqs = [
   { question: 'Cuando hay que reparar o cambiar el compresor?', answer: 'El compresor debe repararse o reemplazarse cuando presenta ruidos extraños, no embraga correctamente, tiene fugas internas de aceite o gas, o simplemente deja de comprimir. Un diagnostico profesional determina si es reparable o requiere reemplazo.' },
@@ -18,16 +32,64 @@ const zonePricing = [
   { zone: 'Zona 5', areas: 'Colina, Chicureo, Pirque, San Jose de Maipo', price: 25000 },
 ]
 
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Como reparar o reemplazar el compresor del aire acondicionado automotriz en 7 pasos",
+  "description": "Procedimiento profesional de 7 pasos para reparar o cambiar el compresor A/C automotriz: recuperacion, desmontaje electrico, desmontaje mecanico, flushing obligatorio, instalacion del nuevo compresor, filtro secador y vacio y carga.",
+  "totalTime": "PT180M",
+  "estimatedCost": {"@type": "MonetaryAmount", "currency": "CLP", "value": "250000-450000"},
+  "tool": [
+    {"@type": "HowToTool", "name": "Maquina de recuperacion de refrigerante"},
+    {"@type": "HowToTool", "name": "Bomba de vacio de doble etapa"},
+    {"@type": "HowToTool", "name": "Manometro de A/C automotriz alta y baja presion"},
+    {"@type": "HowToTool", "name": "Balanza digital para refrigerante"},
+    {"@type": "HowToTool", "name": "Kit de flushing con solvente A/C"},
+    {"@type": "HowToTool", "name": "Multimetro automotriz"}
+  ],
+  "step": [
+    {"@type": "HowToStep", "position": 1, "name": "Recuperacion total del refrigerante", "text": "Conectar la maquina de recuperacion y extraer el 100 por ciento del gas. Confirmar vacio total en manometros. Esto protege el medio ambiente y prepara el sistema para el trabajo mecanico.", "url": "https://autofixer.cl/servicios/reparacion-compresor#paso-1", "tool": [{"@type": "HowToTool", "name": "Maquina de recuperacion de refrigerante"}]},
+    {"@type": "HowToStep", "position": 2, "name": "Desmontaje electrico del compresor", "text": "Desconectar bateria. Localizar conector electrico del embrague del compresor y desconectarlo cuidadosamente. En vehiculos con control electrico de valvula, desconectar la valvula deExpansion. Marcar y fotografiar cada conexion.", "url": "https://autofixer.cl/servicios/reparacion-compresor#paso-2", "tool": [{"@type": "HowToTool", "name": "Multimetro automotriz"}]},
+    {"@type": "HowToStep", "position": 3, "name": "Desmontaje mecanico del compresor", "text": "Aflojar la correa del accesorio o cadena de distribucion segun el modelo. Quitar los pernos de fijacion del compresor al soporte. Desconectar mangueras de succion y descarga, tapar inmediatamente las lineas para evitar contaminacion. Sacar el compresor.", "url": "https://autofixer.cl/servicios/reparacion-compresor#paso-3"},
+    {"@type": "HowToStep", "position": 4, "name": "Flushing obligatorio del sistema", "text": "Cualquier fallo del compresor contamina el circuito con virutas metalicas y goma. Hacer flushing del condensador, mangueras, evaporador y filtro secador antes de instalar el nuevo compresor. Sin flushing, el compresor nuevo fallara en pocas semanas.", "url": "https://autofixer.cl/servicios/reparacion-compresor#paso-4", "tool": [{"@type": "HowToTool", "name": "Kit de flushing con solvente A/C"}]},
+    {"@type": "HowToStep", "position": 5, "name": "Instalacion del compresor nuevo o reparado", "text": "Montar el compresor nuevo (o reparado con kit de embrague y valvulas) en su soporte, apretar pernos al par especificado. Conectar mangueras con juntas toricas nuevas. Reconectar conector electrico del embrague. Montar la correa y verificar tension.", "url": "https://autofixer.cl/servicios/reparacion-compresor#paso-5"},
+    {"@type": "HowToStep", "position": 6, "name": "Reemplazo obligatorio del filtro secador", "text": "Instalar filtro secador nuevo. Es obligatorio tras la apertura del sistema: el filtro secador captura humedad que daña el compresor nuevo. Tambien cambiar la valvula deExpansion si el modelo lo requiere.", "url": "https://autofixer.cl/servicios/reparacion-compresor#paso-6"},
+    {"@type": "HowToStep", "position": 7, "name": "Vacio profundo, carga y prueba final", "text": "Hacer vacio por 45 minutos (mas largo que una carga normal por la complejidad). Verificar hermeticidad, inyectar aceite PAG nuevo segun placa, cargar R134a por peso. Probar A/C 20 minutos verificando: embrague engrana, presiones correctas (baja 25-45, alta 150-250 psi), salida 5-10 grados C.", "url": "https://autofixer.cl/servicios/reparacion-compresor#paso-7", "tool": [{"@type": "HowToTool", "name": "Bomba de vacio de doble etapa"}, {"@type": "HowToTool", "name": "Balanza digital para refrigerante"}, {"@type": "HowToTool", "name": "Manometro de A/C automotriz alta y baja presion"}]}
+  ]
+};
+
 export default function ReparacionCompresorPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
+      <ServiceViewTracker slug="reparacion-compresor" serviceName="Reparacion de Compresor" />
+            <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://autofixer.cl/' },
+            { '@type': 'ListItem', position: 2, name: 'Servicios', item: 'https://autofixer.cl/servicios' },
+            { '@type': 'ListItem', position: 3, name: 'Reparación de Compresor' }
+          ]
+        }) }}
+      />
+      <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context": "https://schema.org", "@type": "Service", "name": "Reparacion y Reemplazo de Compresor de Aire Acondicionado Automotriz", "serviceType": "Reparacion de compresor automotriz", "description": "Reemplazo y reparacion de compresor de aire acondicionado automotriz. Compresores reconstruidos y nuevos con garantia. Servicio a domicilio en Santiago.", "provider": {"@type": "Organization", "name": "Autofixer", "@id": "https://autofixer.cl/#organization"}, "areaServed": {"@type": "GeoCircle", "geoMidpoint": {"@type": "GeoCoordinates", "latitude": -33.4372, "longitude": -70.6506}, "geoRadius": "25000"}, "url": "https://autofixer.cl/servicios/reparacion-compresor/", "image": "https://autofixer.cl/og-servicio-reparacion-compresor.jpg", "offers": {"@type": "Offer", "priceCurrency": "CLP", "price": "250000", "priceSpecification": {"@type": "PriceSpecification", "priceCurrency": "CLP", "minPrice": "250000", "maxPrice": "600000", "eligibleQuantity": {"@type": "QuantitativeValue", "unitText": "servicio"}}}, "category": "Automotive", "inLanguage": "es-CL"}) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+      />
+      <div className="min-h-screen bg-gray-50">
       <nav className="bg-white border-b py-3">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ol className="flex items-center gap-2 text-sm">
             <li><Link href="/" className="text-gray-500 hover:text-blue-900">Inicio</Link></li>
-            <ChevronDown className="w-4 h-4 text-gray-400" />
+            <ChevronDown className="w-4 h-4 text-gray-500" />
             <li><Link href="/servicios" className="text-gray-500 hover:text-blue-900">Servicios</Link></li>
-            <ChevronDown className="w-4 h-4 text-gray-400" />
+            <ChevronDown className="w-4 h-4 text-gray-500" />
             <li><span className="text-blue-900 font-medium">Reparacion de Compresor</span></li>
           </ol>
         </div>
@@ -46,7 +108,7 @@ export default function ReparacionCompresorPage() {
               si se repara o reemplaza. Servicio a domicilio en toda Santiago.
             </p>
             <div className="flex flex-wrap gap-4">
-              <a href="https://wa.me/56935075600?text=Hola%2C%20creo%20que%20mi%20compresor%20esta%20fallando" className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+              <a href="https://wa.me/56935075600?text=Hola%2C%20creo%20que%20mi%20compresor%20esta%20fallando" className="inline-flex items-center gap-2 bg-amber-700 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
                 <Phone className="w-5 h-5" />
                 Solicitar Revision
               </a>
@@ -119,6 +181,68 @@ export default function ReparacionCompresorPage() {
               </div>
 
               <div className="mb-12">
+                              <div className="mb-12">
+                <h2 className="text-3xl font-bold text-gray-900 mb-3">Proceso Paso a Paso</h2>
+                <p className="text-gray-600 mb-8">7 pasos profesionales para reparar o reemplazar el compresor A/C automotriz. Tiempo total estimado: 180 minutos. Si lo prefieres, agenda nuestro servicio a domicilio con tecnico certificado e informe escrito.</p>
+                <ol className="space-y-5">
+                  <li id="paso-1" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">01</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Recuperacion total del refrigerante</h3>
+                      <span className="ml-auto text-sm text-gray-500">15 min</span>
+                    </div>
+                    <p className="text-gray-700">Conectar la maquina de recuperacion y extraer el 100 por ciento del gas. Confirmar vacio total en manometros. Esto protege el medio ambiente y prepara el sistema para el trabajo mecanico.</p>
+                  </li>
+                  <li id="paso-2" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">02</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Desmontaje electrico del compresor</h3>
+                      <span className="ml-auto text-sm text-gray-500">15 min</span>
+                    </div>
+                    <p className="text-gray-700">Desconectar bateria. Localizar conector electrico del embrague del compresor y desconectarlo cuidadosamente. En vehiculos con control electrico de valvula, desconectar la valvula deExpansion. Marcar y fotografiar cada conexion.</p>
+                  </li>
+                  <li id="paso-3" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">03</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Desmontaje mecanico del compresor</h3>
+                      <span className="ml-auto text-sm text-gray-500">30 min</span>
+                    </div>
+                    <p className="text-gray-700">Aflojar la correa del accesorio o cadena de distribucion segun el modelo. Quitar los pernos de fijacion del compresor al soporte. Desconectar mangueras de succion y descarga, tapar inmediatamente las lineas para evitar contaminacion. Sacar el compresor.</p>
+                  </li>
+                  <li id="paso-4" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">04</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Flushing obligatorio del sistema</h3>
+                      <span className="ml-auto text-sm text-gray-500">30 min</span>
+                    </div>
+                    <p className="text-gray-700">Cualquier fallo del compresor contamina el circuito con virutas metalicas y goma. Hacer flushing del condensador, mangueras, evaporador y filtro secador antes de instalar el nuevo compresor. Sin flushing, el compresor nuevo fallara en pocas semanas.</p>
+                  </li>
+                  <li id="paso-5" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">05</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Instalacion del compresor nuevo o reparado</h3>
+                      <span className="ml-auto text-sm text-gray-500">30 min</span>
+                    </div>
+                    <p className="text-gray-700">Montar el compresor nuevo (o reparado con kit de embrague y valvulas) en su soporte, apretar pernos al par especificado. Conectar mangueras con juntas toricas nuevas. Reconectar conector electrico del embrague. Montar la correa y verificar tension.</p>
+                  </li>
+                  <li id="paso-6" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">06</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Reemplazo obligatorio del filtro secador</h3>
+                      <span className="ml-auto text-sm text-gray-500">10 min</span>
+                    </div>
+                    <p className="text-gray-700">Instalar filtro secador nuevo. Es obligatorio tras la apertura del sistema: el filtro secador captura humedad que daña el compresor nuevo. Tambien cambiar la valvula deExpansion si el modelo lo requiere.</p>
+                  </li>
+                  <li id="paso-7" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">07</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Vacio profundo, carga y prueba final</h3>
+                      <span className="ml-auto text-sm text-gray-500">50 min</span>
+                    </div>
+                    <p className="text-gray-700">Hacer vacio por 45 minutos (mas largo que una carga normal por la complejidad). Verificar hermeticidad, inyectar aceite PAG nuevo segun placa, cargar R134a por peso. Probar A/C 20 minutos verificando: embrague engrana, presiones correctas (baja 25-45, alta 150-250 psi), salida 5-10 grados C.</p>
+                  </li>
+                </ol>
+              </div>
                 <h2 className="text-3xl font-bold text-gray-900 mb-6">Preguntas Frecuentes</h2>
                 <div className="space-y-4">
                   {faqs.map((faq, idx) => (
@@ -150,7 +274,7 @@ export default function ReparacionCompresorPage() {
                     </div>
                   ))}
                 </div>
-                <a href="https://wa.me/56935075600?text=Hola%2C%20mi%20compresor%20esta%20fallando" className="block w-full text-center bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-medium mb-3 transition-colors">
+                <a href="https://wa.me/56935075600?text=Hola%2C%20mi%20compresor%20esta%20fallando" className="block w-full text-center bg-amber-700 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-medium mb-3 transition-colors">
                   <Phone className="w-4 h-4 inline mr-2" />
                   Solicitar en WhatsApp
                 </a>
@@ -169,7 +293,7 @@ export default function ReparacionCompresorPage() {
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Tu Compresor No Funciona?</h2>
           <p className="text-xl text-blue-100 mb-8">Diagnostico profesional y presupuesto sin compromiso. Compresores con garantia para todos los vehiculos.</p>
           <div className="flex flex-wrap justify-center gap-4">
-            <a href="https://wa.me/56935075600?text=Hola%2C%20mi%20compresor%20A%2FC%20no%20funciona" className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-lg font-medium text-lg transition-colors">
+            <a href="https://wa.me/56935075600?text=Hola%2C%20mi%20compresor%20A%2FC%20no%20funciona" className="inline-flex items-center gap-2 bg-amber-700 hover:bg-amber-600 text-white px-8 py-4 rounded-lg font-medium text-lg transition-colors">
               <Phone className="w-5 h-5" />
               Solicitar Revision
             </a>
@@ -183,18 +307,19 @@ export default function ReparacionCompresorPage() {
         <h3 className="text-lg font-bold text-gray-900 mb-4">Servicios relacionados que podrian interesarte</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <a href="/servicios/carga-gas" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
-            <h4 className="font-semibold text-blue-600 mb-1">Carga de Gas Refrigerante</h4>
+            <h3 className="font-semibold text-blue-600 mb-1">Carga de Gas Refrigerante</h3>
             <p className="text-sm text-gray-600">Nuevo compresor requiere recarga de gas con refrigerante puro certificado.</p>
           </a>
           <a href="/servicios/deteccion-reparacion-fugas" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
-            <h4 className="font-semibold text-blue-600 mb-1">Deteccion y Reparacion de Fugas</h4>
+            <h3 className="font-semibold text-blue-600 mb-1">Deteccion y Reparacion de Fugas</h3>
             <p className="text-sm text-gray-600">El compresor puede estar fugando.</p>
           </a>
           <a href="/servicios/mantenimiento-preventivo" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
-            <h4 className="font-semibold text-blue-600 mb-1">Mantenimiento Preventivo</h4>
+            <h3 className="font-semibold text-blue-600 mb-1">Mantenimiento Preventivo</h3>
             <p className="text-sm text-gray-600">Mantencion que alarga la vida util del compresor.</p>
           </a>        </div>
       </div>
     </div>
+    </>
   )
 }

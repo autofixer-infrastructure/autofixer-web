@@ -2,15 +2,26 @@ import type { Metadata } from 'next'
 import { Phone, CheckCircle, MapPin, Clock, Shield, Truck, Wrench, ArrowRight, AlertTriangle, Thermometer, RefreshCw } from 'lucide-react'
 import { ScrollReveal } from '@/components/ScrollReveal'
 import Link from 'next/link'
+import ServiceViewTracker from '@/components/tracking/ServiceViewTracker'
 
 export const metadata: Metadata = {
-  title: 'Carga de Gas Aire Acondicionado Automotriz a Domicilio en Santiago | Autofixer',
-  description: 'Carga de gas para aire acondicionado automotriz a domicilio en Santiago. R134a desde $35.000, R1234yf desde $90.000. Técnicos certificados. Servicio en el mismo día. Garantía 90 días.',
+  title: 'Carga Gas A/C Auto a Domicilio Santiago | desde $35.000',
+  description: 'Carga de gas R134a y R1234yf a domicilio en Santiago. Deteccion de fugas incluida. Garantia 90 dias. WhatsApp +56 9 3507 5600.',
   keywords: ['carga de gas aire acondicionado auto Santiago', 'carga aire acondicionado automotriz a domicilio', 'recarga gas aire acondicionado auto', 'carga gas R134a Santiago', 'carga gas R1234yf'],
   alternates: { canonical: 'https://autofixer.cl/servicios/carga-gas' },
   openGraph: {
+    url: 'https://autofixer.cl/servicios/carga-gas',
     title: 'Carga de Gas A/C Automotriz a Domicilio en Santiago | Autofixer',
     description: 'R134a desde $35.000. Servicio a domicilio en toda la Región Metropolitana. Técnicos certificados. Garantía 90 días.',
+  
+    images: [
+      {
+        url: 'https://autofixer.cl/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Carga de Gas A/C Automotriz a Domicilio',
+      },
+    ],
   },
 }
 
@@ -36,9 +47,56 @@ const steps = [
   { num: '04', title: 'Trabajo garantizado', desc: 'Realizamos la carga y verificamos el funcionamiento. Garantía 90 días.' },
 ]
 
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Como cargar gas refrigerante R134a al aire acondicionado automotriz en 7 pasos",
+  "description": "Procedimiento profesional de 7 pasos para cargar gas R134a al sistema A/C automotriz: recuperacion del gas residual, vacio, verificacion de fugas, aceite UV, carga por peso, presion y temperatura, y prueba final.",
+  "totalTime": "PT75M",
+  "estimatedCost": {"@type": "MonetaryAmount", "currency": "CLP", "value": "25000-35000"},
+  "tool": [
+    {"@type": "HowToTool", "name": "Maquina de recuperacion de refrigerante"},
+    {"@type": "HowToTool", "name": "Bomba de vacio de doble etapa"},
+    {"@type": "HowToTool", "name": "Manometro de A/C automotriz alta y baja presion"},
+    {"@type": "HowToTool", "name": "Balanza digital para refrigerante"},
+    {"@type": "HowToTool", "name": "Termometro infrarrojo"}
+  ],
+  "step": [
+    {"@type": "HowToStep", "position": 1, "name": "Recuperacion del gas refrigerante residual", "text": "Conectar la maquina de recuperacion a los puertos de servicio y extraer el gas remanente. Este gas NO se libera a la atmosfera por normativa ambiental. Tiempo de recuperacion: 10-15 minutos hasta que los manometros marquen vacio.", "url": "https://autofixer.cl/servicios/carga-gas#paso-1", "tool": [{"@type": "HowToTool", "name": "Maquina de recuperacion de refrigerante"}]},
+    {"@type": "HowToStep", "position": 2, "name": "Vacio profundo del sistema", "text": "Conectar bomba de vacio de doble etapa al sistema y evacuar por minimo 30 minutos. El vacio elimina humedad y aire no condensables. Verificar que los manometros lleguen a -30 inHg y mantener el vacio 15 min adicionales para confirmar hermeticidad.", "url": "https://autofixer.cl/servicios/carga-gas#paso-2", "tool": [{"@type": "HowToTool", "name": "Bomba de vacio de doble etapa"}]},
+    {"@type": "HowToStep", "position": 3, "name": "Verificacion de fugas con vacio mantenido", "text": "Con la bomba apagada, dejar el sistema en vacio 10-15 minutos. Si la presion sube, hay una fuga. La subida indica ingreso de aire o humedad y el sistema no esta apto para recibir gas sin reparar primero.", "url": "https://autofixer.cl/servicios/carga-gas#paso-3", "tool": [{"@type": "HowToTool", "name": "Manometro de A/C automotriz alta y baja presion"}]},
+    {"@type": "HowToStep", "position": 4, "name": "Carga de aceite UV y tinte fluorescente", "text": "Inyectar aceite PAG especifico para compresor y tinte UV para deteccion futura de fugas. Las cantidades se determinan por la placa del compresor o lo que indique el manual del vehiculo.", "url": "https://autofixer.cl/servicios/carga-gas#paso-4"},
+    {"@type": "HowToStep", "position": 5, "name": "Carga de R134a por peso con balanza", "text": "Conectar la balanza digital al cilindro de R134a y cargar el peso exacto indicado en la placa del vehiculo (tipicamente 500-800g). Cargar por el puerto de baja con el motor a 1500 RPM y A/C en maximo. La balanza garantiza la cantidad exacta.", "url": "https://autofixer.cl/servicios/carga-gas#paso-5", "tool": [{"@type": "HowToTool", "name": "Balanza digital para refrigerante"}]},
+    {"@type": "HowToStep", "position": 6, "name": "Verificacion de presion y temperatura", "text": "Con A/C en maximo y motor a 1500 RPM, medir: baja 25-45 psi, alta 150-250 psi (a 25-30 grados C exterior). Temperatura de salida en ducto central: 5-10 grados C. Si las presiones estan fuera de rango, ajustar la carga o diagnosticar.", "url": "https://autofixer.cl/servicios/carga-gas#paso-6", "tool": [{"@type": "HowToTool", "name": "Manometro de A/C automotriz alta y baja presion"}, {"@type": "HowToTool", "name": "Termometro infrarrojo"}]},
+    {"@type": "HowToStep", "position": 7, "name": "Prueba de funcionamiento y entrega", "text": "Mantener A/C en maximo por 10 minutos, verificar que la temperatura se mantenga estable, sin fluctuaciones ni ruidos en el compresor. Apagar y revisar que no haya fugas visibles en conexiones. Documentar presiones, peso cargado y temperatura final.", "url": "https://autofixer.cl/servicios/carga-gas#paso-7"}
+  ]
+};
+
 export default function CargaGasPage() {
   return (
-    <div className='min-h-screen bg-gray-50'>
+    <>
+      <ServiceViewTracker slug="carga-gas" serviceName="Carga de Gas Refrigerante" servicePrice={90000} />
+            <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://autofixer.cl/' },
+            { '@type': 'ListItem', position: 2, name: 'Servicios', item: 'https://autofixer.cl/servicios' },
+            { '@type': 'ListItem', position: 3, name: 'Carga de Gas' }
+          ]
+        }) }}
+      />
+      <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context": "https://schema.org", "@type": "Service", "name": "Carga de Gas R134a y R1234yf", "serviceType": "Carga de gas refrigerante automotriz", "description": "Carga de gas para aire acondicionado automotriz a domicilio en Santiago. R134a desde $35.000, R1234yf desde $90.000. Técnicos certificados. Servicio en el mismo día. Garantía 90 días.", "provider": {"@type": "Organization", "name": "Autofixer", "@id": "https://autofixer.cl/#organization"}, "areaServed": {"@type": "GeoCircle", "geoMidpoint": {"@type": "GeoCoordinates", "latitude": -33.4372, "longitude": -70.6506}, "geoRadius": "25000"}, "url": "https://autofixer.cl/servicios/carga-gas/", "image": "https://autofixer.cl/og-servicio-carga-gas.jpg", "offers": {"@type": "Offer", "priceCurrency": "CLP", "price": "35000", "priceSpecification": {"@type": "PriceSpecification", "priceCurrency": "CLP", "minPrice": "35000", "maxPrice": "110000", "eligibleQuantity": {"@type": "QuantitativeValue", "unitText": "servicio"}}}, "category": "Automotive", "inLanguage": "es-CL"}) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+      />
+      <div className='min-h-screen bg-gray-50'>
 
       {/* Hero */}
       <section className='bg-gradient-to-br from-blue-900 to-indigo-900 text-white py-16 md:py-24'>
@@ -49,7 +107,7 @@ export default function CargaGasPage() {
             </h1>
             <p className='text-xl text-blue-100 mb-8'>
               ¿El aire de tu auto no enfría? Recarga de gas R134a y R1234yf con técnicos certificados.
-              Servicio en tu domicilio — sin跑的 sin demoras.
+              Servicio en tu domicilio — sin demoras.
             </p>
             <div className='flex flex-wrap gap-6 text-sm'>
               <div className='flex items-center gap-2'><CheckCircle className='w-5 h-5 text-amber-400' /><span>R134a desde $35.000</span></div>
@@ -85,7 +143,7 @@ export default function CargaGasPage() {
 
           <ScrollReveal>
             <div className='bg-white rounded-2xl shadow-card p-8 border-t-4 border-amber-500 relative overflow-hidden'>
-              <div className='absolute top-4 right-4 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full'>MODERNO</div>
+              <div className='absolute top-4 right-4 bg-amber-700 text-white text-xs font-bold px-3 py-1 rounded-full'>MODERNO</div>
               <div className='text-4xl mb-2'>🌿</div>
               <h2 className='text-2xl font-bold text-gray-900 mb-2'>Carga de Gas R1234yf</h2>
               <p className='text-gray-600 mb-4'>Para vehículos desde 2017 y híbridos</p>
@@ -97,7 +155,7 @@ export default function CargaGasPage() {
                 <li className='flex items-start gap-2'><CheckCircle className='w-5 h-5 text-green-600 shrink-0 mt-0.5' /> Carga precisa por gramo</li>
                 <li className='flex items-start gap-2'><CheckCircle className='w-5 h-5 text-green-600 shrink-0 mt-0.5' /> Garantía 90 días</li>
               </ul>
-              <Link href='/cotizar?service=carga-gas' className='mt-6 w-full inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-xl font-semibold transition-colors'>
+              <Link href='/cotizar?service=carga-gas' className='mt-6 w-full inline-flex items-center justify-center gap-2 bg-amber-700 hover:bg-amber-600 text-white px-6 py-3 rounded-xl font-semibold transition-colors'>
                 Cotizar Carga R1234yf <ArrowRight className='w-5 h-5' />
               </Link>
             </div>
@@ -184,6 +242,68 @@ export default function CargaGasPage() {
       {/* FAQ */}
       <section className='py-16'>
         <div className='max-w-3xl mx-auto px-4 sm:px-6 lg:px-8'>
+                        <div className="mb-12">
+                <h2 className="text-3xl font-bold text-gray-900 mb-3">Proceso Paso a Paso</h2>
+                <p className="text-gray-600 mb-8">7 pasos profesionales para cargar gas R134a al sistema A/C automotriz. Tiempo total estimado: 75 minutos. Si lo prefieres, agenda nuestro servicio a domicilio con tecnico certificado e informe escrito.</p>
+                <ol className="space-y-5">
+                  <li id="paso-1" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">01</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Recuperacion del gas refrigerante residual</h3>
+                      <span className="ml-auto text-sm text-gray-500">10 min</span>
+                    </div>
+                    <p className="text-gray-700">Conectar la maquina de recuperacion a los puertos de servicio y extraer el gas remanente. Este gas NO se libera a la atmosfera por normativa ambiental. Tiempo de recuperacion: 10-15 minutos hasta que los manometros marquen vacio.</p>
+                  </li>
+                  <li id="paso-2" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">02</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Vacio profundo del sistema</h3>
+                      <span className="ml-auto text-sm text-gray-500">15 min</span>
+                    </div>
+                    <p className="text-gray-700">Conectar bomba de vacio de doble etapa al sistema y evacuar por minimo 30 minutos. El vacio elimina humedad y aire no condensables. Verificar que los manometros lleguen a -30 inHg y mantener el vacio 15 min adicionales para confirmar hermeticidad.</p>
+                  </li>
+                  <li id="paso-3" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">03</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Verificacion de fugas con vacio mantenido</h3>
+                      <span className="ml-auto text-sm text-gray-500">10 min</span>
+                    </div>
+                    <p className="text-gray-700">Con la bomba apagada, dejar el sistema en vacio 10-15 minutos. Si la presion sube, hay una fuga. La subida indica ingreso de aire o humedad y el sistema no esta apto para recibir gas sin reparar primero.</p>
+                  </li>
+                  <li id="paso-4" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">04</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Carga de aceite UV y tinte fluorescente</h3>
+                      <span className="ml-auto text-sm text-gray-500">5 min</span>
+                    </div>
+                    <p className="text-gray-700">Inyectar aceite PAG especifico para compresor y tinte UV para deteccion futura de fugas. Las cantidades se determinan por la placa del compresor o lo que indique el manual del vehiculo.</p>
+                  </li>
+                  <li id="paso-5" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">05</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Carga de R134a por peso con balanza</h3>
+                      <span className="ml-auto text-sm text-gray-500">15 min</span>
+                    </div>
+                    <p className="text-gray-700">Conectar la balanza digital al cilindro de R134a y cargar el peso exacto indicado en la placa del vehiculo (tipicamente 500-800g). Cargar por el puerto de baja con el motor a 1500 RPM y A/C en maximo. La balanza garantiza la cantidad exacta.</p>
+                  </li>
+                  <li id="paso-6" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">06</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Verificacion de presion y temperatura</h3>
+                      <span className="ml-auto text-sm text-gray-500">10 min</span>
+                    </div>
+                    <p className="text-gray-700">Con A/C en maximo y motor a 1500 RPM, medir: baja 25-45 psi, alta 150-250 psi (a 25-30 grados C exterior). Temperatura de salida en ducto central: 5-10 grados C. Si las presiones estan fuera de rango, ajustar la carga o diagnosticar.</p>
+                  </li>
+                  <li id="paso-7" className="bg-white border-l-4 border-blue-500 rounded-r-xl p-5 shadow-sm">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-2xl font-bold text-blue-600">07</span>
+                      <h3 className="text-xl font-semibold text-gray-900">Prueba de funcionamiento y entrega</h3>
+                      <span className="ml-auto text-sm text-gray-500">10 min</span>
+                    </div>
+                    <p className="text-gray-700">Mantener A/C en maximo por 10 minutos, verificar que la temperatura se mantenga estable, sin fluctuaciones ni ruidos en el compresor. Apagar y revisar que no haya fugas visibles en conexiones. Documentar presiones, peso cargado y temperatura final.</p>
+                  </li>
+                </ol>
+              </div>
           <ScrollReveal><h2 className='text-3xl font-bold text-gray-900 text-center mb-8'>Preguntas frecuentes sobre carga de gas</h2></ScrollReveal>
           <div className='space-y-3'>
             {faqs.map((faq, idx) => (
@@ -206,7 +326,7 @@ export default function CargaGasPage() {
             <h2 className='text-3xl font-bold text-white mb-4'>¿El aire de tu auto no enfría como debería?</h2>
             <p className='text-blue-100 mb-8 max-w-2xl mx-auto'>Solicita la carga de gas a domicilio. Diagnóstico gratis si contratas el servicio.</p>
             <div className='flex flex-col sm:flex-row gap-4 justify-center'>
-              <a href='https://wa.me/56935075600?text=Hola%2C%20necesito%20carga%20de%20gas%20para%20mi%20aire%20acondicionado' className='inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-semibold transition-colors'>
+              <a href='https://wa.me/56935075600?text=Hola%2C%20necesito%20carga%20de%20gas%20para%20mi%20aire%20acondicionado' className='inline-flex items-center justify-center gap-2 bg-amber-700 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-semibold transition-colors'>
                 <Phone className='w-5 h-5' />Solicitar por WhatsApp
               </a>
               <Link href='/precios-referenciales' className='inline-flex items-center justify-center gap-2 border-2 border-white text-white hover:bg-white hover:text-blue-900 px-8 py-4 rounded-xl font-semibold transition-colors'>
@@ -221,18 +341,19 @@ export default function CargaGasPage() {
         <h3 className="text-lg font-bold text-gray-900 mb-4">Servicios relacionados que podrian interesarte</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <a href="/servicios/deteccion-reparacion-fugas" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
-            <h4 className="font-semibold text-blue-600 mb-1">Deteccion y Reparacion de Fugas</h4>
+            <h3 className="font-semibold text-blue-600 mb-1">Deteccion y Reparacion de Fugas</h3>
             <p className="text-sm text-gray-600">Si tu AC no enfria, podria haber una fuga. Localizacion electronica con garantia.</p>
           </a>
           <a href="/servicios/mantenimiento-preventivo" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
-            <h4 className="font-semibold text-blue-600 mb-1">Mantenimiento Preventivo</h4>
+            <h3 className="font-semibold text-blue-600 mb-1">Mantenimiento Preventivo</h3>
             <p className="text-sm text-gray-600">Previene perdida de gas y alarga la vida de tu sistema.</p>
           </a>
           <a href="/servicios/sanitizacion" className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100">
-            <h4 className="font-semibold text-blue-600 mb-1">Sanitizacion del Sistema</h4>
+            <h3 className="font-semibold text-blue-600 mb-1">Sanitizacion del Sistema</h3>
             <p className="text-sm text-gray-600">Elimina bacterias y hongos despues de la recarga de gas.</p>
           </a>        </div>
       </div>
     </div>
+    </>
   )
 }

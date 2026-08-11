@@ -4,7 +4,7 @@ import { CheckCircle, ArrowRight, Truck, Shield, Phone } from 'lucide-react'
 import { ScrollReveal } from '@/components/ScrollReveal'
 
 export const metadata: Metadata = {
-  title: 'Servicios de Aire Acondicionado Automotriz a Domicilio en Santiago',
+  title: 'Servicios A/C Automotriz Santiago',
   description: 'Diagnóstico, carga de gas, sanitización y reparación de aire acondicionado automotriz a domicilio en Santiago. Especialistas en R134a, R1234yf, compresor y más. Garantía 90 días.',
   keywords: ['servicio aire acondicionado automotriz Santiago', 'reparación A/C auto domicilio', 'mantenimiento aire acondicionado auto'],
   alternates: { canonical: 'https://autofixer.cl/servicios' },
@@ -58,6 +58,7 @@ export default function ServiciosPage() {
           {services.map((service) => (
             <ScrollReveal key={service.id}>
               <Link
+                id={service.id}
                 href={service.href}
                 className='group bg-white rounded-2xl p-6 shadow-card hover:shadow-elevated transition-all border border-gray-100 h-full flex flex-col'
               >
@@ -67,7 +68,7 @@ export default function ServiciosPage() {
                 <p className='text-gray-600 text-sm mb-4 flex-1'>{service.desc}</p>
                 <div className='flex items-center justify-between'>
                   <span className='text-sm font-semibold text-blue-900'>{service.price}</span>
-                  <ArrowRight className='w-5 h-5 text-gray-400 group-hover:text-secondary group-hover:translate-x-1 transition-all' />
+                  <ArrowRight className='w-5 h-5 text-gray-500 group-hover:text-secondary group-hover:translate-x-1 transition-all' />
                 </div>
               </Link>
             </ScrollReveal>
@@ -82,7 +83,7 @@ export default function ServiciosPage() {
             <div className='flex-1 text-white'>
               <h2 className='text-3xl font-bold mb-4'>¿No sabes qué servicio necesitas?</h2>
               <p className='text-blue-100 mb-6'>Revisa los problemas más comunes del aire acondicionado automotriz y encuentra la solución que corresponde.</p>
-              <Link href='/problemas' className='inline-flex items-center gap-2 bg-white text-blue-900 px-6 py-3 rounded-xl font-semibold hover:bg-amber-500 hover:text-white transition-colors'>
+              <Link href='/problemas' className='inline-flex items-center gap-2 bg-white text-blue-900 px-6 py-3 rounded-xl font-semibold hover:bg-amber-700 hover:text-white transition-colors'>
                 Ver problemas comunes <ArrowRight className='w-5 h-5' />
               </Link>
             </div>
@@ -116,7 +117,7 @@ export default function ServiciosPage() {
             <h2 className='text-3xl font-bold text-white mb-4'>¿Necesitas servicio de aire acondicionado?</h2>
             <p className='text-blue-100 mb-8 max-w-2xl mx-auto'>Contáctanos por WhatsApp y te ayudamos a identificar qué servicio necesitas. Diagnóstico gratis si contratas.</p>
             <div className='flex flex-col sm:flex-row gap-4 justify-center'>
-              <a href='https://wa.me/56935075600?text=Hola%2C%20necesito%20información%20sobre%20servicios%20de%20aire%20acondicionado' className='inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-semibold transition-colors'>
+              <a href='https://wa.me/56935075600?text=Hola%2C%20necesito%20información%20sobre%20servicios%20de%20aire%20acondicionado' className='inline-flex items-center justify-center gap-2 bg-amber-700 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-semibold transition-colors'>
                 <Phone className='w-5 h-5' />Hablar por WhatsApp
               </a>
               <Link href='/precios-referenciales' className='inline-flex items-center justify-center gap-2 border-2 border-white text-white hover:bg-white hover:text-blue-900 px-8 py-4 rounded-xl font-semibold transition-colors'>
@@ -127,6 +128,22 @@ export default function ServiciosPage() {
         </div>
       </section>
 
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "Servicios de Aire Acondicionado Automotriz a Domicilio en Santiago",
+            "itemListElement": services.map((service, index) => ({
+              "@type": "ListItem",
+              "position": index + 1,
+              "url": `https://autofixer.cl${service.href}/`,
+              "name": service.title,
+            })),
+          }),
+        }}
+      />
     </div>
   )
 }
