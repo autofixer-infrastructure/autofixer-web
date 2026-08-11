@@ -28,8 +28,7 @@ next-env.d.ts
 # Misc
 *.local
 
-# Performance docs (baselines, known-issues) - generado por sprint 41
-docs/
+# Backups, secrets, credentials (PRIORIDAD ALTA)
 .sprint*-safety-*
 .sprint*-backup-*
 *.bak
@@ -37,3 +36,39 @@ docs/
 *.dump.gz
 package-lock.json
 yarn.lock
+.env.development
+.env.production
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+*-credentials.json
+secrets/
+*.swp
+*.swo
+*~
+
+# Documentación trackeable (rehabilitar paths ignorados más arriba)
+!docs/
+!docs/**
+!.env.example
+!docs/security/
+!docs/security/**
+
+# Re-ignore backups/secrets incluso dentro de paths rehabilitados
+*.bak
+*.tmp
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+*.key
+*.pem
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+*-credentials.json
+secrets/
