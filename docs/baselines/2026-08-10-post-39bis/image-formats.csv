@@ -1,0 +1,6 @@
+categoria,url,content_type_avif,vary_avif,cache_control_avif,bytes_avif,bytes_webp,bytes_jpeg,ahorro_avif_pct,ahorro_webp_pct
+sabida_que_andaba,/_next/image?url=%2Fimages%2Fedinson-portrait.webp&w=640&q=75,image/avif,Accept,public, max-age=31536000, must-revalidate,20384,24748,39572,48.5,37.5
+era_hardcodeada_ClientHome,/_next/image?url=%2Fimages%2Fcaso-compresor.webp&w=750&q=75,image/avif,Accept,public, max-age=31536000, must-revalidate,33872,38904,44031,23.1,11.6
+galeria_servicios,/_next/image?url=%2Fimages%2Fservicio-carga-gas.webp&w=640&q=75,image/avif,Accept,public, max-age=31536000, must-revalidate,15254,17702,25139,39.3,29.6
+hero_alt_home,/_next/image?url=%2Fimages%2Fhero-technician.webp&w=640&q=75,image/avif,Accept,public, max-age=31536000, must-revalidate,25715,30094,42953,40.1,29.9
+size_grande,/_next/image?url=%2Fimages%2Fedinson-portrait.webp&w=1920&q=75,image/avif,Accept,public, max-age=31536000, must-revalidate,28782,37996,60268,52.2,37.0

@@ -27,3 +27,6 @@ next-env.d.ts
 
 # Misc
 *.local
+
+# Performance docs (baselines, known-issues) - generado por sprint 41
+docs/
