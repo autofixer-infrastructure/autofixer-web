@@ -53,14 +53,14 @@ export function Footer() {
               Especialistas en aire acondicionado automotriz a domicilio en Santiago.
               Servicio profesional, garantía escrita de 90 días.
             </p>
-            <p className='text-xs text-gray-500'>
+            <p className='text-xs text-gray-400'>
               Santiago, Región Metropolitana, Chile
             </p>
           </div>
 
           {/* Services */}
           <div>
-            <h4 className='text-white font-semibold mb-4'>Servicios</h4>
+            <h3 className='text-white font-semibold mb-4'>Servicios</h3>
             <ul className='space-y-2'>
               {footerLinks.servicios.map((item) => (
                 <li key={item.href}>
@@ -74,7 +74,7 @@ export function Footer() {
 
           {/* Coverage */}
           <div>
-            <h4 className='text-white font-semibold mb-4'>Zonas</h4>
+            <h3 className='text-white font-semibold mb-4'>Zonas</h3>
             <ul className='space-y-2'>
               {footerLinks.coverage.map((item) => (
                 <li key={item.href}>
@@ -88,7 +88,7 @@ export function Footer() {
 
           {/* Company */}
           <div>
-            <h4 className='text-white font-semibold mb-4'>Empresa</h4>
+            <h3 className='text-white font-semibold mb-4'>Empresa</h3>
             <ul className='space-y-2'>
               {footerLinks.company.map((item) => (
                 <li key={item.href}>
@@ -120,13 +120,13 @@ export function Footer() {
             </div>
             <div className='flex gap-6 text-sm'>
               {footerLinks.legal.map((item) => (
-                <Link key={item.href} href={item.href} className='text-gray-500 hover:text-white transition-colors'>
+                <Link key={item.href} href={item.href} className='text-gray-400 hover:text-white transition-colors'>
                   {item.label}
                 </Link>
               ))}
             </div>
           </div>
-          <p className='text-xs text-gray-600 mt-4'>
+          <p className='text-xs text-gray-300 mt-4'>
             © {new Date().getFullYear()} Autofixer SPA. Todos los derechos reservados.
           </p>
         </div>

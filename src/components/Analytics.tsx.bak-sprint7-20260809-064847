@@ -1,0 +1,72 @@
+"use client"
+
+import { useEffect } from "react"
+import Script from "next/script"
+
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID
+
+export function Analytics() {
+  useEffect(() => {
+    if (!GA_ID) return
+
+    // Track WhatsApp clicks
+    const trackWhatsApp = () => {
+      window.gtag?.("event", "click_whatsapp", {
+        event_category: "conversion",
+        event_label: "whatsapp_floating_cta",
+      })
+    }
+
+    // Track phone clicks
+    const trackPhone = () => {
+      window.gtag?.("event", "click_phone", {
+        event_category: "conversion",
+        event_label: "phone_floating_cta",
+      })
+    }
+
+    document.querySelectorAll('a[href*="wa.me"]').forEach((el) => {
+      el.addEventListener("click", trackWhatsApp)
+    })
+    document.querySelectorAll('a[href^="tel:"]').forEach((el) => {
+      el.addEventListener("click", trackPhone)
+    })
+
+    return () => {
+      document.querySelectorAll('a[href*="wa.me"]').forEach((el) => {
+        el.removeEventListener("click", trackWhatsApp)
+      })
+      document.querySelectorAll('a[href^="tel:"]').forEach((el) => {
+        el.removeEventListener("click", trackPhone)
+      })
+    }
+  }, [])
+
+  if (!GA_ID) return null
+
+  return (
+    <>
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+        strategy="lazyOnload"
+      />
+      <Script id="ga-init" strategy="lazyOnload">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${GA_ID}', {
+            page_path: window.location.pathname,
+          });
+        `}
+      </Script>
+    </>
+  )
+}
+
+declare global {
+  interface Window {
+    gtag: (...args: unknown[]) => void
+    dataLayer: unknown[]
+  }
+}

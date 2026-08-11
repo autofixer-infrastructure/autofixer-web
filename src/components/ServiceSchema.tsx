@@ -122,11 +122,15 @@ export function ServiceSchemaMarkup({ serviceIndex }: { serviceIndex?: number })
       />
     )
   }
-  // Todas los servicios
+  // Todas los servicios: un solo script con @graph (Google requiere un solo objeto por script)
+  const graphPayload = {
+    '@context': 'https://schema.org',
+    '@graph': servicesSchema,
+  }
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesSchema) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(graphPayload) }}
     />
   )
 }

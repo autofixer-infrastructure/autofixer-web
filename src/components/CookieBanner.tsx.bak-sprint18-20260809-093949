@@ -15,32 +15,11 @@ export default function CookieBanner() {
 
   const accept = () => {
     localStorage.setItem('cookie_consent', 'accepted')
-    // ⚠️ CONSENT MODE v2 — Sprint 18
-    // Notificamos a gtag que el user aceptó. Si GA4 ya cargó con defaults denied,
-    // esto lo cambia a granted y los próximos hits se trackean con cookies.
-    if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-      window.gtag('consent', 'update', {
-        analytics_storage: 'granted',
-        ad_storage: 'granted',
-        ad_user_data: 'granted',
-        ad_personalization: 'granted',
-      })
-    }
     setVisible(false)
   }
 
   const decline = () => {
-    localStorage.setItem('cookie_consent', 'rejected')
-    // ⚠️ CONSENT MODE v2 — Sprint 18
-    // User rechazó: mantener todo denied. NO cookies, NO tracking, NO page_view.
-    if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-      window.gtag('consent', 'update', {
-        analytics_storage: 'denied',
-        ad_storage: 'denied',
-        ad_user_data: 'denied',
-        ad_personalization: 'denied',
-      })
-    }
+    localStorage.setItem('cookie_consent', 'declined')
     setVisible(false)
   }
 
@@ -63,7 +42,7 @@ export default function CookieBanner() {
           <div className="flex items-center gap-3 shrink-0">
             <button
               onClick={decline}
-              className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-white border border-gray-600 rounded-lg transition-colors"
+              className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white border border-gray-600 rounded-lg transition-colors"
             >
               Rechazar
             </button>

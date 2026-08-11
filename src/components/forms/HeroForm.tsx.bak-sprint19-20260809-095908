@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Search, ChevronDown, Loader2 } from 'lucide-react'
-import { mapServiceToCategory, trackEvent } from '@/lib/gtag-helpers'
 
 const serviceOptions = [
   { value: 'diagnostico', label: 'Diagnóstico de AC', price: 'Desde $15.000' },
@@ -72,18 +71,7 @@ export function HeroForm() {
     
     // Simulate loading
     await new Promise(resolve => setTimeout(resolve, 1000))
-
-    // Track: cotizador iniciado (lead capturado: telefono + servicio + comuna)
-    trackEvent('generate_lead', {
-      event_label: 'hero_form_cotizar',
-      form_name: 'hero_contact',
-      service: formData.service || 'general',
-      service_slug: formData.service || 'general',
-      service_category: mapServiceToCategory(formData.service || 'general'),
-      cta_location: 'hero_form',
-      source: 'hero_form',
-    })
-
+    
     router.push(`/cotizar?${params.toString()}`)
   }
 
@@ -101,7 +89,7 @@ export function HeroForm() {
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Service Selection */}
         <div>
-          <label htmlFor="service" className="form-label">Servicio</label>
+          <label className="form-label">Servicio</label>
           <div className="relative">
             <select
               value={formData.service}
@@ -115,13 +103,13 @@ export function HeroForm() {
                 </option>
               ))}
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none" />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
           </div>
         </div>
         
         {/* Vehicle Type */}
         <div>
-          <label htmlFor="vehicleType" className="form-label">Tipo de Vehículo</label>
+          <label className="form-label">Tipo de Vehículo</label>
           <div className="relative">
             <select
               value={formData.vehicleType}
@@ -135,13 +123,13 @@ export function HeroForm() {
                 </option>
               ))}
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none" />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
           </div>
         </div>
         
         {/* Commune */}
         <div>
-          <label htmlFor="commune" className="form-label">Tu Comuna</label>
+          <label className="form-label">Tu Comuna</label>
           <div className="relative">
             <select
               value={formData.commune}
@@ -155,13 +143,13 @@ export function HeroForm() {
                 </option>
               ))}
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none" />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
           </div>
         </div>
         
         {/* Phone */}
         <div>
-          <label htmlFor="phone" className="form-label">Teléfono (WhatsApp)</label>
+          <label className="form-label">Teléfono (WhatsApp)</label>
           <input
             type="tel"
             value={formData.phone}

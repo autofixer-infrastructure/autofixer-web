@@ -15,7 +15,7 @@ interface BreadcrumbProps {
 export function Breadcrumb({ crumbs }: BreadcrumbProps) {
   return (
     <nav aria-label='Breadcrumb' className='flex items-center gap-1 text-sm text-gray-500 mb-4'>
-      <Link href='/' className='hover:text-amber-600 transition-colors'>
+      <Link href='/' aria-label='Inicio' className='hover:text-amber-600 transition-colors'>
         <Home className='w-4 h-4' />
       </Link>
       {crumbs.map((crumb, i) => (

@@ -17,56 +17,16 @@ export function Analytics() {
       window.dataLayer.push(arguments)
     }
     window.gtag("js", new Date())
-
-    // ⚠️ CONSENT MODE v2 — Sprint 18
-    // Defaults: NO trackear nada hasta que user consienta.
-    // El CookieBanner.tsx llama gtag('consent', 'update', {...}) al aceptar/rechazar.
-    // wait_for_update: 500ms = tiempo que gtag espera el signal antes de aplicar defaults.
-    window.gtag("consent", "default", {
-      analytics_storage: "denied",
-      ad_storage: "denied",
-      ad_user_data: "denied",
-      ad_personalization: "denied",
-      wait_for_update: 500,
+    window.gtag("config", GA_ID, {
+      page_path: window.location.pathname,
     })
 
-    // Si el user ya consintió (vino de sesión anterior), respetamos su decisión.
-    // Si rechazó o nunca interactuó: NO configuramos GA4 (no se setea cookie, no se dispara page_view).
-    const priorConsent = localStorage.getItem("cookie_consent")
-    if (priorConsent === "accepted") {
-      window.gtag("consent", "update", {
-        analytics_storage: "granted",
-        ad_storage: "granted",
-        ad_user_data: "granted",
-        ad_personalization: "granted",
-      })
-      window.gtag("config", GA_ID, {
-        page_path: window.location.pathname,
-      })
-    } else if (priorConsent === "rejected") {
-      // User rechazó explícitamente. NO configurar GA4, NO cookies, NO page_view.
-      console.log("[Analytics] Tracking denied by user (prior consent=rejected)")
-    } else {
-      // Sin decisión previa: GA4 en modo cookieless (pings sin identificar usuario)
-      window.gtag("config", GA_ID, {
-        page_path: window.location.pathname,
-      })
-    }
-
     // ---- Listeners de eventos custom ----
-    // Helper que detecta data-cta-location en el HTML (subiendo por el DOM).
-    // Si no hay data-cta-location en el elemento ni en sus padres, devuelve "unknown".
-    // Sprint 20 (Grupo 1): NO agregamos data-cta-location a los CTAs en este sprint.
-    // Solo dejamos la funcion lista para cuando se haga ese trabajo (sprint aparte).
-    const trackClickWithLocation = (eventName: string, element: HTMLElement) => {
-      const ctaLocation =
-        element.closest("[data-cta-location]")?.getAttribute("data-cta-location") ||
-        "unknown"
+    const trackEvent = (eventName: string) => {
       if (typeof window.gtag === "function") {
         window.gtag("event", eventName, {
           event_category: "conversion",
           event_label: window.location.pathname,
-          cta_location: ctaLocation,
         })
       }
     }
@@ -78,7 +38,7 @@ export function Analytics() {
     const whatsappHandlers: Array<{ el: HTMLAnchorElement; fn: (e: Event) => void }> = []
     whatsappLinks.forEach((link) => {
       const handler = (_e: Event) => {
-        trackClickWithLocation("click_whatsapp", link)
+        trackEvent("click_whatsapp")
       }
       link.addEventListener("click", handler)
       whatsappHandlers.push({ el: link, fn: handler })
@@ -89,7 +49,7 @@ export function Analytics() {
     const phoneHandlers: Array<{ el: HTMLAnchorElement; fn: (e: Event) => void }> = []
     phoneLinks.forEach((link) => {
       const handler = (_e: Event) => {
-        trackClickWithLocation("click_phone", link)
+        trackEvent("click_phone")
       }
       link.addEventListener("click", handler)
       phoneHandlers.push({ el: link, fn: handler })
