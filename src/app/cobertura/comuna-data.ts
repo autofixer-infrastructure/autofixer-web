@@ -57,6 +57,15 @@ export async function generateMetadata({ params }: { params: Promise<{ comuna: s
       siteName: 'Autofixer',
       locale: 'es_CL',
       type: 'website',
+      // Sprint 51 v2: og:image para social sharing (cerrar gap auditoría)
+      images: [
+        {
+          url: 'https://autofixer.cl/og-image.png',
+          width: 1200,
+          height: 630,
+          alt: `Servicio de aire acondicionado automotriz a domicilio en ${info.nombre}`,
+        },
+      ],
     },
   }
 }
