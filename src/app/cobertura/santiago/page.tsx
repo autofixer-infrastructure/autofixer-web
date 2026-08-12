@@ -271,6 +271,66 @@ export default function CoberturaSantiagoPage() {
           </ScrollReveal>
         </div>
       </section>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: [
+              {
+                '@type': 'Question',
+                name: '¿Cuánto cuesta el servicio de aire acondicionado automotriz a domicilio en Santiago?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'El costo del servicio es el mismo en toda la Gran Santiago: carga de gas R134a desde $35.000, R1234yf desde $90.000, diagnóstico GRATIS si contratas. Solo se cobra un fee de desplazamiento según la zona: $0 en Santiago Centro/Providencia/Ñuñoa, $5.000 en Las Condes/Vitacura, $10.000 en La Florida/Maipú, $15.000 en Puente Alto/Pudahuel, hasta $30.000 en comunas periféricas como Melipilla. Te informamos el total antes de confirmar.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: '¿Cuánto tardan en llegar a mi comuna en Santiago?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Nuestro tiempo de respuesta en la Gran Santiago es de menos de 2 horas desde que confirmas la cotización. Cubrimos las 22 comunas principales de la Región Metropolitana con técnicos móviles equipados. Si tu comuna no aparece en la lista, consúltanos: llegamos a toda el área metropolitana.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: '¿Qué zonas de Santiago tienen cobertura sin costo de desplazamiento?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'La Zona 1 (Centro) no tiene costo de desplazamiento e incluye: Santiago, Providencia, Ñuñoa, Recoleta e Independencia. Las demás zonas tienen un fee progresivo: Zona 2 Oriente $5.000 (Las Condes, Vitacura, La Reina, Macul), Zona 3 Sur $10.000 (La Florida, Peñalolén, Puente Alto, San Bernardo), Zona 4 Poniente $15.000 (Pudahuel, Quilicura, Maipú, Cerrillos, Estación Central), Zona 5 Periferia hasta $30.000 (Colina, Peñaflor, Talagante, Melipilla).',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: '¿Atienden a domicilio en todas las comunas de Santiago o debo ir al taller?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'No contamos con taller físico abierto al público. Nuestra especialidad es servicio 100% a domicilio en toda la Región Metropolitana. Vamos donde esté tu auto: tu casa, oficina o estacionamiento, sin necesidad de dejarlo en un local. Técnicos certificados con equipo profesional y respuesta en menos de 2 horas.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: '¿Qué incluye la garantía de 90 días del servicio en Santiago?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'La garantía escrita cubre mano de obra y los repuestos instalados por nosotros durante 90 días corridos en toda la Gran Santiago. Si la misma falla se repite dentro del periodo, retornamos sin costo. Los repuestos mantienen la garantía del fabricante (6 a 12 meses según el componente).',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: '¿Qué medios de pago aceptan para el servicio en Santiago?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Efectivo, transferencia bancaria, tarjetas de débito y crédito (incluyendo cuotas). El pago se realiza una vez finalizado el servicio y verificado el funcionamiento del A/C. Emitimos boleta o factura según corresponda. Aplica para todas las comunas de la Gran Santiago sin recargos adicionales por forma de pago.',
+                },
+              },
+            ],
+          }),
+        }}
+      />
     </main>
   )
 }
