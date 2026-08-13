@@ -6,7 +6,7 @@ const NESTJS_CONTACT_URL =
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, email, phone, message, turnstileToken, serviceSlug } = body;
+    const { name, email, phone, message, serviceSlug } = body;
 
     // Validación local (defense in depth)
     if (!name || !email || !message) {
